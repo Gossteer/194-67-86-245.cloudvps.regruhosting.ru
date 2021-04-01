@@ -144,7 +144,7 @@ class Request extends Model
 		// 	unset($json['filter']['Dst.continentCode']);
 		// }
 
-        if ($json['filter']['Dst.continentCode'] == 'ALL') {
+        if (empty($json['filter']['Dst.continentCode']) or $json['filter']['Dst.continentCode'] == 'ALL') {
 			unset($json['filter']['Dst.continentCode']);
 		}
 
