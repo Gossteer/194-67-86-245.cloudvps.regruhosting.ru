@@ -1,0 +1,110 @@
+#tags {
+    display: flex;
+    justify-content: space-between;
+    padding: 85px 25px;
+    padding-bottom: 0;
+}
+
+#tags.zero-z {
+    z-index: 0;
+}
+
+#tags form {
+    display: flex;
+    flex-direction: column;
+}
+
+#tags form .el-collapse {
+    height: 525px;
+    overflow-y: scroll;
+}
+
+#tags .groupEl {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+#tags .groupEl .title {
+    font-size: 20px !important;
+}
+
+#tags .groupEl .el-checkbox.is-disabled .el-checkbox__label {
+    color: #409EFF;
+}
+
+#tags .groupEl .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+    background-color: #409EFF;
+}
+
+#tags .groupEl .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+    border-color: white;
+}
+
+.settings {
+    display: flex;
+    margin-left: 10px;
+}
+
+.settings:hover {
+    color: #6a7ea5 !important;
+}
+
+.el-checkbox__inner {
+    z-index: 0 !important;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tooltip-custom {
+    width: 250px;
+}
+
+.tags_button {
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-appearance: none;
+    text-align: center;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: .1s;
+    transition: .1s;
+    font-weight: 500;
+    text-decoration: none;
+
+    border-radius: 50%;
+    padding: 11.5px;
+    color: #FFF;
+    background-color: #409EFF;
+    border-color: #409EFF;
+}
+
+.tags_button:focus, .tags_button:hover {
+    background: #66b1ff;
+    border-color: #66b1ff;
+    color: #FFF;
+}
+
+.el-button--medium.is-circle {
+
+}
+
+#tags .groupEl .el-button--medium.is-circle {
+    width: fit-content;
+}
+
+.el-tooltip__popper {
+    font-size: 17px !important;
+}
+
+
+#tags .el-checkbox__label {
+    font-size: 20px !important;
+}

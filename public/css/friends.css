@@ -1,0 +1,166 @@
+#friends .el-main {
+    padding-top: 30px;
+}
+
+.friend-card {
+    margin-bottom: 10px;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.friend-block {
+    display: flex;
+}
+
+.friend-block .photo {
+    flex: 1.8;
+    height: 180px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.friend-block .photo .img-container {
+    flex: 3.9;
+    height: 166px;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+}
+
+.friend-block .photo img {
+    width: 100%;
+}
+
+.friend-block .photo .last-seen {
+    font-size: 14px;
+    color: #606266;
+    flex: 1;
+    line-height: 2;
+    align-self: start;
+}
+
+.friend-block .info {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    padding-left: 15px;
+}
+
+.friend-block .info .name {
+    line-height: 1;
+    display: flex;
+    justify-content: space-between;
+}
+
+.friend-block .info .name h3 {
+    margin: 0;
+    height: 20px;
+}
+
+.friend-block .info .name h3:hover {
+    color: rgb(64, 158, 255);
+}
+
+.friend-block .info .name .online {
+    vertical-align: middle;
+    font-size: 14px;
+    color: #606266;
+    box-sizing: border-box;
+    float: none;
+    display: inline-block;
+    text-align: left;
+}
+
+.friend-block .status {
+    font-size: 12px;
+    color: grey;
+    height: 41px;
+}
+
+.friend-block .status i {
+    vertical-align: middle;
+}
+
+.bottom {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bottom .buttons .friend-button {
+    display: inline-block !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    -webkit-appearance: none !important;
+    box-sizing: border-box !important;
+    outline: 0 !important;
+    -webkit-transition: .1s !important;
+    transition: .1s !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    padding: 8.5px !important;
+    margin: 5px 0 !important;
+    color: #FFF !important;
+    background-color: #409EFF !important;
+    border-color: #409EFF !important;
+    font-size: 14px !important;
+    width: 230px !important;
+    text-align: start !important;
+    height: 33px !important;
+    border-radius: 3px !important;
+}
+
+.bottom .bottom_info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.55;
+    flex: 0.9;
+    font-size: 14px !important;
+}
+
+.bottom .bottom_info .city {
+    color: #606266;
+}
+
+.bottom .bottom_info .birthday-label {
+    font-size: 11px !important;
+}
+
+.bottom .bottom_info .birthday-value {
+    color: #606266;
+}
+
+.bottom .bottom_info .relationship-status-label {
+    font-size: 11px !important;
+}
+
+.bottom .bottom_info .relationship-status-value {
+    color: #606266;
+}
+
+.bottom .buttons .friend-button:focus, .bottom .buttons .friend-button:hover {
+    background: #66b1ff;
+    border-color: #66b1ff;
+    color: #FFF;
+}
+
+#friends .el-card {
+    padding-right: 10px;
+}
+
+#friends .el-card__body {
+    padding: 0;
+}
+
+#friends .el-autocomplete {
+    width: 100%;
+}
+
+.info .name h3 a:hover {
+    color: inherit !important;
+}
+

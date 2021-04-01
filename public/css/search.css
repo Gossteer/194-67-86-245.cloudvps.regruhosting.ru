@@ -1,0 +1,28 @@
+.aviasales-tab {
+    display: none;
+}
+
+.aviasales-tab.showSearch {
+    display: block;
+    padding: 0 0; /*20px 0*/
+}
+
+.aviasales-tab.showSearch .cascoon-root {
+    padding: 20px 0 10px !important;
+}
+
+.aviasales-tab.showSearch .weedle-widget {
+    max-width: 100% !important;
+}
+
+.bottom-search-row {
+    margin-top: 300px;
+}
+
+.bottom-search-row-popper {
+    width: 93%;
+}
+
+.bottom-search-row-popper .el-cascader-menu {
+    width: 100%;
+}

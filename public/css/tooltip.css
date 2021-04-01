@@ -1,0 +1,44 @@
+.settings {
+    position: relative;
+}
+
+.settings .tooltiptext {
+    width: 135px;
+    font-size: 10px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 5px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 5;
+    bottom: 75%;
+    left: -90%;
+    margin-left: -50px;
+}
+
+/* Tooltip arrow */
+.settings .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip-bottom {
+    top: 135%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.tooltiptextHref {
+    color: #409EFF !important;
+}
+
+.tooltiptextHref:hover {
+    color: #6a7ea5 !important
+}

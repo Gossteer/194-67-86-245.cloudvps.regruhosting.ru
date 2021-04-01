@@ -1,0 +1,165 @@
+#api {
+    display: flex;
+    justify-content: space-between;
+    z-index: 0;
+    min-height: 400px;
+    padding: 65px 23px;
+}
+
+.api-form-list__wrap {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.api-form-list__row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.api-form-list__row#none {
+    display: flex;
+    justify-content: start;
+}
+
+.api-form-list__element {
+    margin-left: 40px;
+}
+
+.api-form-list__element.interval {
+    top: 55px;
+    right: 45px;
+}
+
+.api-form-list__element .not_required {
+    margin: 27px 0;
+}
+
+#sliderCost {
+    margin-top: 55px;
+}
+
+#sliderDayTemp {
+    margin-top: 55px;
+}
+
+#sliderNightTemp {
+    margin-top: 55px;
+}
+
+.weather {
+}
+
+.show .list {
+    padding-left: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #2a5885;
+    margin-bottom: 170px;
+}
+
+.show .list li:hover {
+    /*color: #6a7ea5;*/
+}
+
+#searchString a {
+    visibility: hidden;
+}
+
+#searchString div a {
+    visibility: visible;
+}
+
+.countryDst {
+    width: 160px;
+}
+
+#subscriptionsVk {
+    display: flex;
+    flex-direction: column;
+}
+
+.subscriptionsSubscr {
+
+}
+
+.subscriptionsSubscr .block {
+    display: flex;
+    font-size: 12px;
+}
+
+.countryDstHidden {
+    display: initial !important;
+}
+
+#optionalCheckbox .el-link--inner, .weatherLink .el-link--inner {
+    font-size: 19px;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0;
+    -webkit-margin-end: 0;
+    font-weight: bold;
+}
+
+[class*=el-col-] {
+    float: left;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.flights__select {
+    width: 100%;
+}
+
+.flights__number_input {
+    width: 100%;
+}
+
+.api__button {
+    width: 100%;
+}
+
+#modifyLink {
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #DCDFE6;
+    -webkit-appearance: none;
+    text-align: center;
+    box-sizing: border-box;
+    margin: 0;
+    -webkit-transition: .1s;
+    transition: .1s;
+    font-weight: 500;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+    outline: 0;
+    color: #FFF;
+    background-color: #409EFF;
+    border-color: #409EFF;
+}
+
+#modifyLink:hover {
+    background: #66b1ff;
+    border-color: #66b1ff;
+    color: #FFF;
+}
+
+.countrySrcHidden {
+    display: initial !important;
+}
+
+.selected-api-param {
+    color: #409EFF;
+}
+
+.api-modal-dialog {
+
+}
+
+.api-modal-dialog .el-dialog__body {
+    padding-top: 0;
+}
+
