@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Request extends Model
 {
@@ -66,7 +67,7 @@ class Request extends Model
             try {
                 $content = $this->getFlightsFromApiRequest();
             } catch(Exception $e) {
-
+                Log::error('getFlightsFromApi ' . $e->getMessage());
             }
 
             $this->updateRequest();
@@ -108,23 +109,23 @@ class Request extends Model
         $requestContent = json_decode($this->content, true);
 		$requestOutput = json_decode($this->output, true);
 
-        if (isset($requestOutput)) {
-            $requestOutput = [
-                "citySrc" => "Москва",
-                "cityDst" => "любой"
-            ];
-        }
+        // if (isset($requestOutput)) {
+        //     $requestOutput = [
+        //         "citySrc" => "Москва",
+        //         "cityDst" => "любой"
+        //     ];
+        // }
 
         $json['filter'] = $requestContent;
 		/*$json['filter']['src.name'] = $requestOutput['citySrc'];
 		$json['filter']['dst.name'] = $requestOutput['cityDst'];*/
-		if (isset($json['filter']['src.name'])) {
-			unset($json['filter']['src.name']);
-		}
-		//unset($json['filter']['dst.name']);
-		if (isset($json['filter']['dst.name'])) {
-			unset($json['filter']['dst.name']);
-		}
+		// if (isset($json['filter']['src.name'])) {
+		// 	unset($json['filter']['src.name']);
+		// }
+		// //unset($json['filter']['dst.name']);
+		// if (isset($json['filter']['dst.name'])) {
+		// 	unset($json['filter']['dst.name']);
+		// }
 
 		$json['filter']['src.nameTranslations.ru'] = isset($requestOutput['citySrc']) ? $requestOutput['citySrc']: "Москва";
 
@@ -139,7 +140,11 @@ class Request extends Model
             $json['limit'] = $limit;
         }
 
-		if (isset($json['filter']['Dst.continentCode']) && $json['filter']['Dst.continentCode'] == 'ALL') {
+		// if (isset($json['filter']['Dst.continentCode']) && $json['filter']['Dst.continentCode'] == 'ALL') {
+		// 	unset($json['filter']['Dst.continentCode']);
+		// }
+
+        if ($json['filter']['Dst.continentCode'] == 'ALL') {
 			unset($json['filter']['Dst.continentCode']);
 		}
 
