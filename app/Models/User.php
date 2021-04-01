@@ -13,7 +13,7 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'hello_text', 'api_text', 'id'
+        'id'
     ];
 
     public function groups()
@@ -84,7 +84,7 @@ class User extends Authenticatable
     }
 
     public static function attachRequestToUser($userId, $request)
-    {	
+    {
         $user = User::firstOrCreate(['id' => $userId]);
         $requestModel = Request::firstOrNew(['id' => $request->post('id')]);
         $requestModel->id = $request->post('id');
@@ -97,7 +97,7 @@ class User extends Authenticatable
         $requestModel->updated_at = Carbon::now()->subYears(1);
         $requestModel->timestamps = false;
         $requestModel->group_id = $request->post('group_id');
-		
+
         return $user->requests()->save($requestModel);
     }
 
