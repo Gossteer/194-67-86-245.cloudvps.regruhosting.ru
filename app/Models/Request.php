@@ -117,6 +117,7 @@ class Request extends Model
         // }
 
         $json['filter'] = $requestContent;
+        $json['sort']['_id'] = -1;
         // $json['filter']['src.name'] = $requestOutput['citySrc'];
         // $json['filter']['dst.name'] = $requestOutput['cityDst'];
         // if (isset($json['filter']['src.name'])) {
