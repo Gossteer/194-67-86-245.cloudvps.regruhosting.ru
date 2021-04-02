@@ -64,19 +64,19 @@ class Request extends Model
     {
 
         //if ((!$this->limitHasReached() || $this->haveNoLimit()) && $this->timeHasPassed()) {
-            try {
-                $content = $this->getFlightsFromApiRequest();
-            } catch(Exception $e) {
-                Log::error('getFlightsFromApi ' . $e->getMessage());
-            }
+        try {
+            $content = $this->getFlightsFromApiRequest();
+        } catch (Exception $e) {
+            Log::error('getFlightsFromApi ' . $e->getMessage());
+        }
 
-            $this->updateRequest();
+        $this->updateRequest();
 
-            if ($content) {
-                $this->updateRequestCurrentLimit(count($content));
-                return $content;
-            }
-     //   }
+        if ($content) {
+            $this->updateRequestCurrentLimit(count($content));
+            return $content;
+        }
+        //   }
 
         return [];
     }
@@ -107,10 +107,8 @@ class Request extends Model
     public function formRequestJson()
     {
         $requestContent = json_decode($this->content, true);
-		$requestOutput = json_decode($this->output, true);
+        $requestOutput = json_decode($this->output, true);
 
-        Log::info($requestContent);
-        Log::info($requestOutput);
         // if (isset($requestOutput)) {
         //     $requestOutput = [
         //         "citySrc" => "Москва",
@@ -119,21 +117,20 @@ class Request extends Model
         // }
 
         $json['filter'] = $requestContent;
-		/*$json['filter']['src.name'] = $requestOutput['citySrc'];
-		$json['filter']['dst.name'] = $requestOutput['cityDst'];*/
-		// if (isset($json['filter']['src.name'])) {
-		// 	unset($json['filter']['src.name']);
-		// }
-		// //unset($json['filter']['dst.name']);
-		// if (isset($json['filter']['dst.name'])) {
-		// 	unset($json['filter']['dst.name']);
-		// }
+        // $json['filter']['src.name'] = $requestOutput['citySrc'];
+        // $json['filter']['dst.name'] = $requestOutput['cityDst'];
+        // if (isset($json['filter']['src.name'])) {
+        // 	unset($json['filter']['src.name']);
+        // }
+        //unset($json['filter']['dst.name']);
+        unset($json['filter']['dst.name']);
+        unset($json['filter']['src.name']);
 
-		$json['filter']['src.nameTranslations.ru'] = isset($requestOutput['citySrc']) ? $requestOutput['citySrc']: "Москва";
+        $json['filter']['src.nameTranslations.ru'] = isset($requestOutput['citySrc']) ? $requestOutput['citySrc'] : "Москва";
 
-		if (isset($requestOutput['cityDst']) && $requestOutput['cityDst'] != 'любой') {
-			$json['filter']['dst.nameTranslations.ru'] = $requestOutput['cityDst'];
-		}
+        if (isset($requestOutput['cityDst']) && $requestOutput['cityDst'] != 'любой') {
+            $json['filter']['dst.nameTranslations.ru'] = $requestOutput['cityDst'];
+        }
         $limit = $this->limit;
         if (!$limit) {
             $limit = ($this->interval / 60) * 90;
@@ -142,16 +139,20 @@ class Request extends Model
             $json['limit'] = $limit;
         }
 
-		// if (isset($json['filter']['Dst.continentCode']) && $json['filter']['Dst.continentCode'] == 'ALL') {
-		// 	unset($json['filter']['Dst.continentCode']);
-		// }
+        // if (isset($json['filter']['Dst.continentCode']) && $json['filter']['Dst.continentCode'] == 'ALL') {
+        // 	unset($json['filter']['Dst.continentCode']);
+        // }
 
         if (empty($json['filter']['Dst.continentCode']) or $json['filter']['Dst.continentCode'] == 'ALL') {
-			unset($json['filter']['Dst.continentCode']);
-		}
+            unset($json['filter']['Dst.continentCode']);
+        }
 
-		//print_r($json);
-		//print_r(json_encode($json));
+        if (empty($json['filter']['Dst.CountryCode'])) {
+            unset($json['filter']['Dst.CountryCode']);
+        }
+
+        //print_r($json);
+        //print_r(json_encode($json));
         Log::info($json);
 
         return $json;
@@ -305,8 +306,8 @@ EOT;
 $apiMessage
 EOT;
 
-		$this->send_count = $this->send_count + 1;
-		$this->save();
+        $this->send_count = $this->send_count + 1;
+        $this->save();
 
         return $message;
     }
@@ -316,4 +317,3 @@ EOT;
         return self::where(['user_id' => $id])->get();
     }
 }
-
