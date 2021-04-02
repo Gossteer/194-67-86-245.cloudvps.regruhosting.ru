@@ -14,18 +14,18 @@ class UserDataController extends Controller
 	public function store(Request $request, $user_id, $key)
     {
         $value = $request->get('value');
-		
+
 		$user = User::firstOrCreate(['id' => $user_id]);
 
         if ($exists = $user->data()->where('key', $key)->first()) {
             $exists->update([
-                'value' => $value,
+                'value' => json_encode($value),
             ]);
             return response()->noContent(Response::HTTP_OK);
         } else {
             $user->data()->create([
                 'key' => $key,
-                'value' => $value,
+                'value' => json_encode($value),
             ]);
             return response()->noContent(Response::HTTP_CREATED);
         }
@@ -34,9 +34,9 @@ class UserDataController extends Controller
     public function get(Request $request, $user_id)
     {
 		$data = array();
-		
+
 		$user = User::find($user_id);
-		
+
         $keys = explode(',', $request->get('keys'));
 
 		if ($user) {
