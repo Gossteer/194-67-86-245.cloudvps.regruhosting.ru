@@ -154,7 +154,6 @@ class Request extends Model
 
         //print_r($json);
         //print_r(json_encode($json));
-        Log::info($json);
 
         return $json;
     }
