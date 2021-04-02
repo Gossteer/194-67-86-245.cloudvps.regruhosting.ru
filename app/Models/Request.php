@@ -109,6 +109,8 @@ class Request extends Model
         $requestContent = json_decode($this->content, true);
 		$requestOutput = json_decode($this->output, true);
 
+        Log::info($requestContent);
+        Log::info($requestOutput);
         // if (isset($requestOutput)) {
         //     $requestOutput = [
         //         "citySrc" => "Москва",
@@ -150,6 +152,7 @@ class Request extends Model
 
 		//print_r($json);
 		//print_r(json_encode($json));
+        Log::info($json);
 
         return $json;
     }
