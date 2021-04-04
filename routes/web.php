@@ -28,3 +28,5 @@ Route::get('/get-request/{request_id}', 'RequestController@get_data');
 Route::post('/bot', 'VkGroupEventsListenerController@bot');
 
 Route::get('/test', 'TestController@test');
+
+Route::get('/price-calendar/{origin}{destination}', 'RequestController@priceCalendar');

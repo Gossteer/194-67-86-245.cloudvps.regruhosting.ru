@@ -16,8 +16,8 @@ class CreateTableUsersReceivedRequests extends Migration
         Schema::create('users_received_requests', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->nullable();
-	    $table->string('request_api_id')->nullable();
-	    $table->timestamps();
+            $table->string('request_api_id')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Request as RequestModel;
 use App\Models\Group;
+use Illuminate\Support\Facades\Http;
 
 class RequestController extends Controller
 {
@@ -37,12 +38,22 @@ class RequestController extends Controller
             'response' => 'ok'
         ]);
     }
-	
+
 	public function get_data($request_id) {
 		$request = RequestModel::find($request_id);
-		
+
 		return response()->json([
             'data' => $request
         ]);
 	}
+
+    public function priceCalendar(string $origin, string $destination)
+    {
+        return response()->json(Http::get('https://api.travelpayouts.com/v1/prices/calendar', [
+            'origin' => $origin,
+            'destination' => $destination,
+            'token' => config('app.token_calendar'),
+            'calendar_type' => 'departure_date'
+        ]));
+    }
 }
