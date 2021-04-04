@@ -47,13 +47,14 @@ class RequestController extends Controller
         ]);
 	}
 
-    public function priceCalendar(string $origin, string $destination)
+    public function priceCalendar(Request $request)
     {
-        return response()->json(Http::get('https://api.travelpayouts.com/v1/prices/calendar', [
-            'origin' => $origin,
-            'destination' => $destination,
-            'token' => config('app.token_calendar'),
+        return response()->json(Http::withHeaders([
+            'x-access-token' => config('app.token_calendar'),
+        ])->get('https://api.travelpayouts.com/v1/prices/calendar', [
+            'origin' => $request->origin,
+            'destination' => $request->destination,
             'calendar_type' => 'departure_date'
-        ]));
+        ])->json());
     }
 }

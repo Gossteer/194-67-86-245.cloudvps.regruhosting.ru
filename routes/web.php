@@ -29,4 +29,4 @@ Route::post('/bot', 'VkGroupEventsListenerController@bot');
 
 Route::get('/test', 'TestController@test');
 
-Route::get('/price-calendar/{origin}{destination}', 'RequestController@priceCalendar');
+Route::post('/price-calendar', 'RequestController@priceCalendar');
