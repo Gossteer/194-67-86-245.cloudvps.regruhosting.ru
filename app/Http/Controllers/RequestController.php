@@ -41,6 +41,9 @@ class RequestController extends Controller
 
 	public function get_data($request_id) {
 		$request = RequestModel::find($request_id);
+        $request['content'] = json_decode($request['content']);
+        $request['output'] = json_decode($request['output']);
+        $request['output']->config->content = json_decode($request['output']->config->content);
 
 		return response()->json([
             'data' => $request
