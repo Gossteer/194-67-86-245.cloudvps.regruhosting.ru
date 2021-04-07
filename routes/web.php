@@ -30,3 +30,4 @@ Route::post('/bot', 'VkGroupEventsListenerController@bot');
 Route::get('/test', 'TestController@test');
 
 Route::post('/price-calendar', 'RequestController@priceCalendar');
+Route::get('/request-aviabot/{id}', 'RequestController@requestAviabot');

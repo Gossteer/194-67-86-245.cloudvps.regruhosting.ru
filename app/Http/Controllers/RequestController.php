@@ -57,4 +57,15 @@ class RequestController extends Controller
             'calendar_type' => 'departure_date'
         ])->json());
     }
+
+    public function requestAviabot(int $id)
+    {
+        $response = Http::get('https://back.aviabot.app/get-request/' . $id)->json();
+
+        $response['data']['content'] = json_decode($response['data']['content']);
+        $response['data']['output'] = json_decode($response['data']['output']);
+        $response['data']['output']->config->content = json_decode($response['data']['output']->config->content);
+
+        return response()->json($response);
+    }
 }
