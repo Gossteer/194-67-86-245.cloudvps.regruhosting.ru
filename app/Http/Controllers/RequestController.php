@@ -41,9 +41,18 @@ class RequestController extends Controller
 
 	public function get_data($request_id) {
 		$request = RequestModel::find($request_id);
-        $request['content'] = json_decode($request['content']);
-        $request['output'] = json_decode($request['output']);
-        $request['output']->config->content = json_decode($request['output']->config->content);
+
+        if ($request['content'] ?? false) {
+            $request['content'] = json_decode($request['content']);
+        }
+
+        if ($request['output'] ?? false) {
+            $request['output'] = json_decode($request['output']);
+        }
+
+        if ($request['output']->config->content ?? false) {
+            $request['output']->config->content = json_decode($request['output']->config->content);
+        }
 
 		return response()->json([
             'data' => $request
