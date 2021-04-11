@@ -301,7 +301,7 @@ EOT;
             $fullUrl, self::$passengers[$passengers]
         ];
         $apiMessage = str_replace($healthy, $yummy, $apiMessage['content']);
-
+        Log::info($apiMessage);
         $message = <<<EOT
 $apiMessage
 EOT;

@@ -29,7 +29,7 @@ class UserCheapFlightsApiMessagesService
             Log::info('Search flights for user_id:' . $user->id);
             foreach ($request->getFlightsFromApi() as $flight) {
                 // \Log::info('Search flight '.$user->hasRequestReceived($flight['id']));
-                Log::info( $request->makeRequestMessage($flight));
+                $request->makeRequestMessage($flight)
                 if (!$user->hasRequestReceived($flight['id']) /* && $request->inRequestAllowableUpdatedDatesRadius($flight)*/) {
                     Log::info('has flights for user_id:' . $user->id);
                     $this->api->messagesSend(
