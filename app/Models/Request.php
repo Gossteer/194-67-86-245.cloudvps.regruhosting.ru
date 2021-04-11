@@ -301,7 +301,7 @@ EOT;
             $fullUrl, self::$passengers[$passengers]
         ];
         $apiMessage = str_replace($healthy, $yummy, $apiMessage['content']);
-        Log::info($apiMessage);
+
         $message = <<<EOT
 $apiMessage
 EOT;
@@ -309,7 +309,7 @@ EOT;
         $this->send_count = $this->send_count + 1;
         $this->save();
 
-        return $message;
+        return ['message' => $message, 'fullUrl' => $fullUrl];
     }
 
     public static function getAllByUserId($id)
