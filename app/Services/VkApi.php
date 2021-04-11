@@ -34,7 +34,6 @@ class VkApi
 
     public function prepareMessageData($data, $groupId, $message, $hasAttachment)
     {
-        Log::info($message);
         $arr = [
             'user_id' => $data['from_id'] ?? $data['user_id'],
             'group_id' => $groupId,
