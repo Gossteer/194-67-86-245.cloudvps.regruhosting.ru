@@ -29,8 +29,6 @@ class UserCheapFlightsApiMessagesService
             Log::info('Search flights for user_id:' . $user->id);
             foreach ($request->getFlightsFromApi() as $flight) {
                 // \Log::info('Search flight '.$user->hasRequestReceived($flight['id']));
-                $makeRequestMessage = $request->makeRequestMessage($flight);
-                Log::info($makeRequestMessage['fullUrl']);
                 if (!$user->hasRequestReceived($flight['id']) /* && $request->inRequestAllowableUpdatedDatesRadius($flight)*/) {
                     Log::info('has flights for user_id:' . $user->id);
                     $makeRequestMessage = $request->makeRequestMessage($flight);
@@ -38,6 +36,7 @@ class UserCheapFlightsApiMessagesService
                         ['user_id' => $user->id],
                         $makeRequestMessage['message'],
                         $request->group_id ?? getenv('MIX_MAIN_VK_PUBLIC_ID'),
+                        true,
                         $makeRequestMessage['fullUrl'],
                     );
                     $user->receivedRequest($flight['id']);

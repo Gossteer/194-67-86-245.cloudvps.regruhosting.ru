@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class VkApi
 {
@@ -15,7 +16,7 @@ class VkApi
         $this->client = new \GuzzleHttp\Client();
     }
 
-    public function messagesSend($data, $message, $groupId = null, $hasAttachment = true)
+    public function messagesSend($data, $message, $groupId = null, $hasAttachment = true, $fullUrl = null)
     {
         $user = User::query()->find($data['user_id']);
         $chat = $user->getChatOrCreateNew($groupId);
@@ -25,6 +26,24 @@ class VkApi
         }
 
         $this->prepareMessageData($data, $groupId, $message, $hasAttachment);
+
+        // if ($fullUrl) {
+        //     $keyboard = new stdClass();
+        //     $keyboard->one_time = false;
+        //     $keyboard->inline = true;
+
+        //     $buttons = new stdClass();
+        //     $buttons->action = [
+        //         'type' => "open_link",
+        //         'link' => '',
+        //         'label' => '',
+        //         'payload' => ''
+        //     ];
+
+        //     $keyboard->buttons[0] = [$buttons];
+
+        //     $this->params['keyboard'] = $keyboard;
+        // }
 
         return $this->call(
             'messages.send',
