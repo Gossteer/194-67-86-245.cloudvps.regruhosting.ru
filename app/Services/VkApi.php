@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class VkApi
 {
@@ -33,6 +34,7 @@ class VkApi
 
     public function prepareMessageData($data, $groupId, $message, $hasAttachment)
     {
+        Log::info($message);
         $arr = [
             'user_id' => $data['from_id'] ?? $data['user_id'],
             'group_id' => $groupId,
@@ -40,7 +42,7 @@ class VkApi
             'domain' => 'App',
             'message' => $message,
             'title' => 'Дешевые авиабилеты',
-            'dont_parse_links' => 0
+            'dont_parse_links' => 0,
         ];
 
         if ($hasAttachment) {
