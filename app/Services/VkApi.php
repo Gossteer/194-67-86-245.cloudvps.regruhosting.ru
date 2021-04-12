@@ -27,23 +27,23 @@ class VkApi
 
         $this->prepareMessageData($data, $groupId, $message, $hasAttachment);
 
-        // if ($fullUrl) {
-        //     $keyboard = new stdClass();
-        //     $keyboard->one_time = false;
-        //     $keyboard->inline = true;
+        if ($fullUrl) {
+            $keyboard = new stdClass();
+            $keyboard->one_time = false;
+            $keyboard->inline = true;
 
-        //     $buttons = new stdClass();
-        //     $buttons->action = [
-        //         'type' => "open_link",
-        //         'link' => '',
-        //         'label' => '',
-        //         'payload' => ''
-        //     ];
+            $buttons = new stdClass();
+            $buttons->action = [
+                'type' => 'open_link',
+                'link' => $fullUrl,
+                'label' => 'Проверить цену.',
+                'payload' => ''
+            ];
 
-        //     $keyboard->buttons[0] = [$buttons];
+            $keyboard->buttons[0] = [$buttons];
 
-        //     $this->params['keyboard'] = $keyboard;
-        // }
+            $this->params['keyboard'] = $keyboard;
+        }
 
         return $this->call(
             'messages.send',
