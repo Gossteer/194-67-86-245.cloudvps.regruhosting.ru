@@ -85,7 +85,7 @@ class VkApi
             ]
         );
 
-        //\Log::info('response' . $response->getBody()->getContents());
+        Log::info('response' . $response->getBody()->getContents());
         $result = json_decode($response->getBody()->getContents(), true);
 
         return $result['response'] ?? null;
