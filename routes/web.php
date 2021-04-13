@@ -40,7 +40,12 @@ Route::get('test', function () {
         'label' => '',
         'payload' => ''
     ];
-    $keyboard->buttons[0] = [$buttons];
+    $keyboard->buttons[0] = ['action' => [
+        'type' => "open_link",
+        'link' => '',
+        'label' => '',
+        'payload' => ''
+    ]];
 
 
     $lol['keyboard'] = $keyboard;
