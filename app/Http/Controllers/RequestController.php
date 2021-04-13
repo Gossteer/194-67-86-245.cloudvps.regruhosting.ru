@@ -80,4 +80,9 @@ class RequestController extends Controller
 
         return response()->json($response);
     }
+
+    public function searchTickets(Request $request)
+    {
+        return response()->json(['Piska']);
+    }
 }

@@ -22,6 +22,7 @@ Route::post('/save-tags', 'TagController@save');
 Route::post('/remove-tags', 'TagController@remove');
 
 Route::post('/get-requests', 'RequestController@all');
+Route::post('/search-tickets', 'RequestController@searchTickets');
 Route::post('/delete-request', 'RequestController@delete');
 Route::get('/get-request/{request_id}', 'RequestController@get_data');
 
