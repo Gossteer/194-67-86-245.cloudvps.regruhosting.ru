@@ -28,19 +28,18 @@ class VkApi
         $this->prepareMessageData($data, $groupId, $message, $hasAttachment);
 
         if ($fullUrl) {
-            $keyboard = new stdClass();
-            $keyboard->one_time = false;
-            $keyboard->inline = true;
+            $keyboard = [];
+            $keyboard["one_time"] = false;
+            $keyboard["inline"] = true;
 
-            $buttons = new stdClass();
-            $buttons->action = [
+            $button = []
+            $button["action"] = [
                 'type' => 'open_link',
                 'link' => $fullUrl,
                 'label' => 'Проверить цену.',
-                'payload' => ''
             ];
 
-            $keyboard->buttons[0] = [$buttons];
+            $keyboard["buttons"] = [$buttons];
 
             $this->params['keyboard'] = [
                 'one_time' => false,
