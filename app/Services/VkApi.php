@@ -39,7 +39,7 @@ class VkApi
                 'label' => 'Проверить цену.',
             ];
 
-            $keyboard["buttons"] = [$buttons];
+            $keyboard["buttons"] = [$button];
 
             $this->params['keyboard'] = [
                 'one_time' => false,
