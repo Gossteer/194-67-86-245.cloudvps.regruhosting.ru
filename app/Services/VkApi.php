@@ -40,14 +40,25 @@ class VkApi
                 'payload' => ''
             ];
 
-            $keyboard->buttons[0] = ['action' => [
-                'type' => 'open_link',
-                'link' => $fullUrl,
-                'label' => 'Проверить цену.',
-                'payload' => ''
-            ]];
+            $keyboard->buttons[0] = [$buttons];
 
-            $this->params['keyboard'] = $keyboard;
+            $this->params['keyboard'] = [
+                'one_time' => false,
+                'inline' => true,
+                'buttons' => [
+                    [
+                        [
+                            'action' => [
+                                'type' => "open_link",
+                                'link' => $fullUrl,
+                                'label' => 'Проверить цену.',
+                                'payload' => ''
+                            ]
+                        ]
+
+                    ]
+                ]
+            ];
         }
 
         return $this->call(
@@ -83,7 +94,7 @@ class VkApi
         $this->params['access_token'] = $accessToken;
         $this->params['v'] = getenv('VK_API_VERSION');
 
-        Log::info($this->params);
+        Log::info(json_encode($this->params));
 
         $response = $this->client->post(
             getenv('VK_API_ENDPOINT') . $method,

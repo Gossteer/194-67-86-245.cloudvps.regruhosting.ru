@@ -41,16 +41,28 @@ Route::get('test', function () {
         'label' => '',
         'payload' => ''
     ];
-    $keyboard->buttons[0] = ['action' => [
-        'type' => "open_link",
-        'link' => '',
-        'label' => '',
-        'payload' => ''
-    ]];
+    $keyboard->buttons[0] = [$buttons];
 
 
-    $lol['keyboard'] = $keyboard;
-    dd(json_encode($lol) );
+    $lol['keyboard'] = [
+        'one_time' => false,
+        'inline' => true,
+        'buttons' => [
+            [
+                [
+                    'action' => [
+                        'type' => "open_link",
+                        'link' => '',
+                        'label' => '',
+                        'payload' => ''
+                    ]
+                ]
+
+            ]
+        ]
+    ];
+    // $keyboard;
+    dd(json_encode($lol));
 });
 
 Route::get('/price-calendar', 'RequestController@priceCalendar');
