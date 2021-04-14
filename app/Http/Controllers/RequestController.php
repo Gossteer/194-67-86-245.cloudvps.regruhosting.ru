@@ -84,33 +84,32 @@ class RequestController extends Controller
 
     public function searchTickets(Request $request)
     {
-        $response = Http::post('http://api.travelpayouts.com/v1/flight_search', [
-            'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:1:0:0:{$request['date_dst']}:{$request['dst']['code']}:{$request['src']['code']}:{$request['date_src']}:{$request['src']['code']}:{$request['dst']['code']}:Y:{$request->ip()}"),
-            "marker" => "122890",
-            "host" => "back.aviabot.app",
-            "user_ip" => $request->ip(),
-            "locale" => "ru",
-            "trip_class" => "Y",
-            "passengers" => [
-                "adults" => 1,
-                "children" => 0,
-                "infants" => 0
-            ],
-            "segments" => [
-                [
-                    "origin" => $request['src']['code'],
-                    "destination" =>  $request['dst']['code'],
-                    "date" => $request['date_dst']
-                ],
-                [
-                    "origin" => $request['dst']['code'],
-                    "destination" => $request['src']['code'],
-                    "date" => $request['date_src']
-                ]
-            ]
-        ])->json();
         return response()->json([
-            'search_id' => $response['search_id']
+            'search_id' => Http::post('http://api.travelpayouts.com/v1/flight_search', [
+                'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:1:0:0:{$request['date_dst']}:{$request['dst']['code']}:{$request['src']['code']}:{$request['date_src']}:{$request['src']['code']}:{$request['dst']['code']}:Y:{$request->ip()}"),
+                "marker" => "122890",
+                "host" => "back.aviabot.app",
+                "user_ip" => $request->ip(),
+                "locale" => "ru",
+                "trip_class" => "Y",
+                "passengers" => [
+                    "adults" => 1,
+                    "children" => 0,
+                    "infants" => 0
+                ],
+                "segments" => [
+                    [
+                        "origin" => $request['src']['code'],
+                        "destination" =>  $request['dst']['code'],
+                        "date" => $request['date_dst']
+                    ],
+                    [
+                        "origin" => $request['dst']['code'],
+                        "destination" => $request['src']['code'],
+                        "date" => $request['date_src']
+                    ]
+                ]
+            ])->json()['search_id']
         ]);
     }
 }
