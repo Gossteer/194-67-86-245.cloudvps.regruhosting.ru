@@ -84,7 +84,7 @@ class RequestController extends Controller
 
     public function searchTickets(Request $request)
     {
-        $response = Http::post('http://api.travelpayouts.com/v1/flight_search', [
+        $response = Http::timeout(5)->post('http://api.travelpayouts.com/v1/flight_search', [
             'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:1:0:0:{$request['date_src']}:{$request['dst']['code']}:{$request['src']['code']}:{$request['date_dst']}:{$request['src']['code']}:{$request['dst']['code']}:Y:{$request->ip()}"),
             "marker" => "122890",
             "host" => "back.aviabot.app",
@@ -114,7 +114,10 @@ class RequestController extends Controller
             return response()->json($response['error'],$response->status());
         }
 
-        $response = Http::get('http://api.travelpayouts.com/v1/flight_search_results?uuid='.$response['search_id']);
+        $response = Http::timeout(20)->withHeaders([
+            'Accept-Encoding' => 'gzip, deflate, br',
+            'Connection' => 'keep-alive'
+        ])->get('http://api.travelpayouts.com/v1/flight_search_results', ['uuid'=>$response['search_id']]);
 
         if ($response->status() !== 200) {
             return response()->json($response['error'],$response->status());
