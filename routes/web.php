@@ -30,40 +30,40 @@ Route::post('/bot', 'VkGroupEventsListenerController@bot');
 
 Route::get('/test', 'TestController@test');
 
-Route::get('test', function () {
-    $keyboard = new stdClass();
-    $keyboard->one_time = false;
-    $keyboard->inline = true;
-    $buttons = new stdClass();
-    $buttons->action = [
-        'type' => "open_link",
-        'link' => '',
-        'label' => '',
-        'payload' => ''
-    ];
-    $keyboard->buttons[0] = [$buttons];
+// Route::get('test', function () {
+//     $keyboard = new stdClass();
+//     $keyboard->one_time = false;
+//     $keyboard->inline = true;
+//     $buttons = new stdClass();
+//     $buttons->action = [
+//         'type' => "open_link",
+//         'link' => '',
+//         'label' => '',
+//         'payload' => ''
+//     ];
+//     $keyboard->buttons[0] = [$buttons];
 
 
-    $lol['keyboard'] = [
-        'one_time' => false,
-        'inline' => true,
-        'buttons' => [
-            [
-                [
-                    'action' => [
-                        'type' => "open_link",
-                        'link' => '',
-                        'label' => '',
-                        'payload' => ''
-                    ]
-                ]
+//     $lol['keyboard'] = [
+//         'one_time' => false,
+//         'inline' => true,
+//         'buttons' => [
+//             [
+//                 [
+//                     'action' => [
+//                         'type' => "open_link",
+//                         'link' => '',
+//                         'label' => '',
+//                         'payload' => ''
+//                     ]
+//                 ]
 
-            ]
-        ]
-    ];
-    // $keyboard;
-    dd(json_encode($lol));
-});
+//             ]
+//         ]
+//     ];
+//     // $keyboard;
+//     dd(json_encode($lol));
+// });
 
 Route::get('/price-calendar', 'RequestController@priceCalendar');
 Route::get('/request-aviabot/{id}', 'RequestController@requestAviabot');
