@@ -108,9 +108,14 @@ class RequestController extends Controller
                     "date" => $request['date_dst']
                 ]
             ]
-        ])->json();
-        return response()->json([
-            'search_id' => $response['search_id'] ?? 'Ошибка: ' . $response['error'],
         ]);
+
+        if ($response->status() !== 200) {
+            return response()->json($response['error'],$response->status());
+        }
+
+        $response = Http::get('http://api.travelpayouts.com/v1/flight_search_results?uuid='.$response['search_id']);
+
+        return response()->json($response->json());
     }
 }
