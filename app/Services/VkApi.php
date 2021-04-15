@@ -27,7 +27,7 @@ class VkApi
 
         $this->prepareMessageData($data, $groupId, $message, $hasAttachment);
 
-        if ($fullUrl) {
+        // if ($fullUrl) {
             // $keyboard = [];
             // $keyboard["one_time"] = false;
             // $keyboard["inline"] = true;
@@ -41,24 +41,24 @@ class VkApi
 
             // $keyboard["buttons"] = [$button];
 
-            $this->params['keyboard'] = [
-                'one_time' => false,
-                'inline' => true,
-                'buttons' => [
-                    [
-                        [
-                            'action' => [
-                                'type' => "open_link",
-                                'link' => $fullUrl,
-                                'label' => 'Проверить цену.',
-                                'payload' => ''
-                            ]
-                        ]
+            // $this->params['keyboard'] = [
+            //     'one_time' => false,
+            //     'inline' => true,
+            //     'buttons' => [
+            //         [
+            //             [
+            //                 'action' => [
+            //                     'type' => "open_link",
+            //                     'link' => $fullUrl,
+            //                     'label' => 'Проверить цену.',
+            //                     'payload' => ''
+            //                 ]
+            //             ]
 
-                    ]
-                ]
-            ];
-        }
+            //         ]
+            //     ]
+            // ];
+        // }
 
         return $this->call(
             'messages.send',
