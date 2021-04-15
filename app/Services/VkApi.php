@@ -93,7 +93,7 @@ class VkApi
         $this->params['access_token'] = $accessToken;
         $this->params['v'] = getenv('VK_API_VERSION');
 
-        Log::info(json_encode($this->params));
+        // Log::info(json_encode($this->params));
 
         $response = $this->client->post(
             getenv('VK_API_ENDPOINT') . $method,
