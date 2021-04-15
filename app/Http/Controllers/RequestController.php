@@ -116,6 +116,10 @@ class RequestController extends Controller
 
         $response = Http::get('http://api.travelpayouts.com/v1/flight_search_results?uuid='.$response['search_id']);
 
+        if ($response->status() !== 200) {
+            return response()->json($response['error'],$response->status());
+        }
+
         return response()->json($response->json());
     }
 }
