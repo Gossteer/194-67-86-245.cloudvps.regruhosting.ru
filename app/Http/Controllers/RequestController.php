@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Request as RequestModel;
 use App\Models\Group;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
+
+use function GuzzleHttp\json_decode;
 
 class RequestController extends Controller
 {
@@ -114,25 +117,24 @@ class RequestController extends Controller
             return response()->json($response['error'],$response->status());
         }
 
-        $response_search = Http::timeout(20)->withHeaders([
-            'Accept-Encoding' => 'gzip, deflate, br',
-            'Connection' => 'keep-alive'
-        ])->get('http://api.travelpayouts.com/v1/flight_search_results', ['uuid'=>$response['search_id']]);
+        $client = new Client();
 
-        $response_search = Http::timeout(20)->withHeaders([
-            'Accept-Encoding' => 'gzip, deflate, br',
-            'Connection' => 'keep-alive'
-        ])->get('http://api.travelpayouts.com/v1/flight_search_results', ['uuid'=>$response['search_id']]);
+        $promise = $client->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid='.$response['search_id'], [
+            'timeout' => 180,
+            'read_timeout' => 180,
+            'connect_timeout' => 180,
+        ])->then(
+            function ($response) {
+                return $response->getBody();
+            }, function ($exception) {
+                return $exception->getMessage();
+            }
+        );
 
-        $response_search = Http::timeout(20)->withHeaders([
-            'Accept-Encoding' => 'gzip, deflate, br',
-            'Connection' => 'keep-alive'
-        ])->get('http://api.travelpayouts.com/v1/flight_search_results', ['uuid'=>$response['search_id']]);
+        sleep(7);
 
-        if ($response_search->status() !== 200) {
-            return response()->json($response_search['error'],$response_search->status());
-        }
+        $response_search = $promise->wait();
 
-        return response()->json($response_search->json());
+        return response()->json(json_decode($response_search->getContents()));
     }
 }
