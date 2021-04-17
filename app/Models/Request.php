@@ -309,7 +309,7 @@ EOT;
         $this->send_count = $this->send_count + 1;
         $this->save();
 
-        return ['message' => $message, 'fullUrl' => $fullUrl];
+        return $message;
     }
 
     public static function getAllByUserId($id)

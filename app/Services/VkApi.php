@@ -16,7 +16,7 @@ class VkApi
         $this->client = new \GuzzleHttp\Client();
     }
 
-    public function messagesSend($data, $message, $groupId = null, $hasAttachment = true, $fullUrl = null)
+    public function messagesSend($data, $message, $groupId = null, $hasAttachment = true)
     {
         $user = User::query()->find($data['user_id']);
         $chat = $user->getChatOrCreateNew($groupId);
@@ -26,39 +26,6 @@ class VkApi
         }
 
         $this->prepareMessageData($data, $groupId, $message, $hasAttachment);
-
-        // if ($fullUrl) {
-            // $keyboard = [];
-            // $keyboard["one_time"] = false;
-            // $keyboard["inline"] = true;
-
-            // $button = []
-            // $button["action"] = [
-            //     'type' => 'open_link',
-            //     'link' => $fullUrl,
-            //     'label' => 'Проверить цену.',
-            // ];
-
-            // $keyboard["buttons"] = [$button];
-
-            // $this->params['keyboard'] = [
-            //     'one_time' => false,
-            //     'inline' => true,
-            //     'buttons' => [
-            //         [
-            //             [
-            //                 'action' => [
-            //                     'type' => "open_link",
-            //                     'link' => $fullUrl,
-            //                     'label' => 'Проверить цену.',
-            //                     'payload' => ''
-            //                 ]
-            //             ]
-
-            //         ]
-            //     ]
-            // ];
-        // }
 
         return $this->call(
             'messages.send',

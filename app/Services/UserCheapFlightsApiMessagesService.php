@@ -31,13 +31,11 @@ class UserCheapFlightsApiMessagesService
                 // \Log::info('Search flight '.$user->hasRequestReceived($flight['id']));
                 if (!$user->hasRequestReceived($flight['id']) /* && $request->inRequestAllowableUpdatedDatesRadius($flight)*/) {
                     Log::info('has flights for user_id:' . $user->id);
-                    $makeRequestMessage = $request->makeRequestMessage($flight);
                     $this->api->messagesSend(
                         ['user_id' => $user->id],
-                        $makeRequestMessage['message'],
+                        $request->makeRequestMessage($flight),
                         $request->group_id ?? getenv('MIX_MAIN_VK_PUBLIC_ID'),
                         true,
-                        $makeRequestMessage['fullUrl'],
                     );
                     $user->receivedRequest($flight['id']);
                     sleep(1);
