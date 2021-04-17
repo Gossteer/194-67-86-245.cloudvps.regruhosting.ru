@@ -114,15 +114,25 @@ class RequestController extends Controller
             return response()->json($response['error'],$response->status());
         }
 
-        $response = Http::timeout(20)->withHeaders([
+        $response_search = Http::timeout(20)->withHeaders([
             'Accept-Encoding' => 'gzip, deflate, br',
             'Connection' => 'keep-alive'
         ])->get('http://api.travelpayouts.com/v1/flight_search_results', ['uuid'=>$response['search_id']]);
 
-        if ($response->status() !== 200) {
-            return response()->json($response['error'],$response->status());
+        $response_search = Http::timeout(20)->withHeaders([
+            'Accept-Encoding' => 'gzip, deflate, br',
+            'Connection' => 'keep-alive'
+        ])->get('http://api.travelpayouts.com/v1/flight_search_results', ['uuid'=>$response['search_id']]);
+
+        $response_search = Http::timeout(20)->withHeaders([
+            'Accept-Encoding' => 'gzip, deflate, br',
+            'Connection' => 'keep-alive'
+        ])->get('http://api.travelpayouts.com/v1/flight_search_results', ['uuid'=>$response['search_id']]);
+
+        if ($response_search->status() !== 200) {
+            return response()->json($response_search['error'],$response_search->status());
         }
 
-        return response()->json($response->json());
+        return response()->json($response_search->json());
     }
 }
