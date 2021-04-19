@@ -120,9 +120,9 @@ class RequestController extends Controller
         $client = new Client();
 
         $promise = $client->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid='.$response['search_id'], [
-            'timeout' => 180,
-            'read_timeout' => 180,
-            'connect_timeout' => 180,
+            'timeout' => 10,
+            'read_timeout' => 10,
+            'connect_timeout' => 10,
         ])->then(
             function ($response) {
                 return $response->getBody();
@@ -131,7 +131,7 @@ class RequestController extends Controller
             }
         );
 
-        sleep(7);
+        sleep(8);
 
         $response_search = $promise->wait();
 
