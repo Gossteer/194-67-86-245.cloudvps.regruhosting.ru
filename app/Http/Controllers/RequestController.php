@@ -87,6 +87,7 @@ class RequestController extends Controller
 
     public function searchTickets(Request $request)
     {
+        session_start();
         $response = Http::timeout(5)->post('http://api.travelpayouts.com/v1/flight_search', [
             'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:1:0:0:{$request['date_src']}:{$request['dst']['code']}:{$request['src']['code']}:{$request['date_dst']}:{$request['src']['code']}:{$request['dst']['code']}:Y:{$request->ip()}"),
             "marker" => "122890",
@@ -114,27 +115,33 @@ class RequestController extends Controller
         ]);
 
         if ($response->status() !== 200) {
-            return response()->json($response['error'],$response->status());
+            return response()->json($response['error'], $response->status());
         }
 
         $client = new Client();
 
-        $promise = $client->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid='.$response['search_id'], [
+        $response = $client->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid=' . $response['search_id'], [
             'timeout' => 10,
             'read_timeout' => 10,
             'connect_timeout' => 10,
         ])->then(
             function ($response) {
                 return $response->getBody();
-            }, function ($exception) {
+            },
+            function ($exception) {
                 return $exception->getMessage();
             }
         );
 
         sleep(8);
 
-        $response_search = $promise->wait();
+        $_SESSION['latestRequestTime'] = $response->wait()->getContents();
 
-        return response()->json(json_decode($response_search->getContents()));
+        // I can read/write to session
+
+        // close the session
+        session_write_close();
+
+        return response()->json(json_decode($_SESSION['latestRequestTime']) );
     }
 }
