@@ -87,6 +87,8 @@ class RequestController extends Controller
 
     public function searchTickets(Request $request)
     {
+        session_write_close();
+        set_time_limit(50);
         session_start();
         $response = Http::timeout(5)->post('http://api.travelpayouts.com/v1/flight_search', [
             'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:1:0:0:{$request['date_src']}:{$request['dst']['code']}:{$request['src']['code']}:{$request['date_dst']}:{$request['src']['code']}:{$request['dst']['code']}:Y:{$request->ip()}"),
