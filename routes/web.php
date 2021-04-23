@@ -67,3 +67,4 @@ Route::get('/test', 'TestController@test');
 
 Route::get('/price-calendar', 'RequestController@priceCalendar');
 Route::get('/request-aviabot/{id}', 'RequestController@requestAviabot');
+Route::post('/get-url', 'RequestController@getURL');

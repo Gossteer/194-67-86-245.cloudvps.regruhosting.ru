@@ -124,6 +124,8 @@ class RequestController extends Controller
 
         $client = new Client();
 
+        $_SESSION['search_id'] =  $response['search_id'];
+
         $response = $client->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid=' . $response['search_id'], [
             'timeout' => 10,
             'read_timeout' => 10,
@@ -139,13 +141,23 @@ class RequestController extends Controller
 
         sleep(8);
 
-        $_SESSION['latestRequestTime'] = $response->wait()->getContents();
+        $_SESSION['response_result'] = $response->wait()->getContents();
 
         // I can read/write to session
 
         // close the session
         session_write_close();
 
-        return response()->json(json_decode($_SESSION['latestRequestTime']) );
+        return response()->json([
+            'response_result' => json_decode($_SESSION['response_result']),
+            'search_id' => $_SESSION['search_id']
+            ]);
+    }
+
+    public function getURL(Request $request)
+    {
+        $response = Http::get('http://api.travelpayouts.com/v1/flight_searches/' . $request->search_id . '/clicks/' . $request->terms_url . '.json?marker=122890');
+
+        return response()->json($response->json());
     }
 }
