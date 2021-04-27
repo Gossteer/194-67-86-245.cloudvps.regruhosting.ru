@@ -102,11 +102,11 @@ class RequestController extends Controller
                 "host" => "back.aviabot.app",
                 "user_ip" => $request->ip(),
                 "locale" => "ru",
-                "trip_class" => "Y",
+                "trip_class" => $request['trip_class'] ?? "Y",
                 "passengers" => [
-                    "adults" => 1,
-                    "children" => 0,
-                    "infants" => 0
+                    "adults" => $request['passengers']['adults'] ?? 1,
+                    "children" => $request['passengers']['children'] ?? 0,
+                    "infants" => $request['passengers']['infants'] ?? 0
                 ],
                 "segments" => [
                     [
@@ -128,11 +128,11 @@ class RequestController extends Controller
                 "host" => "back.aviabot.app",
                 "user_ip" => $request->ip(),
                 "locale" => "ru",
-                "trip_class" => "Y",
+                "trip_class" => $request['trip_class'] ?? "Y",
                 "passengers" => [
-                    "adults" => 1,
-                    "children" => 0,
-                    "infants" => 0
+                    "adults" => $request['passengers']['adults'] ?? 1,
+                    "children" => $request['passengers']['children'] ?? 0,
+                    "infants" => $request['passengers']['infants'] ?? 0
                 ],
                 "segments" => [
                     [
