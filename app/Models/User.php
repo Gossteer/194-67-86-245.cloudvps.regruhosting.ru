@@ -56,7 +56,6 @@ class User extends Authenticatable
     public function getChatOrCreateNew($groupId)
     {
         $chat = null;
-
         if ($groupId) {
             $chat = $this->chats()->where([['chat_id', '=', $groupId]])->first();
         }

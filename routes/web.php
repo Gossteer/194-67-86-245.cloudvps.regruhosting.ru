@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\VkApi;
+
 Route::get('/', 'IndexController@index');
 Route::post('/allow-messages', 'IndexController@allowMessages');
 Route::post('/setup-confirmation', 'IndexController@setupConfirmation');
@@ -16,6 +18,13 @@ Route::get('/group_allowed/{user_id}/{group_id}', 'GroupController@group_allowed
 
 Route::post('/save-groups', 'GroupController@save');
 Route::post('/check-group-enable', 'GroupController@checkGroupEnable');
+
+Route::get('users/send/{user_id}', function ($user_id) {
+    $senSirvice = new VkApi();
+    $senSirvice->messagesSend(['user_id' => $user_id], 'Семён приветик!1! Напиши пожалуйста мне в тг, если это видишь', "192548341");
+
+    return $senSirvice;
+});
 
 Route::post('/get-tags', 'TagController@all');
 Route::post('/save-tags', 'TagController@save');

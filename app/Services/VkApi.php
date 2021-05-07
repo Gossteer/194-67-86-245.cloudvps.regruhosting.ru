@@ -18,6 +18,7 @@ class VkApi
 
     public function messagesSend($data, $message, $groupId = null, $hasAttachment = true)
     {
+
         $user = User::query()->find($data['user_id']);
         $chat = $user->getChatOrCreateNew($groupId);
         if (!$chat) {
