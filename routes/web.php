@@ -22,7 +22,7 @@ Route::post('/check-group-enable', 'GroupController@checkGroupEnable');
 Route::get('users/send/{user_id}', function ($user_id) {
     $senSirvice = new VkApi();
     $senSirvice->messagesSend(['user_id' => $user_id], 'Семён приветик!1! Напиши пожалуйста мне в тг, если это видишь', "192548341");
-
+    dd($senSirvice);
     return $senSirvice;
 });
 
