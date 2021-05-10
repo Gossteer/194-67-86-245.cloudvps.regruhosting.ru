@@ -36,7 +36,7 @@ Route::get('users/send/{user_id}', function ($user_id) {
             ],
         ]]
     ];
-    $senSirvice->messagesSend(['user_id' => $user_id], 'Семён приветик!1! Напиши пожалуйста мне в тг, если это видишь', getenv('MIX_MAIN_VK_PUBLIC_ID'), true, $keyboard);
+    $senSirvice->messagesSend(['user_id' => $user_id], 'Семён приветик!1! Напиши пожалуйста мне в тг, если это видишь', "192548341", true, $keyboard);
     dd($senSirvice);
     return $senSirvice;
 });
