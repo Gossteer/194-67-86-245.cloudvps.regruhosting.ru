@@ -21,7 +21,22 @@ Route::post('/check-group-enable', 'GroupController@checkGroupEnable');
 
 Route::get('users/send/{user_id}', function ($user_id) {
     $senSirvice = new VkApi();
-    $senSirvice->messagesSend(['user_id' => $user_id], 'Семён приветик!1! Напиши пожалуйста мне в тг, если это видишь', "192548341");
+    $keyboard = [
+        'one_time' => false,
+        'inline' => true,
+        "buttons" => [[
+            [
+                "action" => [
+                    'type' => "open_link",
+                    'link' => 'https://github.com/Gossteer/194-67-86-245.cloudvps.regruhosting.ru',
+                    "payload" => '{"button": "1"}',
+                    "label" => "Фрукты?"
+                ],
+                "color" => "default"
+            ],
+        ]]
+    ];
+    $senSirvice->messagesSend(['user_id' => $user_id], 'Семён приветик!1! Напиши пожалуйста мне в тг, если это видишь', getenv('MIX_MAIN_VK_PUBLIC_ID'), true, $keyboard);
     dd($senSirvice);
     return $senSirvice;
 });
@@ -39,40 +54,57 @@ Route::post('/bot', 'VkGroupEventsListenerController@bot');
 
 Route::get('/test', 'TestController@test');
 
-// Route::get('test', function () {
-//     $keyboard = new stdClass();
-//     $keyboard->one_time = false;
-//     $keyboard->inline = true;
-//     $buttons = new stdClass();
-//     $buttons->action = [
-//         'type' => "open_link",
-//         'link' => '',
-//         'label' => '',
-//         'payload' => ''
-//     ];
-//     $keyboard->buttons[0] = [$buttons];
+Route::get('testbutton', function () {
+    $keyboard = new stdClass();
+    $keyboard->one_time = false;
+    $keyboard->inline = true;
+    $buttons = new stdClass();
+    $buttons->action = [
+        'type' => "open_link",
+        'link' => '',
+        'label' => '',
+        'payload' => ''
+    ];
+    $keyboard->buttons[0] = [$buttons];
 
 
-//     $lol['keyboard'] = [
-//         'one_time' => false,
-//         'inline' => true,
-//         'buttons' => [
-//             [
-//                 [
-//                     'action' => [
-//                         'type' => "open_link",
-//                         'link' => '',
-//                         'label' => '',
-//                         'payload' => ''
-//                     ]
-//                 ]
+    $lol['keyboard'] = [
+        'one_time' => true,
+        'inline' => true,
+        'buttons' => [
+            [
+                [
+                    'action' => [
+                        'type' => "open_link",
+                        'link' => '',
+                        'label' => '',
+                        'payload' => ''
+                    ]
+                ]
 
-//             ]
-//         ]
-//     ];
-//     // $keyboard;
-//     dd(json_encode($lol));
-// });
+            ]
+        ]
+    ];
+
+    $keyboard = [
+        'one_time' => false,
+        'inline' => true,
+        "buttons" => [[
+            [
+                "action" => [
+                    'type' => "open_link",
+                    'link' => '',
+                    "payload" => '{"button": "1"}',
+                    "label" => "Фрукты?"
+                ],
+                "color" => "default"
+            ],
+        ]]
+    ];
+
+    // $keyboard;
+    dd(json_encode($keyboard, JSON_UNESCAPED_UNICODE), $keyboard);
+});
 
 Route::get('/price-calendar', 'RequestController@priceCalendar');
 Route::get('/request-aviabot/{id}', 'RequestController@requestAviabot');

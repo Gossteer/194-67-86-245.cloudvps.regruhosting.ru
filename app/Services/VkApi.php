@@ -16,7 +16,7 @@ class VkApi
         $this->client = new \GuzzleHttp\Client();
     }
 
-    public function messagesSend($data, $message, $groupId = null, $hasAttachment = true)
+    public function messagesSend($data, $message, $groupId = null, $hasAttachment = true, $keyboard = null)
     {
 
         $user = User::query()->find($data['user_id']);
@@ -26,7 +26,7 @@ class VkApi
             return;
         }
 
-        $this->prepareMessageData($data, $groupId, $message, $hasAttachment);
+        $this->prepareMessageData($data, $groupId, $message, $hasAttachment, $keyboard);
 
         return $this->call(
             'messages.send',
@@ -34,7 +34,7 @@ class VkApi
         );
     }
 
-    public function prepareMessageData($data, $groupId, $message, $hasAttachment)
+    public function prepareMessageData($data, $groupId, $message, $hasAttachment, $keyboard = null)
     {
         $arr = [
             'user_id' => $data['from_id'] ?? $data['user_id'],
@@ -45,6 +45,10 @@ class VkApi
             'title' => 'Дешевые авиабилеты',
             'dont_parse_links' => 0,
         ];
+
+        if (isset($keyboard)) {
+            $arr['keyboard'] = json_encode($keyboard, JSON_UNESCAPED_UNICODE);
+        }
 
         if ($hasAttachment) {
             $arr['attachment'] = 'https://www.aviasales.ru/';

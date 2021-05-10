@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserDataRequest;
 use App\Models\User;
 use App\Models\UserData;
+use App\Services\VkApi;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserDataController extends Controller
 {
     //public function store(Request $request, User $user, $key)
-	public function store(Request $request, $user_id, $key)
+	public function store(Request $request, $user_id, $key, VkApi $vkApi)
     {
         $value = $request->get('value');
 
@@ -27,6 +28,9 @@ class UserDataController extends Controller
                 'key' => $key,
                 'value' => json_encode($value),
             ]);
+
+            // $vkApi->messagesSend(['user_id' => $user->id], '')
+
             return response()->noContent(Response::HTTP_CREATED);
         }
     }
