@@ -31,12 +31,11 @@ Route::get('users/send/{user_id}', function ($user_id) {
                     'link' => 'https://github.com/Gossteer/194-67-86-245.cloudvps.regruhosting.ru',
                     // "payload" => '{"button": "1"}',
                     "label" => "Фрукты?"
-                ],
-                "color" => "default"
+                ]
             ],
         ]]
     ];
-    $senSirvice->messagesSend(['user_id' => $user_id], 'Семён приветик!1! Напиши пожалуйста мне в тг, если это видишь', "192548341", true, $keyboard);
+    $senSirvice->messagesSend(['user_id' => $user_id], 'Семён приветик!1! Напиши пожалуйста мне в тг, если это видишь', getenv('MIX_MAIN_VK_PUBLIC_ID'), true, $keyboard);
     dd($senSirvice);
     return $senSirvice;
 });
