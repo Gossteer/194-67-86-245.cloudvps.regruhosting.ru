@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
@@ -182,7 +183,7 @@ class Request extends Model
             ]
         );
 
-        \Log::info('Found ' . count(json_decode($response->getBody(), true)));
+        Log::info('Found ' . count(json_decode($response->getBody(), true)));
 
         return json_decode($response->getBody(), true);
     }
@@ -315,5 +316,13 @@ EOT;
     public static function getAllByUserId($id)
     {
         return self::where(['user_id' => $id])->get();
+    }
+
+    public function getUrl($item)
+    {
+        $output = json_decode($this->output, true);
+        $currencyForUrl = isset($output['currencyForUrl']) ? $output['currencyForUrl'] : "RUB";
+        $passengers = isset($output['passengers']) ? $output['passengers'] : "url";
+        return $item['localizedInfos'][$currencyForUrl][$passengers] ?? null;
     }
 }

@@ -29,7 +29,6 @@ Route::get('users/send/{user_id}', function ($user_id) {
                 "action" => [
                     'type' => "open_link",
                     'link' => 'https://github.com/Gossteer/194-67-86-245.cloudvps.regruhosting.ru',
-                    // "payload" => '{"button": "1"}',
                     "label" => "Фрукты?"
                 ]
             ],

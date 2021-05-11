@@ -99,7 +99,8 @@ class UserControllerTest extends TestCase
                 $this->api->messagesSend(
                     ['user_id' => $user->id],
                     $request->makeRequestMessage($flight),
-                    getenv('MIX_MAIN_VK_PUBLIC_ID')
+                    getenv('MIX_MAIN_VK_PUBLIC_ID'),
+                    $this->getKeyboard($request->getUrl($flight))
                 );
                 $user->receivedRequest($flight['id']);
             }
@@ -107,5 +108,25 @@ class UserControllerTest extends TestCase
 
         $this->assertIsObject($request);
     }
-}
 
+    private function getKeyboard($url = null)
+    {
+        if (isset($url)) {
+            return [
+                'one_time' => false,
+                'inline' => true,
+                "buttons" => [[
+                    [
+                        "action" => [
+                            'type' => "open_link",
+                            'link' => $url,
+                            "label" => "Проверить цену"
+                        ]
+                    ],
+                ]]
+            ];
+        }
+
+        return null;
+    }
+}
