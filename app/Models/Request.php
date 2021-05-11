@@ -257,9 +257,9 @@ class Request extends Model
         $tempSummary = $item['temp']['summary'];
 
         $updated = $item['updated'];
-        $currencyForUrl = isset($output['currencyForUrl']) ? $output['currencyForUrl'] : "RUB";
+        // $currencyForUrl = isset($output['currencyForUrl']) ? $output['currencyForUrl'] : "RUB";
         $passengers = isset($output['passengers']) ? $output['passengers'] : "url";
-        $fullUrl = $item['localizedInfos'][$currencyForUrl][$passengers];
+        // $fullUrl = $item['localizedInfos'][$currencyForUrl][$passengers];
         $vkAppId = getenv('VK_APP_ID');
 
         if (!empty($days)) {
@@ -279,6 +279,16 @@ EOT;
 
         $apiMessage = Message::where(['name' => 'api_text'])->first();
 
+        // $healthy = [
+        //     '[[srcCity]]', '[[srcCountry]]', '[[arrow]]',
+        //     '[[dstCity]]', '[[dstCountry]]', '[[dates]]',
+        //     '[[price]]', '[[dstCity]]',
+        //     '[[oldPrice]]', '[[discount]]', '[[footer]]',
+        //     '[[tempMin]]', '[[tempMax]]', '[[vkAppId]]',
+        //     '[[updated:d]]', '[[updated:g]]', '[[tempSummary]]',
+        //     '[[url]]', '[[passengers]]'
+        // ];
+
         $healthy = [
             '[[srcCity]]', '[[srcCountry]]', '[[arrow]]',
             '[[dstCity]]', '[[dstCountry]]', '[[dates]]',
@@ -286,12 +296,21 @@ EOT;
             '[[oldPrice]]', '[[discount]]', '[[footer]]',
             '[[tempMin]]', '[[tempMax]]', '[[vkAppId]]',
             '[[updated:d]]', '[[updated:g]]', '[[tempSummary]]',
-            '[[url]]', '[[passengers]]'
+            '[[passengers]]'
         ];
 
         $updated = date_create($updated);
         $updatedG = date_format($updated, "Y-m-d H:i:s");
         $updatedD = explode(' ', $updatedG)[0];
+        // $yummy = [
+        //     $srcCity, $srcCountry, $arrow,
+        //     $dstCity, $dstCountry, $dates,
+        //     $price, $dstCity,
+        //     $oldPrice, $discount, $footer,
+        //     $tempMin, $tempMax, $vkAppId,
+        //     $updatedD, $updatedG, $tempSummary,
+        //     $fullUrl, self::$passengers[$passengers]
+        // ];
         $yummy = [
             $srcCity, $srcCountry, $arrow,
             $dstCity, $dstCountry, $dates,
@@ -299,7 +318,7 @@ EOT;
             $oldPrice, $discount, $footer,
             $tempMin, $tempMax, $vkAppId,
             $updatedD, $updatedG, $tempSummary,
-            $fullUrl, self::$passengers[$passengers]
+            self::$passengers[$passengers]
         ];
         $apiMessage = str_replace($healthy, $yummy, $apiMessage['content']);
 
