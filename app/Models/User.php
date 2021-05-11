@@ -96,7 +96,7 @@ class User extends Authenticatable
         $requestModel->updated_at = Carbon::now()->subYears(1);
         $requestModel->timestamps = false;
         $requestModel->group_id = $request->post('group_id');
-        $requestModel->send_count = $request->send_count ?? $requestModel->send_count;
+        $requestModel->send_count = $request->send_count ?? $requestModel->send_count ?? 0;
 
         return $user->requests()->save($requestModel);
     }
