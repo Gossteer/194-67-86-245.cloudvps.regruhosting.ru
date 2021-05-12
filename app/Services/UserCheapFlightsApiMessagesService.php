@@ -74,18 +74,9 @@ class UserCheapFlightsApiMessagesService
         return null;
     }
 
-    // private function getErrorForGroup(array $errors = []): array
-    // {
-    //     return array_filter($errors, function ($key, $value) use(&$errors)
-    //     {
-    //         if (in_array($value, $errors)) {
-    //             unset($errors[$key]);
-    //         }
-    //     });
-    // }
-
-    public function sendError(array $errors)
+    public function sendError(array $errors = [])
     {
+        $error_912 = [];
         foreach ($errors as $key => $value) {
             if (isset($value['error_code']) and isset($value['request_params'][3]['value']) and $value['error_code'] == 912) {
                 $error_912[$key] = $value;
@@ -93,7 +84,6 @@ class UserCheapFlightsApiMessagesService
         }
 
         if ($error_912) {
-
             $text = '';
             foreach ($error_912 as $key => $value) {
                 $text .=  "Включите пожалуйста возможности ботов в группе: https://vk.com/public" . $value . "\n";
@@ -109,4 +99,14 @@ class UserCheapFlightsApiMessagesService
             }
         }
     }
+
+    // private function getErrorForGroup(array $errors = []): array
+    // {
+    //     return array_filter($errors, function ($key, $value) use(&$errors)
+    //     {
+    //         if (in_array($value, $errors)) {
+    //             unset($errors[$key]);
+    //         }
+    //     });
+    // }
 }
