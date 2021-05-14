@@ -258,8 +258,8 @@ class Request extends Model
 
         $updated = $item['updated'];
         // $currencyForUrl = isset($output['currencyForUrl']) ? $output['currencyForUrl'] : "RUB";
-        $passengers = isset($output['passengers']) ? $output['passengers'] : "url";
-        $fullUrl = '';
+        // $passengers = isset($output['passengers']) ? $output['passengers'] : "url";
+        // $fullUrl = '';
         $vkAppId = getenv('VK_APP_ID');
 
         if (!empty($days)) {
@@ -275,7 +275,7 @@ EOT;
         }
 
         $imgApiArr = array_pop($item['dstImages']);
-        $imgSrc = getenv('API_URL') . $imgApiArr['url'];
+        // $imgSrc = getenv('API_URL') . $imgApiArr['url'];
 
         $apiMessage = Message::where(['name' => 'api_text'])->first();
 
@@ -286,8 +286,17 @@ EOT;
             '[[oldPrice]]', '[[discount]]', '[[footer]]',
             '[[tempMin]]', '[[tempMax]]', '[[vkAppId]]',
             '[[updated:d]]', '[[updated:g]]', '[[tempSummary]]',
-            '[[url]]', '[[passengers]]'
         ];
+
+//         ✈️  [[srcCity]] ([[srcCountry]]) [[arrow]] [[dstCity]] ([[dstCountry]])
+// &#128197; [[dates]]
+// &#8618; [[footer]]
+// &#9203; Цена [[price]]
+// &#9786; Обычная цена [[oldPrice]], выгода [[discount]]%
+// Проверь цену сейчас для [[passengers]]
+// [[url]]
+// &#9728; Погода в день прилета &#9728; [[tempMax]]°, &#127771; [[tempMin]]° [[tempSummary]]
+// Билет найден [[updated:d]]
 
         $updated = date_create($updated);
         $updatedG = date_format($updated, "Y-m-d H:i:s");
@@ -299,7 +308,6 @@ EOT;
             $oldPrice, $discount, $footer,
             $tempMin, $tempMax, $vkAppId,
             $updatedD, $updatedG, $tempSummary,
-            $fullUrl, self::$passengers[$passengers]
         ];
 
         $apiMessage = str_replace($healthy, $yummy, $apiMessage['content']);
