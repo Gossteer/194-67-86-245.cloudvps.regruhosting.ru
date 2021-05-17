@@ -274,7 +274,7 @@ EOT;
             $arrow = '→';
         }
 
-        $imgApiArr = array_pop($item['dstImages']);
+        // $imgApiArr = array_pop($item['dstImages']);
         // $imgSrc = getenv('API_URL') . $imgApiArr['url'];
 
         $apiMessage = Message::where(['name' => 'api_text'])->first();

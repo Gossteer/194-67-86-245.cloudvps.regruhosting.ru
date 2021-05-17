@@ -177,13 +177,21 @@ class RequestController extends Controller
 
         $_SESSION['response_result'] = $response->wait()->getContents();
 
-        // I can read/write to session
-
-        // close the session
         session_write_close();
 
+        $response_result = json_decode($_SESSION['response_result'], true);
+
+        usort($response_result, function ($value, $value_next) {
+            if (isset($value['filters_boundary']['price']['min'], $value_next['filters_boundary']['price']['min'])) {
+                if ($value['filters_boundary']['price']['min'] == $value_next['filters_boundary']['price']['min']) {
+                    return 0;
+                }
+                return ($value['filters_boundary']['price']['min'] < $value_next['filters_boundary']['price']['min']) ? -1 : 1;
+            }
+        });
+
         return response()->json([
-            'response_result' => json_decode($_SESSION['response_result']),
+            'response_result' => $response_result,
             'search_id' => $_SESSION['search_id']
             ]);
     }
