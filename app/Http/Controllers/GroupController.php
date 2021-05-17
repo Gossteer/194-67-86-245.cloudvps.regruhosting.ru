@@ -26,12 +26,12 @@ class GroupController extends Controller
 				}
 			}
         }
-		
+
 		return response()->json([
             'isAllowed' => $isAllowed
         ]);
 	}
-	
+
     public function save(Request $request)
     {
         $userId = $request->post('user_id');
