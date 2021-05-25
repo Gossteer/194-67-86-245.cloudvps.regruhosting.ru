@@ -22,7 +22,7 @@ class VkApi
         $user = User::query()->find($data['user_id']);
         $chat = $user->getChatOrCreateNew($groupId);
         if (!$chat) {
-            //\Log::error('Token not found for ' . $groupId, $data);
+            Log::error('Token not found for ' . $groupId, $data);
             return;
         }
 
