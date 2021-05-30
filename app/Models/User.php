@@ -7,6 +7,7 @@ use App\Models\UserData;
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
@@ -65,7 +66,7 @@ class User extends Authenticatable
             if ($chat) {
                 $this->chats()->save($chat);
             } else {
-                \Log::error("Please create chat for {$groupId} in admin panel");
+                Log::error("Please create chat for {$groupId} in admin panel");
                 //throw new UserException("Please create chat for {$groupId} in admin panel");
             }
         }

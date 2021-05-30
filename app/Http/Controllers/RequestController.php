@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Request as RequestModel;
 use App\Models\Group;
+use App\Services\VkApi;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 
@@ -201,5 +202,14 @@ class RequestController extends Controller
         $response = Http::get('http://api.travelpayouts.com/v1/flight_searches/' . $request->search_id . '/clicks/' . $request->terms_url . '.json?marker=122890');
 
         return response()->json($response->json());
+    }
+
+    public function sendFirstSearchTickets(Request $request, VkApi $vk_api)
+    {
+        foreach ($request->bullets as $key => $bullet) {
+            $response[] = $vk_api->messagesSend(['user_id' => $request->user_id], 'Я тестовый тест, тесто тест погоняет', env('SEND_FIRST_SEARCH_VK_PUBLIC_ID', '204613902'), false);
+        }
+
+        return response()->json($response ?? []);
     }
 }

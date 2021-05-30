@@ -9,6 +9,7 @@ Route::get('/price-calendar', 'RequestController@priceCalendar'); //Календ
 Route::get('/request-aviabot/{id}', 'RequestController@requestAviabot'); //Непомню для чего
 Route::post('/get-url', 'RequestController@getURL'); //Получение ссылки на билет (работает в связке с поиском в реальном времени)
 Route::post('/search-tickets', 'RequestController@searchTickets'); //Поиск билетов в 'реальном времени'
+Route::post('/send-first-search-tickets', 'RequestController@sendFirstSearchTickets'); // Отправка n-первых билетов в личные сообщения пользователя
 Route::post('/delete-request', 'RequestController@delete'); //Удаление подписки
 Route::post('/get-cheapest-ticket', 'IndexController@getCheapestTicket'); //Получение самых дешёвых билетов
 Route::post('/save-chat', 'ChatController@save'); //Создание чата (хз что это)
@@ -86,6 +87,7 @@ Route::get('testbutton', function () {
     dd(json_encode($keyboard, JSON_UNESCAPED_UNICODE), $keyboard);
 });
 Route::get('users/send/{user_id}', function ($user_id) {
+    //382960669
     $senSirvice = new VkApi();
     $keyboard = [
         'one_time' => false,
