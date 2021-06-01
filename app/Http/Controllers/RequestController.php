@@ -56,7 +56,7 @@ class RequestController extends Controller
         }
 
         if ($request['output']->config->content ?? false) {
-            $request['output']->config->content = json_decode($request['output']->config->content);
+            $request['output']['config']['content'] = json_decode($request['output']['config']['content']);
         }
 
         return response()->json([
