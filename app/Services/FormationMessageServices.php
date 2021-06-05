@@ -30,7 +30,7 @@ class FormationMessageServices
         return str_replace($this->healthy, $this->yummy, $apiMessage->content);
     }
 
-    public function makeRequestKeyboard(bool $one_time = false, bool $inline = false, array $buttons): string
+    public function makeRequestKeyboard(bool $one_time = false, bool $inline = false, array $buttons): array
     {
         foreach ($buttons as $group => $value) {
             $this->buttons[$group][] = $this->getActionForButtons($group, $value);
@@ -40,11 +40,11 @@ class FormationMessageServices
             $keyboard_buttons[] = $button;
         }
 
-        return json_encode([
+        return [
             'one_time' => $one_time,
             'inline' => $inline,
             "buttons" => $keyboard_buttons
-        ], JSON_UNESCAPED_UNICODE);
+        ];
     }
 
     public function sendFirstSearchTickets(array $src, array $dst, array $bullets, array $airlines, string $search_id): array
