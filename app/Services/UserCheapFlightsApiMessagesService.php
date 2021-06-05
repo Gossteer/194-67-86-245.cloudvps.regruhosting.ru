@@ -59,15 +59,17 @@ class UserCheapFlightsApiMessagesService
             return [
                 'one_time' => false,
                 'inline' => true,
-                "buttons" => [[
+                "buttons" => [
                     [
-                        "action" => [
-                            'type' => "open_link",
-                            'link' => $url,
-                            "label" => "Проверить цену"
-                        ]
-                    ],
-                ]]
+                        [
+                            "action" => [
+                                'type' => "open_link",
+                                'link' => $url,
+                                "label" => "Проверить цену"
+                            ]
+                        ],
+                    ]
+                ]
             ];
         }
 

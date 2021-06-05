@@ -264,7 +264,7 @@ class Request extends Model
 
         if (!empty($days)) {
             $dates = <<<EOT
-$srcDt - $dstDt на $days дн., $srcDayOfWeek$dstDayOfWeek
+$srcDt - $dstDt на $days дн., $srcDayOfWeek $dstDayOfWeek
 EOT;
             $arrow = '⇄';
         } else {

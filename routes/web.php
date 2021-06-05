@@ -87,6 +87,10 @@ Route::get('testbutton', function () {
     dd(json_encode($keyboard, JSON_UNESCAPED_UNICODE), $keyboard);
 });
 Route::get('users/send/{user_id}', function ($user_id) {
+
+    dd(date('d.m.Y', strtotime('2021-06-20')));
+
+
     //382960669
     $senSirvice = new VkApi();
     $keyboard = [

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Request as RequestModel;
 use App\Models\Group;
+use App\Services\FormationMessageServices;
+use App\Services\TravelPayoutsServices;
 use App\Services\VkApi;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
@@ -55,20 +57,18 @@ class RequestController extends Controller
             $request['output'] = json_decode($request['output']);
         }
 
+        // if ($request['output']->config->content ?? false) {
+        //     $request['output']->config->content = json_decode($request['output']->config->content);
+        // }
+
         return response()->json([
             'data' => $request
         ]);
     }
 
-    public function priceCalendar(Request $request)
+    public function priceCalendar(Request $request, TravelPayoutsServices $travel_payouts_services)
     {
-        return response()->json(Http::withHeaders([
-            'x-access-token' => config('app.token_calendar'),
-        ])->get('https://api.travelpayouts.com/v1/prices/calendar', [
-            'origin' => $request->origin,
-            'destination' => $request->destination,
-            'calendar_type' => 'departure_date'
-        ])->json());
+        return response()->json($travel_payouts_services->priceCalendar($request->origin, $request->destination));
     }
 
     public function requestAviabot(int $id)
@@ -77,133 +77,30 @@ class RequestController extends Controller
 
         $response['data']['content'] = json_decode($response['data']['content']);
         $response['data']['output'] = json_decode($response['data']['output']);
-        $response['data']['output']->config->content = json_decode($response['data']['output']->config->content);
+
+        if ($response['data']['output']->config->content ?? false) {
+            $response['data']['output']->config->content = json_decode($response['data']['output']->config->content);
+        }
 
         return response()->json($response);
     }
 
-    public function searchTickets(Request $request)
+    public function searchTickets(Request $request, TravelPayoutsServices $travel_payouts_services)
     {
-        session_write_close();
-
-        session_start();
-        set_time_limit(50);
-        ini_set('memory_limit', '-1');
-
-        $date_dst = $request['date_dst'] ?? null;
-        $trip_class = $request['trip_class'] ?? "Y";
-        $passengers = [
-            'adults' => $request['passengers']['adults'] ?? 1,
-            'children' => $request['passengers']['children'] ?? 0,
-            'infants' => $request['passengers']['infants'] ?? 0,
-        ];
-
-        if ($date_dst) {
-            $response = Http::timeout(5)->post('http://api.travelpayouts.com/v1/flight_search', [
-                'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:{$passengers['adults']}:{$passengers['children']}:{$passengers['infants']}:{$request['date_src']}:{$request['dst']['code']}:{$request['src']['code']}:$date_dst:{$request['src']['code']}:{$request['dst']['code']}:$trip_class:{$request->ip()}"),
-                "marker" => "122890",
-                "host" => "back.aviabot.app",
-                "user_ip" => $request->ip(),
-                "locale" => "ru",
-                "trip_class" => $request['trip_class'] ?? "Y",
-                "passengers" => [
-                    "adults" => $request['passengers']['adults'] ?? 1,
-                    "children" => $request['passengers']['children'] ?? 0,
-                    "infants" => $request['passengers']['infants'] ?? 0
-                ],
-                "segments" => [
-                    [
-                        "origin" => $request['src']['code'],
-                        "destination" =>  $request['dst']['code'],
-                        "date" => $request['date_src']
-                    ],
-                    [
-                        "origin" => $request['dst']['code'],
-                        "destination" => $request['src']['code'],
-                        "date" => $date_dst
-                    ]
-                ]
-            ]);
-        } else {
-            $response = Http::timeout(5)->post('http://api.travelpayouts.com/v1/flight_search', [
-                'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:{$passengers['adults']}:{$passengers['children']}:{$passengers['infants']}:{$request['date_src']}:{$request['dst']['code']}:{$request['src']['code']}:$trip_class:{$request->ip()}"),
-                "marker" => "122890",
-                "host" => "back.aviabot.app",
-                "user_ip" => $request->ip(),
-                "locale" => "ru",
-                "trip_class" => $request['trip_class'] ?? "Y",
-                "passengers" => [
-                    "adults" => $request['passengers']['adults'] ?? 1,
-                    "children" => $request['passengers']['children'] ?? 0,
-                    "infants" => $request['passengers']['infants'] ?? 0
-                ],
-                "segments" => [
-                    [
-                        "origin" => $request['src']['code'],
-                        "destination" =>  $request['dst']['code'],
-                        "date" => $request['date_src']
-                    ]
-                ]
-            ]);
-        }
-
-
-
-        if ($response->status() !== 200) {
-            return response()->json($response['error'], $response->status());
-        }
-
-        $client = new Client();
-
-        $_SESSION['search_id'] =  $response['search_id'];
-
-        $response = $client->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid=' . $response['search_id'], [
-            'timeout' => 10,
-            'read_timeout' => 10,
-            'connect_timeout' => 10,
-        ])->then(
-            function ($response) {
-                return $response->getBody();
-            },
-            function ($exception) {
-                return $exception->getMessage();
-            }
-        );
-
-        sleep(8);
-
-        $_SESSION['response_result'] = $response->wait()->getContents();
-
-        session_write_close();
-
-        $response_result = json_decode($_SESSION['response_result'], true);
-
-        usort($response_result, function ($value, $value_next) {
-            if (isset($value['filters_boundary']['price']['min'], $value_next['filters_boundary']['price']['min'])) {
-                if ($value['filters_boundary']['price']['min'] == $value_next['filters_boundary']['price']['min']) {
-                    return 0;
-                }
-                return ($value['filters_boundary']['price']['min'] < $value_next['filters_boundary']['price']['min']) ? -1 : 1;
-            }
-        });
-
-        return response()->json([
-            'response_result' => $response_result,
-            'search_id' => $_SESSION['search_id']
-            ]);
+        return response()->json($travel_payouts_services->searchTickets($request));
     }
 
-    public function getURL(Request $request)
+    public function getURL(Request $request, TravelPayoutsServices $travel_payouts_services)
     {
-        $response = Http::get('http://api.travelpayouts.com/v1/flight_searches/' . $request->search_id . '/clicks/' . $request->terms_url . '.json?marker=122890');
-
-        return response()->json($response->json());
+        return response()->json($travel_payouts_services->getURL($request->search_id, $request->terms_url) ?? []);
     }
 
-    public function sendFirstSearchTickets(Request $request, VkApi $vk_api)
+    public function sendFirstSearchTickets(Request $request, VkApi $vk_api, FormationMessageServices $formation_message_services)
     {
-        foreach ($request->bullets as $key => $bullet) {
-            $response[] = $vk_api->messagesSend(['user_id' => $request->user_id], 'Я тестовый тест, тесто тест погоняет', env('SEND_FIRST_SEARCH_VK_PUBLIC_ID', '204613902'), false);
+        $messages = $formation_message_services->sendFirstSearchTickets($request->src, $request->dst, $request->bullets, [], $request->search_id);
+
+        foreach ($messages as $key => $message) {
+            $response[] = $vk_api->messagesSend(['user_id' => $request->user_id], $message['message'], env('SEND_FIRST_SEARCH_VK_PUBLIC_ID', '204613902'), false, $message['keyboard']);
         }
 
         return response()->json($response ?? []);
