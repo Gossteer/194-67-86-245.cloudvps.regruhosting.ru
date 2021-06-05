@@ -98,7 +98,7 @@ class RequestController extends Controller
     public function sendFirstSearchTickets(Request $request, VkApi $vk_api, FormationMessageServices $formation_message_services)
     {
         $messages = $formation_message_services->sendFirstSearchTickets($request->src, $request->dst, $request->bullets, $request->airlines, $request->search_id);
-        dd($messages);
+
         foreach ($messages as $key => $message) {
             $response[] = $vk_api->messagesSend(['user_id' => $request->user_id], $message['message'], env('SEND_FIRST_SEARCH_VK_PUBLIC_ID', '204613902'), false, $message['keyboard']);
         }
