@@ -71,16 +71,22 @@ class FormationMessageServices
             $data['updatedD'] = date('d.m.Y');
 
             $response[$key]['message'] = $this->makeRequestMessage($data, 'api_send_tickets');
-            if ($url = (json_decode($this->travel_payouts_services->getURL($search_id, $terms['url']), true)['url'] ?? null)) {
-                $response[$key]['keyboard'] = $this->makeRequestKeyboard(false, true, [
-                    'open_link' => [
-                        'link' => $url,
-                        'label' => 'Проверить цену'
-                    ]
-                ]);
-            } else {
-                $response[$key]['keyboard'] = $url;
-            }
+            // if ($url = (json_decode($this->travel_payouts_services->getURL($search_id, $terms['url']), true)['url'] ?? null)) {
+            //     $response[$key]['keyboard'] = $this->makeRequestKeyboard(false, true, [
+            //         'open_link' => [
+            //             'link' => $url,
+            //             'label' => 'Проверить цену'
+            //         ]
+            //     ]);
+            // } else {
+            //     $response[$key]['keyboard'] = $url;
+            // }
+            $response[$key]['keyboard'] = $this->makeRequestKeyboard(false, true, [
+                'open_link' => [
+                    'link' => 'https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/',
+                    'label' => 'Проверить цену'
+                ]
+            ]);
         }
 
         return $response;
