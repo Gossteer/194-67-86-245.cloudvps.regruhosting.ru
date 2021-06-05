@@ -11,7 +11,6 @@ class FormationMessageServices
 {
     private array $healthy;
     private array $yummy;
-    private array $buttons;
     private TravelPayoutsServices $travel_payouts_services;
 
     public function __construct(TravelPayoutsServices $travel_payouts_services)
@@ -35,10 +34,10 @@ class FormationMessageServices
     {
         try {
             foreach ($buttons as $group => $value) {
-                $this->buttons[$group][] = $this->getActionForButtons($group, $value);
+                $group_buttons[$group][] = $this->getActionForButtons($group, $value);
             }
 
-            foreach ($this->buttons as $group => $button) {
+            foreach ($group_buttons as $group => $button) {
                 $keyboard_buttons[] = $button;
             }
 

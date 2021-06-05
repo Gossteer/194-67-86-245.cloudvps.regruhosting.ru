@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Message;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function save(Request $request)
+    /**
+     * Форматирование текстовых сообщений на отправку пользователям в личные сообщения
+     * TODO: требуется рефакторинг
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return JsonResponse
+     */
+    public function save(Request $request): JsonResponse
     {
         $user = Message::where(['name' => 'hello_text'])->first() ?? new Message();
         $user->name = 'hello_text';

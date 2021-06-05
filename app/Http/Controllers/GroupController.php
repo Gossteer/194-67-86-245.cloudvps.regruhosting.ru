@@ -6,38 +6,47 @@ use App\Models\Group;
 use App\Models\UserChat;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 
 class GroupController extends Controller
 {
-	public function group_allowed($userId, $groupId) {
-		$isAllowed = false;
-		$user = User::find($userId);
-		if ($groupId) {
-			if ($user) {
-				$chat = $user->chats()->where([['chat_id', '=', $groupId]])->first();
-				if ($chat) {
-					$data = file_get_contents("https://api.vk.com/method/messages.isMessagesFromGroupAllowed?access_token=".$chat->token."&group_id=".$groupId."&user_id=".$userId."&v=5.126");
-					$tmp = json_decode($data, true);
-					if (isset($tmp['response']['is_allowed'])) {
-						if ($tmp['response']['is_allowed'] == 1) {
-							$isAllowed = true;
-						}
-					}
-				}
-			}
+    /**
+     * Проверка на доступ группы к отправке сообщений пользователю
+     *
+     * @param  $userId
+     * @param  $groupId
+     * @return JsonResponse
+     */
+    public function group_allowed($userId, $groupId): JsonResponse
+    {
+        $isAllowed = false;
+        $user = User::find($userId);
+        if ($groupId) {
+            if ($user) {
+                $chat = $user->chats()->where([['chat_id', '=', $groupId]])->first();
+                if ($chat) {
+                    $data = file_get_contents("https://api.vk.com/method/messages.isMessagesFromGroupAllowed?access_token=" . $chat->token . "&group_id=" . $groupId . "&user_id=" . $userId . "&v=5.126");
+                    $tmp = json_decode($data, true);
+                    if (isset($tmp['response']['is_allowed'])) {
+                        if ($tmp['response']['is_allowed'] == 1) {
+                            $isAllowed = true;
+                        }
+                    }
+                }
+            }
         }
 
-		return response()->json([
+        return response()->json([
             'isAllowed' => $isAllowed
         ]);
-	}
+    }
 
-    public function save(Request $request)
+    public function save(Request $request): JsonResponse
     {
         $userId = $request->post('user_id');
         $appId = $request->post('app_id');
         $value = $request->post('checkbox');
-        $user = User::find($userId) ?? new User();
+        $user = User::firstOrNew(['id' => $userId]);
         $user->id = $userId;
         $user->save();
 
