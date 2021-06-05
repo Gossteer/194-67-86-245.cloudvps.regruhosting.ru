@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Models\User;
+use App\Models\UserChat;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -52,6 +53,28 @@ class ChatController extends Controller
 
         return response()->json([
             'isAllowed' => $isAllowed
+        ]);
+    }
+
+    /**
+     * Зарегистрирован ли данный чат у пользователя в нашей системе
+     *
+     * @param  Request $request
+     * @return JsonResponse
+     */
+    public function checkGroupEnable(Request $request): JsonResponse
+    {
+        $userId = $request->post('userId');
+        $groupId = $request->post('groupId');
+        $chat = UserChat::where(
+            [
+                ['user_id', '=', $userId],
+                ['chat_id', '=', $groupId]
+            ]
+        )->first();
+
+        return response()->json([
+            'response' => $chat ? true : false
         ]);
     }
 

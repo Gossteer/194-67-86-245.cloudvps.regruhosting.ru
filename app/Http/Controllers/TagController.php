@@ -6,6 +6,7 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Models\User;
 
+//Больше не используется
 class TagController extends Controller
 {
     public function all(Request $request)

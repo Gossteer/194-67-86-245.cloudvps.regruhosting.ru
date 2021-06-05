@@ -30,22 +30,6 @@ class GroupController extends Controller
         ]);
     }
 
-    public function checkGroupEnable(Request $request)
-    {
-        $userId = $request->post('userId');
-        $groupId = $request->post('groupId');
-        $chat = UserChat::where(
-            [
-                ['user_id', '=', $userId],
-                ['chat_id', '=', $groupId]
-            ]
-        )->first();
-
-        return response()->json([
-            'response' => $chat ? true : false
-        ]);
-    }
-
     public function list(Request $request)
     {
         $sex = (int) $request->get('sex');

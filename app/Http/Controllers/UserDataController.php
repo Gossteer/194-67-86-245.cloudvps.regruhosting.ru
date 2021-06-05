@@ -4,19 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserDataRequest;
 use App\Models\User;
-use App\Models\UserData;
 use App\Services\VkApi;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserDataController extends Controller
 {
-    //public function store(Request $request, User $user, $key)
-	public function store(Request $request, $user_id, $key, VkApi $vkApi)
+    /**
+     * Создание нового пользователя и данных (настроек)
+     *
+     * @param  Request $request
+     * @return HttpResponse
+     */
+    public function store(Request $request, $user_id, $key, VkApi $vkApi): HttpResponse
     {
         $value = $request->get('value');
 
-		$user = User::firstOrCreate(['id' => $user_id]);
+        $user = User::firstOrCreate(['id' => $user_id]);
 
         if ($exists = $user->data()->where('key', $key)->first()) {
             $exists->update([
@@ -35,17 +40,24 @@ class UserDataController extends Controller
         }
     }
 
-    public function get(Request $request, $user_id)
+    /**
+     * Получение данных пользователя
+     *
+     * @param  Request $request
+     * @param $user_id
+     * @return array
+     */
+    public function get(Request $request, $user_id): array
     {
-		$data = array();
+        $data = array();
 
-		$user = User::find($user_id);
+        $user = User::find($user_id);
 
         $keys = explode(',', $request->get('keys'));
 
-		if ($user) {
-			$data = $user->data()->whereIn('key', $keys)->pluck('value', 'key');
-		}
+        if ($user) {
+            $data = $user->data()->whereIn('key', $keys)->pluck('value', 'key');
+        }
 
         if (in_array('sub_user_id', $keys) && !isset($data['sub_user_id'])) {
             $data['sub_user_id'] = 382960669;

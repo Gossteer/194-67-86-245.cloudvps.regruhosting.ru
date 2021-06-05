@@ -8,13 +8,20 @@ use App\Models\Group;
 use App\Services\FormationMessageServices;
 use App\Services\TravelPayoutsServices;
 use App\Services\VkApi;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 
 use function GuzzleHttp\json_decode;
 
 class RequestController extends Controller
 {
-    public function all(Request $request)
+    /**
+     * Получение всех подписок пользователя по $request->user_id
+     *
+     * @param  Request $request
+     * @return JsonResponse
+     */
+    public function all(Request $request): JsonResponse
     {
         $userId = $request->post('user_id');
         $requests = RequestModel::where(['user_id' => $userId])->orderBy('id', 'DESC')->get();
@@ -34,7 +41,13 @@ class RequestController extends Controller
         ]);
     }
 
-    public function delete(Request $request)
+    /**
+     * Удаление подписки по $request->request_id
+     *
+     * @param  Request $request
+     * @return JsonResponse
+     */
+    public function delete(Request $request): JsonResponse
     {
         $requestId = $request->post('request_id');
         RequestModel::where(['id' => $requestId])->delete();
@@ -44,7 +57,13 @@ class RequestController extends Controller
         ]);
     }
 
-    public function get_data($request_id)
+    /**
+     * Получение подписки
+     *
+     * @param  $request_id
+     * @return JsonResponse
+     */
+    public function get_data($request_id): JsonResponse
     {
         $request = RequestModel::find($request_id);
 
@@ -65,12 +84,25 @@ class RequestController extends Controller
         ]);
     }
 
-    public function priceCalendar(Request $request, TravelPayoutsServices $travel_payouts_services)
+    /**
+     * Формирования календаря цен
+     *
+     * @param  Request $request
+     * @param  TravelPayoutsServices $travel_payouts_services
+     * @return JsonResponse
+     */
+    public function priceCalendar(Request $request, TravelPayoutsServices $travel_payouts_services): JsonResponse
     {
         return response()->json($travel_payouts_services->priceCalendar($request->origin, $request->destination));
     }
 
-    public function requestAviabot(int $id)
+    /**
+     * Формирование данных по подписке
+     *
+     * @param  int $id
+     * @return JsonResponse
+     */
+    public function requestAviabot(int $id): JsonResponse
     {
         $response = Http::get('https://back.aviabot.app/get-request/' . $id)->json();
 
@@ -84,21 +116,43 @@ class RequestController extends Controller
         return response()->json($response);
     }
 
-    public function searchTickets(Request $request, TravelPayoutsServices $travel_payouts_services)
+    /**
+     * Поиск билетов по заданным характеристикам
+     *
+     * @param  Request $request
+     * @param  TravelPayoutsServices $travel_payouts_services
+     * @return JsonResponse
+     */
+    public function searchTickets(Request $request, TravelPayoutsServices $travel_payouts_services): JsonResponse
     {
         return response()->json($travel_payouts_services->searchTickets($request));
     }
 
-    public function getURL(Request $request, TravelPayoutsServices $travel_payouts_services)
+    /**
+     * Формирование партнёрской ссылки на покупку найденного билета
+     *
+     * @param  Request $request
+     * @param  TravelPayoutsServices $travel_payouts_services
+     * @return JsonResponse
+     */
+    public function getURL(Request $request, TravelPayoutsServices $travel_payouts_services): JsonResponse
     {
         return response()->json($travel_payouts_services->getURL($request->search_id, $request->terms_url) ?? []);
     }
 
-    public function sendFirstSearchTickets(Request $request, VkApi $vk_api, FormationMessageServices $formation_message_services)
+    /**
+     * Отправка первого n количества билетов в личные сообщения пользователя
+     *
+     * @param  Request $request
+     * @param  VkApi $vk_api
+     * @param  FormationMessageServices $formation_message_services
+     * @return JsonResponse
+     */
+    public function sendFirstSearchTickets(Request $request, VkApi $vk_api, FormationMessageServices $formation_message_services): JsonResponse
     {
         $messages = $formation_message_services->sendFirstSearchTickets($request->src, $request->dst, $request->bullets, $request->airlines, $request->search_id);
 
-        foreach ($messages as $key => $message) {
+        foreach ($messages as $message) {
             $response[] = $vk_api->messagesSend(['user_id' => $request->user_id], $message['message'], env('SEND_FIRST_SEARCH_VK_PUBLIC_ID', '204613902'), false, $message['keyboard']);
         }
 

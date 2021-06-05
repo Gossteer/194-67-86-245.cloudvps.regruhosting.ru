@@ -11,7 +11,7 @@ Route::post('/get-url', 'RequestController@getURL'); //Получение ссы
 Route::post('/search-tickets', 'RequestController@searchTickets'); //Поиск билетов в 'реальном времени'
 Route::post('/send-first-search-tickets', 'RequestController@sendFirstSearchTickets'); // Отправка n-первых билетов в личные сообщения пользователя
 Route::post('/delete-request', 'RequestController@delete'); //Удаление подписки
-Route::post('/get-cheapest-ticket', 'IndexController@getCheapestTicket'); //Получение самых дешёвых билетов
+
 Route::post('/save-chat', 'ChatController@save'); //Создание чата (хз что это)
 Route::get('/chats', 'ChatController@list'); //Получение всех id чатов
 Route::post('/save-user-api-request', 'UserController@saveRequest'); //Создание подписки и в случае если пользователя не существует, то и его тоже
@@ -23,10 +23,8 @@ Route::post('/user/{user}/data/{key}', 'UserDataController@store'); //Созда
 Route::get('/user/{user}/data', 'UserDataController@get'); //Получение ключа и value data пользователя
 
 //Методы для работы с группами/чатами
-Route::get('/groups', 'GroupController@list'); //Получение списка групп(ботов) по полу
 Route::get('/group_allowed/{user_id}/{group_id}', 'ChatController@chat_allowed'); //Проверяем есть ли доступ у группы для пользователя
-Route::post('/save-groups', 'GroupController@save'); //Создание/получение группы/пользователя и соединение данных
-Route::post('/check-group-enable', 'GroupController@checkGroupEnable'); //Проверяет, существует ли у пользователя данный чат
+Route::post('/check-group-enable', 'ChatController@checkGroupEnable'); //Проверяет, существует ли у пользователя данный чат
 
 //Методы для работы с тегами
 Route::post('/get-tags', 'TagController@all'); //Получаем все теги для данного пользователя
@@ -139,9 +137,12 @@ Route::get('users/send/{user_id}', function ($user_id) {
     // return $text;
 });
 
-//Непонятные маршруты
+//Более или пока не используются
+Route::post('/get-cheapest-ticket', 'IndexController@getCheapestTicket'); //Получение самых дешёвых билетов
 Route::post('/allow-messages', 'IndexController@allowMessages');
 Route::get('/', 'IndexController@index');
 Route::post('/setup-confirmation', 'IndexController@setupConfirmation');
 Route::post('/save-admin', 'AdminController@save'); //Вроде бы для редактирование сообщений
 Route::post('/bot', 'VkGroupEventsListenerController@bot');
+Route::get('/groups', 'GroupController@list'); //Получение списка групп(ботов) по полу
+Route::post('/save-groups', 'GroupController@save'); //Создание/получение группы/пользователя и соединение данных
