@@ -27,7 +27,7 @@ class FormationMessageServices
 
         $apiMessage = Message::select('content')->where(['name' => $type_message])->first();
 
-        return json_encode(str_replace($this->healthy, $this->yummy, $apiMessage->content));
+        return str_replace($this->healthy, $this->yummy, $apiMessage->content);
     }
 
     public function makeRequestKeyboard(bool $one_time = false, bool $inline = false, array $buttons): string
