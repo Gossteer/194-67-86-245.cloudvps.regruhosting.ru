@@ -47,7 +47,6 @@ class VkApi
         ];
 
         if (isset($keyboard)) {
-            dd( json_encode($keyboard, JSON_UNESCAPED_UNICODE));
             $arr['keyboard'] = json_encode($keyboard, JSON_UNESCAPED_UNICODE);
         }
 
