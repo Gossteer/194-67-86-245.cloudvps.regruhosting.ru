@@ -10,13 +10,13 @@ class SendMessages extends Command
     protected $signature = 'messages:send';
     protected $description = 'Send messages';
 
-    private $service;
+    private UserCheapFlightsApiMessagesService $service;
 
-    public function __construct()
+    public function __construct(UserCheapFlightsApiMessagesService $user_cheap_flightsApi_messagesService)
     {
         parent::__construct();
 
-        $this->service = new UserCheapFlightsApiMessagesService();
+        $this->service = $user_cheap_flightsApi_messagesService;
     }
 
     public function handle()

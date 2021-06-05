@@ -16,7 +16,7 @@ class VkApi
         $this->client = new \GuzzleHttp\Client();
     }
 
-    public function messagesSend($data, $message, $groupId = null, $hasAttachment = true, $keyboard = null)
+    public function messagesSend($data, $message, $groupId = null, $hasAttachment = true, ?string $keyboard = null)
     {
 
         $user = User::query()->find($data['user_id']);
@@ -34,7 +34,7 @@ class VkApi
         );
     }
 
-    public function prepareMessageData($data, $groupId, $message, $hasAttachment, $keyboard = null)
+    public function prepareMessageData($data, $groupId, $message, $hasAttachment, ?string $keyboard = null)
     {
         $arr = [
             'user_id' => $data['from_id'] ?? $data['user_id'],
@@ -47,7 +47,7 @@ class VkApi
         ];
 
         if (isset($keyboard)) {
-            $arr['keyboard'] = json_encode($keyboard, JSON_UNESCAPED_UNICODE);
+            $arr['keyboard'] = $keyboard;
         }
 
         if ($hasAttachment) {

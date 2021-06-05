@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Message;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class FormationMessageServices
 {
@@ -30,21 +31,26 @@ class FormationMessageServices
         return str_replace($this->healthy, $this->yummy, $apiMessage->content);
     }
 
-    public function makeRequestKeyboard(bool $one_time = false, bool $inline = false, array $buttons): array
+    public function makeRequestKeyboard(bool $one_time = false, bool $inline = false, array $buttons): ?string
     {
-        foreach ($buttons as $group => $value) {
-            $this->buttons[$group][] = $this->getActionForButtons($group, $value);
-        }
+        try {
+            foreach ($buttons as $group => $value) {
+                $this->buttons[$group][] = $this->getActionForButtons($group, $value);
+            }
 
-        foreach ($this->buttons as $group => $button) {
-            $keyboard_buttons[] = $button;
-        }
+            foreach ($this->buttons as $group => $button) {
+                $keyboard_buttons[] = $button;
+            }
 
-        return [
-            'one_time' => $one_time,
-            'inline' => $inline,
-            "buttons" => $keyboard_buttons
-        ];
+            return json_encode([
+                'one_time' => $one_time,
+                'inline' => $inline,
+                "buttons" => $keyboard_buttons
+            ], JSON_UNESCAPED_UNICODE);
+        } catch (Throwable $e) {
+            Log::error(($e->getMessage() . ', ' . $e->getFile() . ', строка:' . $e->getLine()), 'error', $e->getTrace());
+            return null;
+        }
     }
 
     public function sendFirstSearchTickets(array $src, array $dst, array $bullets, array $airlines, string $search_id): array

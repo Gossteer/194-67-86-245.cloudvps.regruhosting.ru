@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Log;
 
 class UserCheapFlightsApiMessagesService
 {
-    private $api;
+    private VkApi $api;
+    private FormationMessageServices $formation_message_services;
 
-    public function __construct()
+    public function __construct(VkApi $vk_api, FormationMessageServices $formation_message_services)
     {
-        $this->api = new VkApi();
+        $this->api = $vk_api;
+        $this->formation_message_services = $formation_message_services;
     }
 
     public function sendApiMessagesToAllUsers()
@@ -38,7 +40,12 @@ class UserCheapFlightsApiMessagesService
                         $request->makeRequestMessage($flight),
                         $request->group_id ?? getenv('MIX_MAIN_VK_PUBLIC_ID'),
                         false,
-                        $this->getKeyboard($request->getUrl($flight))
+                        $this->formation_message_services->makeRequestKeyboard(false, true, [
+                            'open_link' => [
+                                'link' => $request->getUrl($flight),
+                                'label' => 'Проверить цену'
+                            ]
+                        ]),
                     );
 
                     if (isset($response['error'])) {
@@ -51,29 +58,6 @@ class UserCheapFlightsApiMessagesService
             }
         }
         $this->sendError($errors);
-    }
-
-    private function getKeyboard($url = null): ?array
-    {
-        if (isset($url)) {
-            return [
-                'one_time' => false,
-                'inline' => true,
-                "buttons" => [
-                    [
-                        [
-                            "action" => [
-                                'type' => "open_link",
-                                'link' => $url,
-                                "label" => "Проверить цену"
-                            ]
-                        ],
-                    ]
-                ]
-            ];
-        }
-
-        return null;
     }
 
     public function sendError(array $errors = [])
