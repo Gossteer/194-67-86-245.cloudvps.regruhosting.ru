@@ -55,15 +55,14 @@ class FormationMessageServices
         $data['dstCountry'] = $dst['country_name'];
 
         foreach ($bullets as $key => $bullet) {
-
             if ($bullet_segment_dst = ($bullet['segment'][1] ?? false)) {
                 $data['arrow'] = '⇄';
                 $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date']));
-                $data['footer'] = 'Туда: ' . 'Обратно';//.  $airlines[$bullet[0]['proposals'][0]['segment'][0]['operating_carrier']]['name'] . ', обратно: ' . $airlines[$bullet_segment_dst['operating_carrier']]['name'];
+                $data['footer'] = 'Туда: ' .  $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'] . ', обратно: ' . $airlines[$bullet_segment_dst['flight'][0]['operating_carrier']]['name'];
             } else {
                 $data['arrow'] = '→';
                 $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date']));
-                $data['footer'] = 'Туда: ' ;//.  $airlines[$bullet[0]['proposals'][0]['segment'][0]['operating_carrier']]['name'];
+                $data['footer'] = 'Туда: ' . $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'];
             }
 
             $terms = current($bullet['terms']);
@@ -71,22 +70,16 @@ class FormationMessageServices
             $data['updatedD'] = date('d.m.Y');
 
             $response[$key]['message'] = $this->makeRequestMessage($data, 'api_send_tickets');
-            // if ($url = (json_decode($this->travel_payouts_services->getURL($search_id, $terms['url']), true)['url'] ?? null)) {
-            //     $response[$key]['keyboard'] = $this->makeRequestKeyboard(false, true, [
-            //         'open_link' => [
-            //             'link' => $url,
-            //             'label' => 'Проверить цену'
-            //         ]
-            //     ]);
-            // } else {
-            //     $response[$key]['keyboard'] = $url;
-            // }
-            $response[$key]['keyboard'] = $this->makeRequestKeyboard(false, true, [
-                'open_link' => [
-                    'link' => 'https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/',
-                    'label' => 'Проверить цену'
-                ]
-            ]);
+            if ($url = ($this->travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
+                $response[$key]['keyboard'] = $this->makeRequestKeyboard(false, true, [
+                    'open_link' => [
+                        'link' => $url,
+                        'label' => 'Проверить цену'
+                    ]
+                ]);
+            } else {
+                $response[$key]['keyboard'] = $url;
+            }
         }
 
         return $response;

@@ -134,7 +134,7 @@ class TravelPayoutsServices
         ])->json();
     }
 
-    public function getURL($search_id, $terms_url): ?string
+    public function getURL($search_id, $terms_url): ?array
     {
         return Http::get('http://api.travelpayouts.com/v1/flight_searches/' . $search_id . '/clicks/' . $terms_url . '.json?marker=122890')->json();
     }
