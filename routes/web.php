@@ -24,7 +24,7 @@ Route::get('/user/{user}/data', 'UserDataController@get'); //Получение 
 
 //Методы для работы с группами/чатами
 Route::get('/groups', 'GroupController@list'); //Получение списка групп(ботов) по полу
-Route::get('/group_allowed/{user_id}/{group_id}', 'GroupController@group_allowed'); //Проверяем есть ли доступ у группы для пользователя
+Route::get('/group_allowed/{user_id}/{group_id}', 'ChatController@chat_allowed'); //Проверяем есть ли доступ у группы для пользователя
 Route::post('/save-groups', 'GroupController@save'); //Создание/получение группы/пользователя и соединение данных
 Route::post('/check-group-enable', 'GroupController@checkGroupEnable'); //Проверяет, существует ли у пользователя данный чат
 
@@ -106,7 +106,6 @@ Route::get('users/send/{user_id}', function ($user_id) {
             ],
         ]]
     ];
-    dd($senSirvice->messagesSend(['user_id' => $user_id], 'Семён приветик!1! Напиши пожалуйста мне в тг, если это видишь', '204613902', true, $keyboard));
 
     // $returnValue = json_decode('{"error":{"error_code":912,"error_msg":"This is a chat bot feature, change this status in settings","request_params":[{"key":"method","value":"messages.send"},{"key":"oauth","value":"1"},{"key":"user_id","value":"382960669"},{"key":"group_id","value":"198385755"},{"key":"random_id","value":"11708684"},{"key":"domain","value":"App"},{"key":"title","value":"Дешевые авиабилеты"},{"key":"dont_parse_links","value":"0"},{"key":"keyboard","value":"{\\"one_time\\":false,\\"inline\\":true,\\"buttons\\":[[{\\"action\\":{\\"type\\":\\"open_link\\",\\"link\\":\\"https:\\\\\\/\\\\\\/www.aviasales.ru\\\\\\/search?origin_iata=CHI&destination_iata=MIA&depart_date=2021-05-18&with_request=1&adults=1&children=0&infants=0&trip_class=0&marker=122890.app¤cy=RUB&oneway=1\\",\\"label\\":\\"Проверить цену\\"}}]]}"},{"key":"attachment","value":"https:\\/\\/www.aviasales.ru\\/"},{"key":"v","value":"5.103"}]}}', true);
 

@@ -8,7 +8,6 @@ use App\Models\Group;
 use App\Services\FormationMessageServices;
 use App\Services\TravelPayoutsServices;
 use App\Services\VkApi;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 
 use function GuzzleHttp\json_decode;

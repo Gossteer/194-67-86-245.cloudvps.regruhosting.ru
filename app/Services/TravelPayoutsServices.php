@@ -123,7 +123,7 @@ class TravelPayoutsServices
             ];
     }
 
-    public function priceCalendar($origin, $destination, string $calendar_type = 'departure_date'): string
+    public function priceCalendar($origin, $destination, string $calendar_type = 'departure_date'): ?array
     {
         return Http::withHeaders([
             'x-access-token' => config('app.token_calendar'),

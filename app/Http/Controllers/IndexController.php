@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 
+//Больше не используется
 class IndexController extends Controller
 {
+    //Скорее всего больше не используется
     public function index(Request $request)
     {
 		//header("Access-Control-Allow-Origin: https://front.aviabot.app/");
 		header("Access-Control-Allow-Origin: *");
-		
+
         $user = User::find($request->vk_user_id) ?? new User();
 
         $hello_text = Message::where(['name' => 'hello_text'])->first() ?? new Message();
@@ -28,6 +30,7 @@ class IndexController extends Controller
         ]);
     }
 
+    //Скорее всего болше не используется
     public function allowMessages()
     {
         return response()->json([
@@ -35,6 +38,7 @@ class IndexController extends Controller
         ]);
     }
 
+    //Непонятно для чего
     public function setupConfirmation(Request $request)
     {
         $confirmationCode = $request->post('confirmation_code');
