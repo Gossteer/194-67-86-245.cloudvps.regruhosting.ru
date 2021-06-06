@@ -121,30 +121,34 @@ class TravelPayoutsServices
         // Проверяем уникальность найденных билетов по цене, даты отправке, и по IATA коду авиакомпании, выполняющей перевозку
         $unique_value_check = [];
         foreach ($response_result as $key => &$value) {
-            foreach ($value['proposals'] as $key_proposals => &$proposals) {
-                if (($check_closure = function (&$unique_value_check, $proposals, $key, $key_proposals) {
-                    $price = $proposals['terms'][array_key_first($proposals['terms'])]['price'];
-                    $departure_date = $proposals['segment'][0]['flight'][0]['departure_date'];
-                    $operating_carrier = $proposals['segment'][0]['flight'][0]['operating_carrier'];
-                    foreach ($unique_value_check as &$value) {
-                        foreach ($value as &$unique_value_check_proposals) {
-                            if (
-                                $unique_value_check_proposals['price'] == $price and
-                                $unique_value_check_proposals['departure_date'] == $departure_date and
-                                $unique_value_check_proposals['operating_carrier'] == $operating_carrier
-                            ) {
-                                return true;
+            if ($value['proposals'] ?? false) {
+                foreach ($value['proposals'] as $key_proposals => &$proposals) {
+                    if (($check_closure = function (&$unique_value_check, $proposals, $key, $key_proposals) {
+                        $price = $proposals['terms'][array_key_first($proposals['terms'])]['price'];
+                        $departure_date = $proposals['segment'][0]['flight'][0]['departure_timestamp'];
+                        $operating_carrier = $proposals['segment'][0]['flight'][0]['operating_carrier'];
+                        foreach ($unique_value_check as &$value) {
+                            foreach ($value as &$unique_value_check_proposals) {
+                                if (
+                                    $unique_value_check_proposals['price'] == $price and
+                                    $unique_value_check_proposals['departure_timestamp'] == $departure_date and
+                                    $unique_value_check_proposals['operating_carrier'] == $operating_carrier
+                                ) {
+                                    return true;
+                                }
                             }
                         }
-                    }
-                    $unique_value_check[$key][$key_proposals]['price'] = $price;
-                    $unique_value_check[$key][$key_proposals]['departure_date'] = $departure_date;
-                    $unique_value_check[$key][$key_proposals]['operating_carrier'] = $operating_carrier;
+                        $unique_value_check[$key][$key_proposals]['price'] = $price;
+                        $unique_value_check[$key][$key_proposals]['departure_timestamp'] = $departure_date;
+                        $unique_value_check[$key][$key_proposals]['operating_carrier'] = $operating_carrier;
 
-                    return false;
-                })($unique_value_check, $proposals, $key, $key_proposals)) {
-                    unset($value['proposals'][$key_proposals]);
+                        return false;
+                    })($unique_value_check, $proposals, $key, $key_proposals)) {
+                        unset($value['proposals'][$key_proposals]);
+                    }
                 }
+            } else {
+                unset($response_result[$key]);
             }
         }
 
