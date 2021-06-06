@@ -58,15 +58,15 @@ class FormationMessageServices
         $data['srcCountry'] = $src['country_name'];
         $data['dstCity'] = $dst['name'];
         $data['dstCountry'] = $dst['country_name'];
-        
+
         foreach ($bullets as $key => $bullet) {
             if ($bullet_segment_dst = ($bullet['segment'][1] ?? false)) {
                 $data['arrow'] = '⇄';
-                $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date']));
+                $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' ' . $bullet['segment'][0]['flight'][0]['arrival_time'] . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date'])) . ' ' . $bullet_segment_dst['flight'][0]['arrival_time'];
                 $data['footer'] = 'Туда: ' .  $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'] . ', обратно: ' . $airlines[$bullet_segment_dst['flight'][0]['operating_carrier']]['name'];
             } else {
                 $data['arrow'] = '→';
-                $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date']));
+                $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' ' . $bullet['segment'][0]['flight'][0]['arrival_time'];
                 $data['footer'] = 'Туда: ' . $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'];
             }
 
