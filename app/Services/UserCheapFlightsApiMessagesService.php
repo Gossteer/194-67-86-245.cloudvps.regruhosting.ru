@@ -8,7 +8,17 @@ use Illuminate\Support\Facades\Log;
 
 class UserCheapFlightsApiMessagesService
 {
+    /**
+     * Сервис отправки сообщений
+     *
+     * @var VkApi
+     */
     private VkApi $api;
+    /**
+     * Сервис формирования сообщений для отправки
+     *
+     * @var FormationMessageServices
+     */
     private FormationMessageServices $formation_message_services;
 
     public function __construct(VkApi $vk_api, FormationMessageServices $formation_message_services)
@@ -17,6 +27,11 @@ class UserCheapFlightsApiMessagesService
         $this->formation_message_services = $formation_message_services;
     }
 
+    /**
+     * Перебор всех юзеров и отправка им билетов по их подпискам
+     *
+     * @return void
+     */
     public function sendApiMessagesToAllUsers()
     {
         $users = User::all();
@@ -25,6 +40,12 @@ class UserCheapFlightsApiMessagesService
         }
     }
 
+    /**
+     * Отправка пользователю найденных для него билетов по подписке
+     *
+     * @param User $user
+     * @return void
+     */
     public function sendUserAllMessages($user)
     {
         $errors = [];
@@ -60,6 +81,12 @@ class UserCheapFlightsApiMessagesService
         $this->sendError($errors);
     }
 
+    /**
+     * Обработка ошибок и отправка их администратору
+     *
+     * @param array $errors
+     * @return void
+     */
     public function sendError(array $errors = [])
     {
         $error_912 = [];

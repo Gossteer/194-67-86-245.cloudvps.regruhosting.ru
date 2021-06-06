@@ -3,19 +3,39 @@
 namespace App\Services;
 
 use App\Models\User;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
-use stdClass;
 
 class VkApi
 {
+    /**
+     * Параметры запроса
+     *
+     * @var array
+     */
     private $params = [];
-    private $client;
+    /**
+     * GuzzleHttp клиент
+     *
+     * @var Client
+     */
+    private Client $client;
 
     public function __construct()
     {
-        $this->client = new \GuzzleHttp\Client();
+        $this->client = new Client();
     }
 
+    /**
+     * Отправка сообщения
+     *
+     * @param array $data
+     * @param string $message
+     * @param int $groupId
+     * @param bool $hasAttachment
+     * @param string|null $keyboard
+     * @return array|null
+     */
     public function messagesSend($data, $message, $groupId = null, $hasAttachment = true, ?string $keyboard = null)
     {
 
@@ -34,6 +54,16 @@ class VkApi
         );
     }
 
+    /**
+     * Подготовка тела запроса
+     *
+     * @param array $data
+     * @param string $message
+     * @param int $groupId
+     * @param bool $hasAttachment
+     * @param string|null $keyboard
+     * @return void
+     */
     public function prepareMessageData($data, $groupId, $message, $hasAttachment, ?string $keyboard = null)
     {
         $arr = [
@@ -60,6 +90,13 @@ class VkApi
         );
     }
 
+    /**
+     * Отправка сообщения
+     *
+     * @param string $method
+     * @param string $accessToken
+     * @return array|null
+     */
     private function call($method, $accessToken = '')
     {
         $this->params['access_token'] = $accessToken;

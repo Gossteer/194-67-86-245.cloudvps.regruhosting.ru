@@ -13,35 +13,71 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    /**
+     * Атрибуты, которые можно назначать массово назначать
+     *
+     * @var array
+     */
     protected $fillable = [
         'id'
     ];
 
+    /**
+     * Связь многие ко многим
+     *
+     * @return belongsToMany
+     */
     public function groups()
     {
         return $this->belongsToMany(Group::class, 'users_groups');
     }
 
+    /**
+     * Связь многие ко многим
+     *
+     * @return belongsToMany
+     */
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'users_tags');
     }
 
+    /**
+     * Связь многие ко многим с группами(чатами)
+     *
+     * @return belongsToMany
+     */
     public function chats()
     {
         return $this->belongsToMany(Chat::class, 'user_chats');
     }
 
+    /**
+     * Связь один ко многим с подписками
+     *
+     * @return hasMany
+     */
     public function requests()
     {
         return $this->hasMany(Request::class);
     }
 
+    /**
+     * Связь один ко многим с полученными подписками
+     *
+     * @return hasMany
+     */
     public function userReceivedRequest()
     {
         return $this->hasMany(UserReceivedRequest::class);
     }
 
+    /**
+     * Сохранение информации о получение юзером подписки
+     *
+     * @param int $requestApiId
+     * @return void
+     */
     public function receivedRequest($requestApiId)
     {
         $requestReceived = new UserReceivedRequest();
@@ -49,11 +85,23 @@ class User extends Authenticatable
         $this->userReceivedRequest()->save($requestReceived);
     }
 
+    /**
+     * Проверка на получение пользователем подписки
+     *
+     * @param int $flightId
+     * @return UserReceivedRequest
+     */
     public function hasRequestReceived($flightId)
     {
         return $this->userReceivedRequest()->where(['request_api_id' => $flightId])->first();
     }
 
+    /**
+     * Получение/создание чата(группы) пользователя
+     *
+     * @param int $groupId
+     * @return Chat
+     */
     public function getChatOrCreateNew($groupId)
     {
         $chat = null;
@@ -74,6 +122,12 @@ class User extends Authenticatable
         return $chat;
     }
 
+    /**
+     * Создание нового пользователя по id
+     *
+     * @param int $id
+     * @return User
+     */
     public static function createNewOneById($id)
     {
         $user = new self();
@@ -83,6 +137,13 @@ class User extends Authenticatable
         return $user;
     }
 
+    /**
+     * Прикрепление пользователю подписки
+     *
+     * @param int $userId
+     * @param Request $request
+     * @return bool
+     */
     public static function attachRequestToUser($userId, $request)
     {
         $user = User::firstOrCreate(['id' => $userId]);
@@ -102,6 +163,11 @@ class User extends Authenticatable
         return $user->requests()->save($requestModel);
     }
 
+    /**
+     * Связь один ко многим с данными(настройками пользователя)
+     *
+     * @return hasMany
+     */
     public function data()
     {
         return $this->hasMany(UserData::class);

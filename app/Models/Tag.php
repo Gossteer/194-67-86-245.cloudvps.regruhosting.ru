@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+//Не используется
 class Tag extends Model
 {
     protected $table = 'tags';

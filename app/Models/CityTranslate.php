@@ -12,12 +12,14 @@ use Stichoza\GoogleTranslate\GoogleTranslate;
 class CityTranslate extends Model
 {
     /**
+     * Выбор таблицы
+     *
      * @var string
      */
     protected $table = 'cities_translations';
 
     /**
-     * The attributes that are mass assignable.
+     * Атрибуты, которые можно назначать массово назначать
      *
      * @var array
      */
@@ -25,7 +27,13 @@ class CityTranslate extends Model
         'word', 'translation'
     ];
 
-    public static function translate($word)
+    /**
+     * Перевод
+     *
+     * @param string $word
+     * @return string|null $translation
+     */
+    public static function translate($word): ?string
     {
         $tr = new GoogleTranslate('ru');
         $model = self::where(['word' => $word])->first() ?? new self();
@@ -41,4 +49,3 @@ class CityTranslate extends Model
         return $translation;
     }
 }
-

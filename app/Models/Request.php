@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Log;
 
 class Request extends Model
 {
+    /**
+     * Перечисление дней недели
+     *
+     * @var array
+     */
     public static $days = [
         0 => 'вс',
         1 => 'пн',
@@ -19,6 +24,11 @@ class Request extends Model
         6 => 'сб',
     ];
 
+    /**
+     * Перечисление типа валют
+     *
+     * @var array
+     */
     public static $currencies = [
         'RUB' => 'рублей',
         'USD' => 'долларов',
@@ -33,11 +43,18 @@ class Request extends Model
         'UZS' => 'узбекских сум'
     ];
 
+    /**
+     * Короткий перевод типа валют
+     *
+     * @var array
+     */
     public static $shortCurrencyTranslate = [
         'rub' => 'руб',
     ];
 
-
+    /**
+     * @var array
+     */
     public static $passengers = [
         'url' => '1 пассажир, экономкласс',
         'url2Passengers' => '2 пассажира, экономкласс',
@@ -45,23 +62,49 @@ class Request extends Model
         'urlForma' => 'открытая редактируемая форма поиска'
     ];
 
+    /**
+     * Выбор таблицы
+     *
+     * @var string
+     */
     protected $table = 'requests';
 
+    /**
+     * Атрибуты, которые можно назначать массово назначать
+     *
+     * @var array
+     */
     protected $fillable = [
         'user_id', 'content', 'interval', 'output', 'limit', 'currentLimit', 'updated_at', 'group_id', 'send_count'
     ];
 
+    /**
+     * Атрибуты дат
+     *
+     * @var array
+     */
     protected $dates = [
         'created_at',
         'updated_at'
     ];
 
+    /**
+     * Короткий перевод валюты
+     *
+     * @param string $currency
+     * @return string
+     */
     public static function getFlightsFromApiFunc($currency)
     {
         return static::$shortCurrencyTranslate[$currency] ?? $currency;
     }
 
-    public function getFlightsFromApi()
+    /**
+     * Получение билета из api
+     *
+     * @return array
+     */
+    public function getFlightsFromApi(): array
     {
 
         //if ((!$this->limitHasReached() || $this->haveNoLimit()) && $this->timeHasPassed()) {
@@ -82,16 +125,31 @@ class Request extends Model
         return [];
     }
 
+    /**
+     * Проверка лимита отправок
+     *
+     * @return bool
+     */
     public function limitHasReached()
     {
         return (int)$this->currentLimit >= (int)$this->limit;
     }
 
+    /**
+     * Проверка лимита на его отсутствие
+     *
+     * @return bool
+     */
     public function haveNoLimit()
     {
         return $this->limit == 0;
     }
 
+    /**
+     * Проверка частоты отправки подписки
+     *
+     * @return bool
+     */
     public function timeHasPassed()
     {
         $now = Carbon::now();
@@ -100,11 +158,21 @@ class Request extends Model
         return $now->diffInSeconds($this->updated_at) > $timePast;
     }
 
+    /**
+     * Назначения интервала рассылки
+     *
+     * @return float|int
+     */
     public function getIntervalInSeconds()
     {
         return $this->interval * 60;
     }
 
+    /**
+     * Формирование ассоциативного массива подписки
+     *
+     * @return array
+     */
     public function formRequestJson()
     {
         $requestContent = json_decode($this->content, true);
@@ -159,19 +227,35 @@ class Request extends Model
         return $json;
     }
 
-    public function updateRequest()
+    /**
+     * Обновление даты последнего изменения подписки
+     *
+     * @return void
+     */
+    public function updateRequest(): void
     {
         $now = Carbon::now();
         $this->updated_at = $this->interval === 0 ? $now->addYears(10) : $now;
         $this->save();
     }
 
-    public function updateRequestCurrentLimit($count)
+    /**
+     * Обновление текущего лимита подписки
+     *
+     * @param int $count
+     * @return void
+     */
+    public function updateRequestCurrentLimit($count): void
     {
         $this->currentLimit += $count;
         $this->save();
     }
 
+    /**
+     * Получение билетов по сформированному ассоциативному массиву подписки
+     *
+     * @return array
+     */
     public function getFlightsFromApiRequest()
     {
         $client = new \GuzzleHttp\Client();
@@ -188,6 +272,12 @@ class Request extends Model
         return json_decode($response->getBody(), true);
     }
 
+    /**
+     * Проверка на допустимость радиуса обновляемых дат
+     *
+     * @param $flight
+     * @return bool
+     */
     public function inRequestAllowableUpdatedDatesRadius($flight)
     {
         $flightUpdated = date_format(date_create($flight['updated']), 'Y-m-d H:i:s');
@@ -198,6 +288,11 @@ class Request extends Model
         return $flightUpdated > $allowableDatesRadius;
     }
 
+    /**
+     * Получение стран по api
+     *
+     * @return array
+     */
     public static function getCountries()
     {
         $client = new \GuzzleHttp\Client();
@@ -215,6 +310,12 @@ class Request extends Model
         return $newCountries;
     }
 
+    /**
+     * Форматирование даты в формате d.m.y
+     *
+     * @param string $date
+     * @return string
+     */
     private static function formatDate($date)
     {
         $year = substr($date, 2, 2);
@@ -224,6 +325,12 @@ class Request extends Model
         return $day . '.' . $month . '.' . $year;
     }
 
+    /**
+     * Форматирование сообщения из билета для отправки в лс
+     *
+     * @param $item
+     * @return string
+     */
     public function makeRequestMessage($item)
     {
         $output = json_decode($this->output, true);
@@ -288,15 +395,15 @@ EOT;
             '[[updated:d]]', '[[updated:g]]', '[[tempSummary]]',
         ];
 
-//         ✈️  [[srcCity]] ([[srcCountry]]) [[arrow]] [[dstCity]] ([[dstCountry]])
-// &#128197; [[dates]]
-// &#8618; [[footer]]
-// &#9203; Цена [[price]]
-// &#9786; Обычная цена [[oldPrice]], выгода [[discount]]%
-// Проверь цену сейчас для [[passengers]]
-// [[url]]
-// &#9728; Погода в день прилета &#9728; [[tempMax]]°, &#127771; [[tempMin]]° [[tempSummary]]
-// Билет найден [[updated:d]]
+        //         ✈️  [[srcCity]] ([[srcCountry]]) [[arrow]] [[dstCity]] ([[dstCountry]])
+        // &#128197; [[dates]]
+        // &#8618; [[footer]]
+        // &#9203; Цена [[price]]
+        // &#9786; Обычная цена [[oldPrice]], выгода [[discount]]%
+        // Проверь цену сейчас для [[passengers]]
+        // [[url]]
+        // &#9728; Погода в день прилета &#9728; [[tempMax]]°, &#127771; [[tempMin]]° [[tempSummary]]
+        // Билет найден [[updated:d]]
 
         $updated = date_create($updated);
         $updatedG = date_format($updated, "Y-m-d H:i:s");
@@ -322,11 +429,23 @@ EOT;
         return $message;
     }
 
+    /**
+     * Получение всех подписок пользователя
+     *
+     * @param int $id
+     * @return Collection
+     */
     public static function getAllByUserId($id)
     {
         return self::where(['user_id' => $id])->get();
     }
 
+    /**
+     * Получение ссылки на покупку билета
+     *
+     * @param $item
+     * @return sting|null
+     */
     public function getUrl($item)
     {
         $output = json_decode($this->output, true);
