@@ -147,6 +147,7 @@ class TravelPayoutsServices
                         unset($value['proposals'][$key_proposals]);
                     }
                 }
+                $response_result[$key]['proposals'] =  array_values($response_result[$key]['proposals']);
             } else {
                 unset($response_result[$key]);
             }

@@ -58,7 +58,7 @@ class FormationMessageServices
         $data['srcCountry'] = $src['country_name'];
         $data['dstCity'] = $dst['name'];
         $data['dstCountry'] = $dst['country_name'];
-
+        
         foreach ($bullets as $key => $bullet) {
             if ($bullet_segment_dst = ($bullet['segment'][1] ?? false)) {
                 $data['arrow'] = '⇄';
