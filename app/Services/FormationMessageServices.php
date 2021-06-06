@@ -9,8 +9,6 @@ use Throwable;
 
 class FormationMessageServices
 {
-    private array $healthy;
-    private array $yummy;
     private TravelPayoutsServices $travel_payouts_services;
 
     public function __construct(TravelPayoutsServices $travel_payouts_services)
@@ -20,14 +18,16 @@ class FormationMessageServices
 
     public function makeRequestMessage(array $data, string $type_message): string
     {
+        $healthy = [];
+        $yummy = [];
         foreach ($data as $key => $value) {
-            $this->healthy[] = "[[$key]]";
-            $this->yummy[] = $value;
+            $healthy[] = "[[$key]]";
+            $yummy[] = $value;
         }
 
         $apiMessage = Message::select('content')->where(['name' => $type_message])->first();
 
-        return str_replace($this->healthy, $this->yummy, $apiMessage->content);
+        return str_replace($healthy, $yummy, $apiMessage->content);
     }
 
     public function makeRequestKeyboard(bool $one_time = false, bool $inline = false, array $buttons): ?string
@@ -60,6 +60,8 @@ class FormationMessageServices
         $data['dstCountry'] = $dst['country_name'];
 
         foreach ($bullets as $key => $bullet) {
+
+
             if ($bullet_segment_dst = ($bullet['segment'][1] ?? false)) {
                 $data['arrow'] = '⇄';
                 $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' ' . $bullet['segment'][0]['flight'][0]['arrival_time'] . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date'])) . ' ' . $bullet_segment_dst['flight'][0]['arrival_time'];
@@ -70,7 +72,7 @@ class FormationMessageServices
                 $data['footer'] = 'Туда: ' . $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'];
             }
 
-            $terms = current($bullet['terms']);
+            $terms = array_shift($bullet['terms']);
             $data['price'] = $terms['price'];
             $data['updatedD'] = date('d.m.Y');
 
