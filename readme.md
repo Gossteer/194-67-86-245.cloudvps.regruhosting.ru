@@ -1,19 +1,5 @@
-```
-1) composer install
-2) php artisan migrate
-3) php artisan db:seed
-4) npm install
-5) npm run development
-```
-**Run tests**
 
-```
-php artisan test
-```
+Документация по сервису - [тык](https://www.notion.so/4e3c5311e586460a89b829cbc99451d7)
 
-**Run crontab**
-```
-crontab main.cron
-```
 
 
