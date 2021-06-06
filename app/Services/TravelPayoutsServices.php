@@ -153,7 +153,7 @@ class TravelPayoutsServices
         }
 
         return [
-            'response_result' => $response_result,
+            'response_result' => array_values($response_result),
             'search_id' => $_SESSION['search_id']
         ];
     }
