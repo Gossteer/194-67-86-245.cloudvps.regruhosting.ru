@@ -45,9 +45,9 @@ class UserDataController extends Controller
      *
      * @param  Request $request
      * @param $user_id
-     * @return array
+     * @return array|object
      */
-    public function get(Request $request, $user_id): array
+    public function get(Request $request, $user_id)
     {
         // header("Access-Control-Allow-Origin: https://front.aviabot.app/");
 
