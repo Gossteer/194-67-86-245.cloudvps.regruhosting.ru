@@ -13,8 +13,8 @@ class IndexController extends Controller
     //Скорее всего больше не используется
     public function index(Request $request)
     {
-		//header("Access-Control-Allow-Origin: https://front.aviabot.app/");
-		header("Access-Control-Allow-Origin: *");
+		header("Access-Control-Allow-Origin: https://front.aviabot.app/");
+		// header("Access-Control-Allow-Origin: *");
 
         $user = User::find($request->vk_user_id) ?? new User();
 
