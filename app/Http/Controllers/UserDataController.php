@@ -49,6 +49,8 @@ class UserDataController extends Controller
      */
     public function get(Request $request, $user_id): array
     {
+        header("Access-Control-Allow-Origin: *");
+
         $data = array();
 
         $user = User::find($user_id);
