@@ -74,7 +74,7 @@ class FormationMessageServices
 
             $terms = array_shift($bullet['terms']);
             $data['price'] = $terms['price'];
-            $data['updatedD'] = date('d.m.Y');
+            $data['updatedD'] = date('d.m.Y H:i');
 
             $response[$key]['message'] = $this->makeRequestMessage($data, 'api_send_tickets');
             if ($url = ($this->travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
