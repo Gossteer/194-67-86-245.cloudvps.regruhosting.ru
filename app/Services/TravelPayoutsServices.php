@@ -101,7 +101,7 @@ class TravelPayoutsServices
             }
         );
 
-        sleep(8);
+        sleep(1);
 
         $_SESSION['response_result'] = $response->wait()->getContents();
 
@@ -109,20 +109,13 @@ class TravelPayoutsServices
 
         $response_result = json_decode($_SESSION['response_result'], true);
 
-        usort($response_result, function ($value, $value_next) {
-            if (isset($value['filters_boundary']['price']['min'], $value_next['filters_boundary']['price']['min'])) {
-                if ($value['filters_boundary']['price']['min'] == $value_next['filters_boundary']['price']['min']) {
-                    return 0;
-                }
-                return ($value['filters_boundary']['price']['min'] < $value_next['filters_boundary']['price']['min']) ? -1 : 1;
-            }
-        });
 
         // Проверяем уникальность найденных билетов по цене, даты отправке, и по IATA коду авиакомпании, выполняющей перевозку
         $unique_value_check = [];
         foreach ($response_result as $key => &$value) {
             if ($value['proposals'] ?? false) {
                 foreach ($value['proposals'] as $key_proposals => &$proposals) {
+                    $proposals['gates_info'] = &$value['gates_info'];
                     if (($check_closure = function (&$unique_value_check, $proposals, $key, $key_proposals) {
                         $price = $proposals['terms'][array_key_first($proposals['terms'])]['price'];
                         $departure_date = $proposals['segment'][0]['flight'][0]['departure_timestamp'];
@@ -152,6 +145,28 @@ class TravelPayoutsServices
                 unset($response_result[$key]);
             }
         }
+
+        // Объединяем данные
+        unset($response_result[0]['filters_boundary'], $response_result[0]['meta'], $response_result[0]['chunk_id']);
+        foreach ($response_result as $key => &$value) {
+            $response_result[0]['proposals'] = array_merge($response_result[0]['proposals'], $value['proposals']);
+            $response_result[0]['gates_info'] = array_merge($response_result[0]['gates_info'], $value['gates_info']);
+            $response_result[0]['airports'] = array_merge($response_result[0]['airports'], $value['airports']);
+            $response_result[0]['flight_info'] = array_merge($response_result[0]['flight_info'], $value['flight_info']);
+            if ($key != 0) {
+                unset($response_result[$key]);
+            }
+        }
+
+        // Сортируем по цене
+        usort($response_result[0]['proposals'], function ($value, $value_next) {
+            if (isset($value['terms'][array_key_first($value['terms'])]['price'], $value_next['terms'][array_key_first($value_next['terms'])]['price'])) {
+                if ($value['terms'][array_key_first($value['terms'])]['price'] == $value_next['terms'][array_key_first($value_next['terms'])]['price']) {
+                    return 0;
+                }
+                return ($value['terms'][array_key_first($value['terms'])]['price'] < $value_next['terms'][array_key_first($value_next['terms'])]['price']) ? -1 : 1;
+            }
+        });
 
         return [
             'response_result' => array_values($response_result),

@@ -61,7 +61,6 @@ class FormationMessageServices
 
         foreach ($bullets as $key => $bullet) {
 
-
             if ($bullet_segment_dst = ($bullet['segment'][1] ?? false)) {
                 $data['arrow'] = '⇄';
                 $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' ' . $bullet['segment'][0]['flight'][0]['arrival_time'] . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date'])) . ' ' . $bullet_segment_dst['flight'][0]['arrival_time'];
@@ -71,6 +70,8 @@ class FormationMessageServices
                 $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' ' . $bullet['segment'][0]['flight'][0]['arrival_time'];
                 $data['footer'] = 'Туда: ' . $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'];
             }
+
+            $data['seller'] = current($bullet['gates_info'])['label'];
 
             $terms = array_shift($bullet['terms']);
             $data['price'] = $terms['price'];
