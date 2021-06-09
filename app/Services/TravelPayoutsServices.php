@@ -86,8 +86,6 @@ class TravelPayoutsServices
             return response()->json($response['error'], $response->status());
         }
 
-        $_SESSION['search_id'] =  $response['search_id'];
-
         $response = $this->clien->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid=' . $response['search_id'], [
             'timeout' => 10,
             'read_timeout' => 10,
@@ -170,8 +168,7 @@ class TravelPayoutsServices
         });
 
         return [
-            'response_result' => array_values($response_result)[0],
-            'search_id' => $_SESSION['search_id']
+            array_values($response_result)[0]
         ];
     }
 
