@@ -101,7 +101,7 @@ class TravelPayoutsServices
             }
         );
 
-        sleep(1);
+        sleep(8);
 
         $_SESSION['response_result'] = $response->wait()->getContents();
 
