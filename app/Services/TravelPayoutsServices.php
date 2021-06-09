@@ -152,6 +152,7 @@ class TravelPayoutsServices
             $response_result[0]['proposals'] = array_merge($response_result[0]['proposals'], $value['proposals']);
             $response_result[0]['gates_info'] = array_merge($response_result[0]['gates_info'], $value['gates_info']);
             $response_result[0]['airports'] = array_merge($response_result[0]['airports'], $value['airports']);
+            $response_result[0]['airlines'] = array_merge($response_result[0]['airlines'], $value['airlines']);
             $response_result[0]['flight_info'] = array_merge($response_result[0]['flight_info'], $value['flight_info']);
             if ($key != 0) {
                 unset($response_result[$key]);
@@ -169,7 +170,7 @@ class TravelPayoutsServices
         });
 
         return [
-            'response_result' => array_values($response_result),
+            'response_result' => array_values($response_result)[0],
             'search_id' => $_SESSION['search_id']
         ];
     }
