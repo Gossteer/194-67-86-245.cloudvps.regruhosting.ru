@@ -9,6 +9,7 @@ Route::get('/price-calendar', 'RequestController@priceCalendar'); //Календ
 Route::get('/request-aviabot/{id}', 'RequestController@requestAviabot'); //Непомню для чего
 Route::post('/get-url', 'RequestController@getURL'); //Получение ссылки на билет (работает в связке с поиском в реальном времени)
 Route::post('/search-tickets', 'RequestController@searchTickets'); //Поиск билетов в 'реальном времени'
+Route::get('/search-id-tickets', 'RequestController@searchResult'); //Поиск билетов в 'реальном времени' по search_id
 Route::post('/send-first-search-tickets', 'RequestController@sendFirstSearchTickets'); // Отправка n-первых билетов в личные сообщения пользователя
 Route::post('/delete-request', 'RequestController@delete'); //Удаление подписки
 

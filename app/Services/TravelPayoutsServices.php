@@ -15,14 +15,8 @@ class TravelPayoutsServices
         $this->clien = new Client();
     }
 
-    public function searchTickets(Request $request): array
+    public function searchTickets(Request $request): string
     {
-        session_write_close();
-
-        session_start();
-        set_time_limit(50);
-        ini_set('memory_limit', '-1');
-
         $date_dst = $request['date_dst'] ?? null;
         $trip_class = $request['trip_class'] ?? "Y";
         $passengers = [
@@ -80,13 +74,23 @@ class TravelPayoutsServices
             ]);
         }
 
+        session_write_close();
+
+        session_start();
+        set_time_limit(50);
+        ini_set('memory_limit', '-1');
 
 
         if ($response->status() !== 200) {
             return response()->json($response['error'], $response->status());
         }
 
-        $response = $this->clien->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid=' . $response['search_id'], [
+        return $response['search_id'];
+    }
+
+    public function searchResults(string $search_id): array
+    {
+        $response = $this->clien->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid=' . $search_id, [
             'timeout' => 10,
             'read_timeout' => 10,
             'connect_timeout' => 10,
@@ -99,7 +103,7 @@ class TravelPayoutsServices
             }
         );
 
-        sleep(8);
+        sleep(9);
 
         $_SESSION['response_result'] = $response->wait()->getContents();
 

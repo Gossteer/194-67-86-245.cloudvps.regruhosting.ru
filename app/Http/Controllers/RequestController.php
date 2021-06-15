@@ -125,7 +125,19 @@ class RequestController extends Controller
      */
     public function searchTickets(Request $request, TravelPayoutsServices $travel_payouts_services): JsonResponse
     {
-        return response()->json($travel_payouts_services->searchTickets($request));
+        return response()->json($travel_payouts_services->searchResults($travel_payouts_services->searchTickets($request)));
+    }
+
+    /**
+     * Поиск билетов по search_id
+     *
+     * @param  Request $request
+     * @param  TravelPayoutsServices $travel_payouts_services
+     * @return JsonResponse
+     */
+    public function searchResult(Request $request, TravelPayoutsServices $travel_payouts_services): JsonResponse
+    {
+        return response()->json($travel_payouts_services->searchResults($request->search_id));
     }
 
     /**
