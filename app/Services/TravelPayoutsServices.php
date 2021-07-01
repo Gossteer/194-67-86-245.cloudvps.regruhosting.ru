@@ -108,7 +108,7 @@ class TravelPayoutsServices
             $_SESSION['response_result'] = $response->wait()->getContents();
         } catch (\Throwable $th) {
             session_write_close();
-            return ['error' => $response->wait()];
+            return [];
         }
 
         session_write_close();
