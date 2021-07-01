@@ -74,13 +74,6 @@ class TravelPayoutsServices
             ]);
         }
 
-        session_write_close();
-
-        session_start();
-        set_time_limit(50);
-        ini_set('memory_limit', '-1');
-
-
         if ($response->status() !== 200) {
             return response()->json($response['error'], $response->status());
         }
@@ -90,6 +83,12 @@ class TravelPayoutsServices
 
     public function searchResults(string $search_id): array
     {
+        session_write_close();
+
+        session_start();
+        set_time_limit(50);
+        ini_set('memory_limit', '-1');
+
         $response = $this->clien->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid=' . $search_id, [
             'timeout' => 10,
             'read_timeout' => 10,
@@ -105,7 +104,12 @@ class TravelPayoutsServices
 
         sleep(9);
 
-        $_SESSION['response_result'] = $response->wait()->getContents();
+        try {
+            $_SESSION['response_result'] = $response->wait()->getContents();
+        } catch (\Throwable $th) {
+            session_write_close();
+            return ['error' => $response->wait()];
+        }
 
         session_write_close();
 
