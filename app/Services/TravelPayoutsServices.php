@@ -81,7 +81,7 @@ class TravelPayoutsServices
         return $response['search_id'];
     }
 
-    public function searchResults(string $search_id): array
+    public function searchResults(string $search_id, int $time_search = 9, int $timeout = 10): array
     {
         session_write_close();
 
@@ -90,9 +90,9 @@ class TravelPayoutsServices
         ini_set('memory_limit', '-1');
 
         $response = $this->clien->getAsync('http://api.travelpayouts.com/v1/flight_search_results?uuid=' . $search_id, [
-            'timeout' => 10,
-            'read_timeout' => 10,
-            'connect_timeout' => 10,
+            'timeout' => $timeout,
+            'read_timeout' => $timeout,
+            'connect_timeout' => $timeout,
         ])->then(
             function ($response) {
                 return $response->getBody();
@@ -102,7 +102,7 @@ class TravelPayoutsServices
             }
         );
 
-        sleep(9);
+        sleep($time_search);
 
         try {
             $_SESSION['response_result'] = $response->wait()->getContents();

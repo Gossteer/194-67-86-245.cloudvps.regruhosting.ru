@@ -125,7 +125,7 @@ class RequestController extends Controller
      */
     public function searchTickets(Request $request, TravelPayoutsServices $travel_payouts_services): JsonResponse
     {
-        return response()->json($travel_payouts_services->searchResults($travel_payouts_services->searchTickets($request)));
+        return response()->json($travel_payouts_services->searchResults($travel_payouts_services->searchTickets($request), 5, 5));
     }
 
     /**
@@ -137,7 +137,7 @@ class RequestController extends Controller
      */
     public function searchResult(Request $request, TravelPayoutsServices $travel_payouts_services): JsonResponse
     {
-        return response()->json($travel_payouts_services->searchResults($request->search_id));
+        return response()->json($travel_payouts_services->searchResults($request->search_id, 25, 25));
     }
 
     /**
