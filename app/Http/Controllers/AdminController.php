@@ -37,10 +37,16 @@ class AdminController extends Controller
         ]);
     }
 
-    public function messageUpdate(Request $request)
+    /**
+     * Обновление
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return JsonResponse
+     */
+    public function messageUpdate(Request $request): JsonResponse
     {
         $message = Message::findOrFail($request->message_id);
-        $message->text = $request->message_text;
+        $message->content = $request->message_text;
         $message->save();
 
         return response()->json([
@@ -48,7 +54,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function getMessages()
+    public function getMessages(): JsonResponse
     {
         return response()->json(Message::select('id', 'name', 'content')->get());
     }
