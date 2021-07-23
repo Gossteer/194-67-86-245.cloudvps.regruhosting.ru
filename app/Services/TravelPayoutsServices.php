@@ -17,6 +17,11 @@ class TravelPayoutsServices
 
     public function searchTickets(Request $request): string
     {
+        return $this->searchTicketsArray(array_merge($request->all(), ['ip' => $request->ip()]) );
+    }
+
+    public function searchTicketsArray(array $request): string
+    {
         $date_dst = $request['date_dst'] ?? null;
         $trip_class = $request['trip_class'] ?? "Y";
         $passengers = [
@@ -27,10 +32,10 @@ class TravelPayoutsServices
 
         if ($date_dst) {
             $response = Http::timeout(5)->post('http://api.travelpayouts.com/v1/flight_search', [
-                'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:{$passengers['adults']}:{$passengers['children']}:{$passengers['infants']}:{$request['date_src']}:{$request['dst']['code']}:{$request['src']['code']}:$date_dst:{$request['src']['code']}:{$request['dst']['code']}:$trip_class:{$request->ip()}"),
+                'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:{$passengers['adults']}:{$passengers['children']}:{$passengers['infants']}:{$request['date_src']}:{$request['dst']['code']}:{$request['src']['code']}:$date_dst:{$request['src']['code']}:{$request['dst']['code']}:$trip_class:{$request['ip']}"),
                 "marker" => "122890",
                 "host" => "back.aviabot.app",
-                "user_ip" => $request->ip(),
+                "user_ip" => $request['ip'],
                 "locale" => "ru",
                 "trip_class" => $request['trip_class'] ?? "Y",
                 "passengers" => [
@@ -53,10 +58,10 @@ class TravelPayoutsServices
             ]);
         } else {
             $response = Http::timeout(5)->post('http://api.travelpayouts.com/v1/flight_search', [
-                'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:{$passengers['adults']}:{$passengers['children']}:{$passengers['infants']}:{$request['date_src']}:{$request['dst']['code']}:{$request['src']['code']}:$trip_class:{$request->ip()}"),
+                'signature' =>  md5("d378bb3f3b879e6fc87899314ba5ce5d:back.aviabot.app:ru:122890:{$passengers['adults']}:{$passengers['children']}:{$passengers['infants']}:{$request['date_src']}:{$request['dst']['code']}:{$request['src']['code']}:$trip_class:{$request['ip']}"),
                 "marker" => "122890",
                 "host" => "back.aviabot.app",
-                "user_ip" => $request->ip(),
+                "user_ip" => $request['ip'],
                 "locale" => "ru",
                 "trip_class" => $request['trip_class'] ?? "Y",
                 "passengers" => [

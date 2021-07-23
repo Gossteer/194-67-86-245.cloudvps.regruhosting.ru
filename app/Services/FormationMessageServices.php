@@ -93,6 +93,46 @@ class FormationMessageServices
         return $response;
     }
 
+    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id): array
+    {
+        $data['srcCity'] = $src['name'];
+        $data['srcCountry'] = $src['country_name'];
+        $data['dstCity'] = $dst['name'];
+        $data['dstCountry'] = $dst['country_name'];
+
+        if ($bullet_segment_dst = ($bullet['segment'][1] ?? false)) {
+            $data['arrow'] = '⇄';
+            $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' ' . $bullet['segment'][0]['flight'][0]['arrival_time'] . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date'])) . ' ' . $bullet_segment_dst['flight'][0]['arrival_time'];
+            $data['footer'] = 'Туда: ' .  $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'] . ', обратно: ' . $airlines[$bullet_segment_dst['flight'][0]['operating_carrier']]['name'];
+        } else {
+            $data['arrow'] = '→';
+            $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' ' . $bullet['segment'][0]['flight'][0]['arrival_time'];
+            $data['footer'] = 'Туда: ' . $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'];
+        }
+
+        $data['seller'] = current($bullet['gates_info'])['label'];
+
+        $terms = array_shift($bullet['terms']);
+        $data['price'] = $terms['price'];
+        $data['old_price'] = $bullet['old_price'];
+        $data['updatedD'] = date('d.m.Y H:i');
+
+        $response['message'] = $this->makeRequestMessage($data, 'api_send_tickets');
+        if ($url = ($this->travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
+            $response['keyboard'] = $this->makeRequestKeyboard(false, true, [
+                'open_link' => [
+                    'link' => $url,
+                    'label' => 'Проверить цену'
+                ]
+            ]);
+        } else {
+            $response['keyboard'] = $url;
+        }
+
+
+        return $response;
+    }
+
     private function getActionForButtons(string $type, array $data): array
     {
         switch ($type) {

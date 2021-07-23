@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\RefreshLimit;
 use App\Console\Commands\SendMessages;
+use App\Console\Commands\SendSubscriptions;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,6 +15,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command(SendMessages::class)->withoutOverlapping()->everyMinute();
+
+        $schedule->command(SendSubscriptions::class)->withoutOverlapping()->everyTenMinutes();
 
         $schedule->command(RefreshLimit::class)->daily();
     }

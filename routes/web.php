@@ -12,6 +12,12 @@ Route::post('/search-tickets', 'RequestController@searchTickets'); //Поиск 
 Route::get('/search-id-tickets', 'RequestController@searchResult'); //Поиск билетов в 'реальном времени' по search_id
 Route::post('/send-first-search-tickets', 'RequestController@sendFirstSearchTickets'); // Отправка n-первых билетов в личные сообщения пользователя
 Route::post('/delete-request', 'RequestController@delete'); //Удаление подписки
+Route::post('/subscription-create', 'SubscriptionController@createSupbscription'); //Создание кастомной подписки
+
+//Методы по работе со статистикой
+Route::get('/get-static-for-user', 'UserDataController@staticDataForUserStartMeny');
+
+Route::post('/subscription-send', 'SubscriptionController@sendSupbscription');
 
 Route::post('/save-chat', 'ChatController@save'); //Создание чата (хз что это)
 Route::get('/chats', 'ChatController@list'); //Получение всех id чатов
