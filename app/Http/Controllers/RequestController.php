@@ -165,7 +165,7 @@ class RequestController extends Controller
         $messages = $formation_message_services->sendFirstSearchTickets($request->src, $request->dst, $request->bullets, $request->airlines, $request->search_id);
 
         foreach ($messages as $message) {
-            $response[] = $vk_api->messagesSend(['user_id' => $request->user_id], $message['message'], env('SEND_FIRST_SEARCH_VK_PUBLIC_ID', '204613902'), false, $message['keyboard']);
+            $response[] = $vk_api->messagesSend(['user_id' => $request->user_id], $message['message'], env('SEND_FIRST_SEARCH_VK_PUBLIC_ID', '204613902'), true, $message['keyboard']);
         }
 
         return response()->json($response ?? []);

@@ -92,7 +92,7 @@ class VkGroupEventsListener
         foreach ($users as $user) {
             foreach ($matches as $tag) {
                 if (Tag::getUserTagsByCertainTagOrTagForAll($user, trim($tag), $groupId)) {
-                    if ($this->api->messagesSend(['user_id' => $user->id], $data['text'], $groupId, false)) {
+                    if ($this->api->messagesSend(['user_id' => $user->id], $data['text'], $groupId, true)) {
                         break;
                     }
                 }

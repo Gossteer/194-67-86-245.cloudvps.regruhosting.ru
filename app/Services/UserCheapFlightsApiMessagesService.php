@@ -60,7 +60,7 @@ class UserCheapFlightsApiMessagesService
                         ['user_id' => $user->id],
                         $request->makeRequestMessage($flight),
                         $request->group_id ?? getenv('MIX_MAIN_VK_PUBLIC_ID'),
-                        false,
+                        true,
                         $this->formation_message_services->makeRequestKeyboard(false, true, [
                             'open_link' => [
                                 'link' => $request->getUrl($flight),
@@ -107,7 +107,7 @@ class UserCheapFlightsApiMessagesService
                     ['user_id' => '382960669'],
                     $text,
                     getenv('MIX_MAIN_VK_PUBLIC_ID'),
-                    false
+                    true
                 );
             }
         }
