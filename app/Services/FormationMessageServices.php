@@ -117,7 +117,7 @@ class FormationMessageServices
         $data['old_price'] = $bullet['old_price'];
         $data['updatedD'] = date('d.m.Y H:i');
 
-        $response['message'] = $this->makeRequestMessage($data, 'api_send_tickets');
+        $response['message'] = $this->makeRequestMessage($data, 'send_new_price_subscription');
         if ($url = ($this->travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
             $response['keyboard'] = $this->makeRequestKeyboard(false, true, [
                 'open_link' => [
