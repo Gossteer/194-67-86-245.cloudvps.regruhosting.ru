@@ -81,7 +81,7 @@ class VkApi
         }
 
         if ($hasAttachment) {
-            $arr['attachment'] = 'https://www.aviasales.ru/';
+            $arr['attachment'] = 'https://vk.com/app7584642_451051929';
         }
 
         $this->params = array_merge(

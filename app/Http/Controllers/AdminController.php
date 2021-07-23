@@ -38,7 +38,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Обновление
+     * Обновление имеющихся сообщений
      *
      * @param  \Illuminate\Http\Request  $request
      * @return JsonResponse
@@ -54,6 +54,11 @@ class AdminController extends Controller
         ]);
     }
 
+    /**
+     * Получение всех имеющихся сообщений
+     *
+     * @return JsonResponse
+     */
     public function getMessages(): JsonResponse
     {
         return response()->json(Message::select('id', 'name', 'content')->get());
