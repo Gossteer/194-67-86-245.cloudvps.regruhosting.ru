@@ -36,4 +36,20 @@ class AdminController extends Controller
             'response' => 'ok'
         ]);
     }
+
+    public function messageUpdate(Request $request)
+    {
+        $message = Message::findOrFail($request->message_id);
+        $message->text = $request->message_text;
+        $message->save();
+
+        return response()->json([
+            'response' => 'ok'
+        ]);
+    }
+
+    public function getMessages()
+    {
+        return response()->json(Message::select('id', 'name', 'content')->get());
+    }
 }

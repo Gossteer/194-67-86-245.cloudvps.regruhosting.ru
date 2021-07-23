@@ -17,6 +17,7 @@ Route::post('/subscription-create', 'SubscriptionController@createSupbscription'
 //Методы по работе со статистикой
 Route::get('/get-static-for-user', 'UserDataController@staticDataForUserStartMeny');
 
+//Удалить, как тест с подпиской закончится
 Route::post('/subscription-send', 'SubscriptionController@sendSupbscription');
 
 Route::post('/save-chat', 'ChatController@save'); //Создание чата (хз что это)
@@ -143,6 +144,10 @@ Route::get('users/send/{user_id}', function ($user_id) {
 
     // return $text;
 });
+
+//Административные методы
+Route::post('/update-message', 'AdminController@messageUpdate');
+Route::get('/get-messages', 'AdminController@getMessages');
 
 //Более или пока не используются
 Route::post('/get-cheapest-ticket', 'IndexController@getCheapestTicket'); //Получение самых дешёвых билетов
