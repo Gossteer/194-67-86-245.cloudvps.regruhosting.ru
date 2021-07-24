@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command(SendMessages::class)->withoutOverlapping()->everyMinute();
 
-        $schedule->command(SendSubscriptions::class)->withoutOverlapping()->everyTenMinutes();
+        $schedule->command(SendSubscriptions::class)->withoutOverlapping()->everyMinute();
 
         $schedule->command(RefreshLimit::class)->daily();
     }

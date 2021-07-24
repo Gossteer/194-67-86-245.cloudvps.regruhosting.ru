@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserReceivedRequest;
 use App\Services\StaticDataServise;
 use App\Services\VkApi;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,14 +40,21 @@ class UserDataController extends Controller
             ]);
 
             if ($key == 'is_install') {
-                $vkApi->messagesSend(['user_id' => $user_id], Message::where('name', 'hello_text')->first()->content , env('HELLO_MESSAGE_VK_PUBLIC_ID', '205982527'));
+                $vkApi->messagesSend(['user_id' => $user_id], Message::where('name', 'hello_text')->first()->content, env('HELLO_MESSAGE_VK_PUBLIC_ID', '205982527'));
             }
 
             return response()->noContent(Response::HTTP_CREATED);
         }
     }
 
-    public function staticDataForUserStartMeny(Request $request, StaticDataServise $static_data_servise)
+    /**
+     * Формирование статистики для пользователя на начальном экране
+     *
+     * @param  Request $request
+     * @param  StaticDataServise $static_data_servise
+     * @return HttpResponse
+     */
+    public function staticDataForUserStartMeny(Request $request, StaticDataServise $static_data_servise): JsonResponse
     {
         $user_data = $static_data_servise->getUserStatic($request->user_id);
 

@@ -20,7 +20,7 @@ class SubscriptionController extends Controller
     public function createSupbscription(Request $request)
     {
         try {
-            $supbscription = $this->subscription_service->createSupbscription($request);
+            $supbscription = $this->subscription_service->createOrUpdateSupbscription($request);
 
             $response = 'ok';
             $code = 201;
