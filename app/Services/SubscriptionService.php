@@ -55,7 +55,7 @@ class SubscriptionService
 
         $date_now = date('Y-m-d H:i:s');
 
-        Subscription::where('origin_date', '<',  $this->getDateFormatForMySql($date_now))->where('subscription_category_id', $subscription_TPST->id)->delete();
+        $subscription_TPST->subscriptions()->where('origin_date', '<',  $date_now)->where('subscription_category_id', $subscription_TPST->id)->delete();
 
         foreach ($subscription_TPST->subscriptions->where('origin_date', '>=',  $this->getDateFormatForMySql($date_now)) as $subscription) {
             if (strtotime(date('Y-m-d H:i:s', strtotime($subscription->updated_at . "+ $subscription->period minutes"))) <= strtotime($date_now)) {
