@@ -17,7 +17,7 @@ class TravelPayoutsServices
 
     public function searchTickets(Request $request): string
     {
-        return $this->searchTicketsArray(array_merge($request->all(), ['ip' => $request->ip()]) );
+        return $this->searchTicketsArray(array_merge($request->all(), ['ip' => $request->ip()]));
     }
 
     public function searchTicketsArray(array $request): string
@@ -125,6 +125,9 @@ class TravelPayoutsServices
                     foreach ($value['proposals'] as $key_proposals => &$proposals) {
                         $proposals['gates_info'] = &$value['gates_info'];
                         if (($check_closure = function (&$unique_value_check, $proposals, $key, $key_proposals) {
+                            if ($proposals['terms'][array_key_first($proposals['terms'])]['currency'] != 'rub') {
+                                return true;
+                            }
                             $price = $proposals['terms'][array_key_first($proposals['terms'])]['price'];
                             $departure_date = $proposals['segment'][0]['flight'][0]['departure_timestamp'];
                             $operating_carrier = $proposals['segment'][0]['flight'][0]['operating_carrier'];
