@@ -18,12 +18,10 @@ class RefreshLimit extends Command
 
     public function handle()
     {
-        $users = UserChat::all();
+        $user_chats = UserChat::with('user.requests')->get();
 
-        foreach ($users as $user) {
-            $requests = Request::where(['user_id' => $user->user_id])->get();
-
-            foreach ($requests as $request) {
+        foreach ($user_chats as $user_chat) {
+            foreach ($user_chat->user->requests as $request) {
                 $request->currentLimit = 0;
                 $request->save();
             }
