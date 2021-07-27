@@ -76,7 +76,7 @@ class SubscriptionService
 
                         $message = $formation_message_services->sendSubscriptionSearchTickets($subscription_data['dst'], $subscription_data['src'], $subscription->last_data_response->toArray(), $low_after_now_search[0]['airlines'], $low_after_now_search[0]['search_id']);
 
-                        $vk_api->messagesSend(['user_id' => $subscription->user_id], $message['message'], env('SEND_SUBSCRIPTION_SEARCH_VK_PUBLIC_ID', '205982527'), false, $message['keyboard']);
+                        $vk_api->messagesSend(['user_id' => $subscription->user_id], $message['message'], env('SEND_SUBSCRIPTION_SEARCH_VK_PUBLIC_ID', '205982619'), true, $message['keyboard']);
 
                         $subscription->user->receivedRequest($low_after_now_search[0]['search_id']);
                     }
