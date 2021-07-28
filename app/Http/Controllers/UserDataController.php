@@ -52,7 +52,7 @@ class UserDataController extends Controller
      *
      * @param  Request $request
      * @param  StaticDataServise $static_data_servise
-     * @return HttpResponse
+     * @return JsonResponse
      */
     public function staticDataForUserStartMeny(Request $request, StaticDataServise $static_data_servise): JsonResponse
     {

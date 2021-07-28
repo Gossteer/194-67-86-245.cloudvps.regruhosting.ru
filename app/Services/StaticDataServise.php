@@ -87,6 +87,18 @@ class StaticDataServise
     }
 
     /**
+     * Метод по получению всей статистики
+     *
+     * @param  string $model
+     * @param  int $user_id
+     * @return int
+     */
+    public function getStaticData(string $model): int
+    {
+        return $model::count();
+    }
+
+    /**
      * Форматирование даты в необходимом формате
      *
      * @param  string $date

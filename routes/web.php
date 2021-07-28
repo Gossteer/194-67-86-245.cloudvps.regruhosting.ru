@@ -15,7 +15,8 @@ Route::post('/delete-request', 'RequestController@delete'); //Удаление �
 Route::post('/subscription-create', 'SubscriptionController@createSupbscription'); //Создание кастомной подписки
 
 //Методы по работе со статистикой
-Route::get('/get-static-for-user', 'UserDataController@staticDataForUserStartMeny');
+Route::get('/get-static-for-user', 'UserDataController@staticDataForUserStartMeny'); // Статистика юзера и о юзере
+Route::get('/get-full-static-for-first-install', 'StaticController@getFullStaticForFirstInstall'); // общая статистика
 
 //Удалить, как тест с подпиской закончится
 Route::post('/subscription-send', 'SubscriptionController@sendSupbscription');
