@@ -58,7 +58,7 @@ class SubscriptionService
         $subscription_TPST->subscriptions()->where('origin_date', '<',  $date_now)->where('subscription_category_id', $subscription_TPST->id)->delete();
 
         foreach ($subscription_TPST->subscriptions->where('origin_date', '>=',  $this->getDateFormatForMySql($date_now)) as $subscription) {
-            if (strtotime(date('Y-m-d H:i:s', strtotime($subscription->updated_at . "+ $subscription->period minutes"))) <= strtotime($date_now)) {
+            if (strtotime(date('Y-m-d H:i:s', strtotime($subscription->updated_at))) <= strtotime($date_now)) {
 
                 $low_after_now_search = $travel_payouts_services->searchResults($travel_payouts_services->searchTicketsArray($subscription->data->toArray()), 15, 15);
 
@@ -82,7 +82,7 @@ class SubscriptionService
                     }
                 }
 
-                $subscription->updated_at = $date_now;
+                $subscription->updated_at = date('Y-m-d H:i:s', strtotime($subscription->updated_at . "+ $subscription->period minutes"));
                 $subscription->save();
             }
         }
