@@ -14,6 +14,7 @@ Route::post('/send-first-search-tickets', 'RequestController@sendFirstSearchTick
 Route::post('/delete-request', 'RequestController@delete'); //Удаление подписки
 Route::post('/subscription-create', 'SubscriptionController@createSupbscription'); //Создание кастомной подписки
 Route::get('/get-subscriptions-byuser', 'SubscriptionController@getSubscriptionsByUser'); //Создание получение кастомной подписки
+Route::post('/delete-subscription/{subscription_id}', 'SubscriptionController@deleteSubscription');
 
 
 //Методы по работе со статистикой
