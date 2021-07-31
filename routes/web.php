@@ -13,13 +13,12 @@ Route::get('/search-id-tickets', 'RequestController@searchResult'); //Поиск
 Route::post('/send-first-search-tickets', 'RequestController@sendFirstSearchTickets'); // Отправка n-первых билетов в личные сообщения пользователя
 Route::post('/delete-request', 'RequestController@delete'); //Удаление подписки
 Route::post('/subscription-create', 'SubscriptionController@createSupbscription'); //Создание кастомной подписки
+Route::get('/get-subscriptions-byuser', 'SubscriptionController@getSubscriptionsByUser'); //Создание получение кастомной подписки
+
 
 //Методы по работе со статистикой
 Route::get('/get-static-for-user', 'UserDataController@staticDataForUserStartMeny'); // Статистика юзера и о юзере
 Route::get('/get-full-static-for-first-install', 'StaticController@getFullStaticForFirstInstall'); // общая статистика
-
-//Удалить, как тест с подпиской закончится
-Route::post('/subscription-send', 'SubscriptionController@sendSupbscription');
 
 Route::post('/save-chat', 'ChatController@save'); //Создание чата (хз что это)
 Route::get('/chats', 'ChatController@list'); //Получение всех id чатов

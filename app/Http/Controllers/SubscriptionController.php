@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FormationMessageServices;
+use App\Models\Subscription;
 use App\Services\SubscriptionService;
-use App\Services\TravelPayoutsServices;
-use App\Services\VkApi;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class SubscriptionController extends Controller
 {
@@ -35,21 +32,15 @@ class SubscriptionController extends Controller
         ], $code);
     }
 
-    public function sendSupbscription(VkApi $vk_api, FormationMessageServices $formation_message_services, TravelPayoutsServices $travel_payouts_services)
+    public function getSubscriptionsByUser(Request $request)
     {
-        try {
-            $supbscription = $this->subscription_service->sendSupbscription($vk_api, $formation_message_services, $travel_payouts_services);
+        return response()->json(Subscription::where('user_id', $request->user_id)->where('subscription_category_id', $request->subscription_category_id)->get());
+    }
 
-            $response = 'ok';
-            $code = 201;
-        } catch (\Throwable $th) {
-            $response = $th->getMessage();
-            $code = 501;
-        }
+    public function deleteSubscription($subscription_id)
+    {
+        Subscription::find($subscription_id)->delete();
 
-
-        return response()->json([
-            'response' => $response
-        ], $code);
+        return response()->noContent();
     }
 }
