@@ -17,7 +17,11 @@ class SubscriptionService
         $period = $request->period ?? 1440;
 
         if ($request->date) {
-            $updated_at = date('Y-m-d H:i:s', strtotime($request->date . " + $period minutes"));
+            if (strtotime($request->date) > strtotime("now")) {
+                $updated_at = date('Y-m-d H:i:s', strtotime($request->date));
+            } else {
+                $updated_at = date('Y-m-d H:i:s', strtotime($request->date . " + $period minutes"));
+            }
         } else {
             $updated_at = date('Y-m-d H:i:s', strtotime("now + $period minutes"));
         }
