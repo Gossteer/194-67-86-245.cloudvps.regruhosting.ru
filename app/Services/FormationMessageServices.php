@@ -114,7 +114,8 @@ class FormationMessageServices
 
         $terms = array_shift($bullet['terms']);
         $data['price'] = $terms['price'];
-        $data['price_diff'] = $bullet['old_price'] - $terms['price'];
+        $data['price_diff'] = abs(($price_diff = $bullet['old_price'] - $terms['price']));
+        $data['condition'] = (($price_diff < 0) ? 'увеличилась' : 'снизилась');
         $data['old_price'] = $bullet['old_price'];
         $data['updatedD'] = date('d.m.Y H:i');
 

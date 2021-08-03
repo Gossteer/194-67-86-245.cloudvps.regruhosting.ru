@@ -68,12 +68,14 @@ class SubscriptionService
 
                 if (!$subscription->user->hasRequestReceived($low_after_now_search[0]['search_id'])) {
                     $subscription_data = $subscription->data->toArray();
-                    $low_last_search = $subscription->last_data_response->toArray()['terms'][array_key_first($subscription->last_data_response->toArray()['terms'])]['price'] - $subscription_data['low_price'];
+                    $last_price = $subscription->last_data_response->toArray()['terms'][array_key_first($subscription->last_data_response->toArray()['terms'])]['price'];
+                    $low_last_search = $last_price - $subscription_data['low_price'];
+                    $max_last_search = $last_price + $subscription_data['low_price'];
 
-
-                    if ($low_after_now_search[0]['proposals'][0]['terms'][array_key_first($low_after_now_search[0]['proposals'][0]['terms'])]['price'] < $low_last_search) {
+                    $new_price = $low_after_now_search[0]['proposals'][0]['terms'][array_key_first($low_after_now_search[0]['proposals'][0]['terms'])]['price'];
+                    if ($new_price < $low_last_search or $new_price > $max_last_search) {
                         $last_data_response = $low_after_now_search[0]['proposals'][0];
-                        $last_data_response['old_price'] = $low_last_search;
+                        $last_data_response['old_price'] = $last_price;
 
                         $subscription->last_data_response = $last_data_response;
                         $subscription->last_date = $date_now;
