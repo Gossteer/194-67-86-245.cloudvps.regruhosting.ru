@@ -124,7 +124,7 @@ class FormationMessageServices
             $response['keyboard'] = $this->makeRequestKeyboard(false, true, [
                 'open_link' => [
                     'link' => $url,
-                    'label' => 'Проверить цену'
+                    'label' => 'Купить за 15 минут'
                 ]
             ]);
         } else {
