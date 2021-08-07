@@ -109,7 +109,7 @@ class FormationMessageServices
         return $response;
     }
 
-    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id, array $passengers, string $trip_class, string $date_create): array
+    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id, array $passengers, string $trip_class, string $date_create, int $first_price): array
     {
         $data['srcCity'] = $src['name'];
         $data['srcCountry'] = $src['country_name'];
@@ -130,6 +130,8 @@ class FormationMessageServices
 
         $terms = array_shift($bullet['terms']);
         $data['price'] = $terms['price'];
+        $data['first_price'] = $first_price;
+        $data['dateCreate'] = $date_create;
         $data['time_tostr'] = self::getHelloMessageForTime();
         $data['price_diff'] = abs(($price_diff = $bullet['old_price'] - $terms['price']));
         $data['condition'] = (($price_diff < 0) ? 'увеличилась' : 'снизилась');
