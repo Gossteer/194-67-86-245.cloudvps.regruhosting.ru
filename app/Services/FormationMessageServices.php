@@ -131,7 +131,7 @@ class FormationMessageServices
         $terms = array_shift($bullet['terms']);
         $data['price'] = $terms['price'];
         $data['first_price'] = $first_price;
-        $data['dateCreate'] = $date_create;
+        $data['dateCreate'] = date('d.m.Y', strtotime($date_create));
         $data['time_tostr'] = self::getHelloMessageForTime();
         $data['price_diff'] = abs(($price_diff = $bullet['old_price'] - $terms['price']));
         $data['condition'] = (($price_diff < 0) ? 'увеличилась' : 'снизилась');
