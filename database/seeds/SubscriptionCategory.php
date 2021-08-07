@@ -15,5 +15,9 @@ class SubscriptionCategory extends Seeder
         DB::table('subscription_categories')->insert([
             'name' => 'TPST',
         ]);
+
+        DB::table('subscription_categories')->insert([
+            'name' => 'UCFAM',
+        ]);
     }
 }

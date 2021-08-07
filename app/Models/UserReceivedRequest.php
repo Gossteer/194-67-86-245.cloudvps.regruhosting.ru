@@ -20,6 +20,12 @@ class UserReceivedRequest extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'request_api_id'
+        'user_id', 'request_api_id',
+        'subscription_category_id'
     ];
+
+    public function subscriptionCategory()
+    {
+        return $this->belongsTo(SubscriptionCategory::class);
+    }
 }

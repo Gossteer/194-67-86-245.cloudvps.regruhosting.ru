@@ -10,4 +10,9 @@ class SubscriptionCategory extends Model
     {
         return $this->hasMany(Subscription::class);
     }
+
+    public function userReceivedRequests()
+    {
+        return $this->hasMany(UserReceivedRequest::class);
+    }
 }

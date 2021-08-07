@@ -85,7 +85,7 @@ class SubscriptionService
 
                         $vk_api->messagesSend(['user_id' => $subscription->user_id], $message['message'], env('SEND_SUBSCRIPTION_SEARCH_VK_PUBLIC_ID', '205982619'), true, $message['keyboard']);
 
-                        $subscription->user->receivedRequest($low_after_now_search[0]['search_id']);
+                        $subscription->user->receivedRequest($low_after_now_search[0]['search_id'], 1);
                     }
                 }
 
