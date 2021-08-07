@@ -99,7 +99,7 @@ class FormationMessageServices
         return $response;
     }
 
-    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id, array $passengers, string $trip_class): array
+    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id, array $passengers, string $trip_class, string $date_create): array
     {
         $data['srcCity'] = $src['name'];
         $data['srcCountry'] = $src['country_name'];
@@ -108,11 +108,11 @@ class FormationMessageServices
 
         if ($bullet_segment_dst = ($bullet['segment'][1] ?? false)) {
             $data['arrow'] = '⇄';
-            $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' ' . $bullet['segment'][0]['flight'][0]['arrival_time'] . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date'])) . ' ' . $bullet_segment_dst['flight'][0]['arrival_time'];
+            $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' в ' . $bullet['segment'][0]['flight'][0]['arrival_time'] . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date'])) . ' в ' . $bullet_segment_dst['flight'][0]['arrival_time'];
             $data['footer'] = 'Туда: ' .  $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'] . ', обратно: ' . $airlines[$bullet_segment_dst['flight'][0]['operating_carrier']]['name'];
         } else {
             $data['arrow'] = '→';
-            $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' ' . $bullet['segment'][0]['flight'][0]['arrival_time'];
+            $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' в ' . $bullet['segment'][0]['flight'][0]['arrival_time'];
             $data['footer'] = 'Туда: ' . $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'];
         }
 
@@ -120,10 +120,11 @@ class FormationMessageServices
 
         $terms = array_shift($bullet['terms']);
         $data['price'] = $terms['price'];
+        $data['dateCreate'] = date('d.m.Y', strtotime($date_create));
         $data['price_diff'] = abs(($price_diff = $bullet['old_price'] - $terms['price']));
         $data['condition'] = (($price_diff < 0) ? 'увеличилась' : 'снизилась');
         $data['old_price'] = $bullet['old_price'];
-        $data['updatedD'] = date('d.m.Y H:i');
+        $data['updatedD'] = date('d.m.Y в H:i');
 
         $response['message'] = $this->makeRequestMessage($data, 'send_new_price_subscription');
         if ($url = ($this->travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
