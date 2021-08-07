@@ -6,6 +6,7 @@ use App\Models\Message;
 use App\Models\Request as ModelsRequest;
 use App\Models\User;
 use App\Models\UserReceivedRequest;
+use App\Services\FormationMessageServices;
 use App\Services\StaticDataServise;
 use App\Services\VkApi;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +22,7 @@ class UserDataController extends Controller
      * @param  Request $request
      * @return HttpResponse
      */
-    public function store(Request $request, $user_id, $key, VkApi $vkApi): HttpResponse
+    public function store(Request $request, $user_id, $key, VkApi $vkApi, FormationMessageServices $formationMessageServices): HttpResponse
     {
         $value = $request->get('value');
 
@@ -40,7 +41,7 @@ class UserDataController extends Controller
             ]);
 
             if ($key == 'is_install') {
-                $vkApi->messagesSend(['user_id' => $user_id], Message::where('name', 'hello_text')->first()->content, env('HELLO_MESSAGE_VK_PUBLIC_ID', '205982527'));
+                $vkApi->messagesSend(['user_id' => $user_id], $formationMessageServices->sendHelloMessage(), env('HELLO_MESSAGE_VK_PUBLIC_ID', '205982527'));
             }
 
             return response()->noContent(Response::HTTP_CREATED);

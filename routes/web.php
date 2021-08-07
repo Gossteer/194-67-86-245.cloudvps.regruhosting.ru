@@ -94,22 +94,7 @@ Route::get('testbutton', function () {
     dd(json_encode($keyboard, JSON_UNESCAPED_UNICODE), $keyboard);
 });
 Route::get('lool', function () {
-    $lol = [
-        'open_link' => [
-            [
-                'link' => 'asdasdasd',
-                'label' => 'Купить'
-            ],
-            [
-                'link' => "asdasd",
-                'label' => 'Проверить цену'
-            ]
-        ]
-    ];
 
-    foreach ($lol as $key => $value) {
-        dd($key, $value, isset($value[0]));
-    }
 });
 
 //Административные методы

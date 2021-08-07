@@ -58,6 +58,13 @@ class FormationMessageServices
         }
     }
 
+    public function sendHelloMessage()
+    {
+        $data['time_tostr'] = self::getHelloMessageForTime();
+
+        $response['message'] = $this->makeRequestMessage($data, 'hello_text');
+    }
+
     public function sendFirstSearchTickets(array $src, array $dst, array $bullets, array $airlines, string $search_id): array
     {
         $data['srcCity'] = $src['name'];
@@ -81,6 +88,7 @@ class FormationMessageServices
 
             $terms = array_shift($bullet['terms']);
             $data['price'] = $terms['price'];
+            $data['time_tostr'] = self::getHelloMessageForTime();
             $data['updatedD'] = date('d.m.Y H:i');
 
             $response[$key]['message'] = $this->makeRequestMessage($data, 'api_send_tickets');
@@ -120,7 +128,7 @@ class FormationMessageServices
 
         $terms = array_shift($bullet['terms']);
         $data['price'] = $terms['price'];
-        $data['dateCreate'] = date('d.m.Y', strtotime($date_create));
+        $data['time_tostr'] = self::getHelloMessageForTime();
         $data['price_diff'] = abs(($price_diff = $bullet['old_price'] - $terms['price']));
         $data['condition'] = (($price_diff < 0) ? 'увеличилась' : 'снизилась');
         $data['old_price'] = $bullet['old_price'];
@@ -167,6 +175,26 @@ class FormationMessageServices
                 Log::error($error_message);
                 throw new Exception($error_message);
                 break;
+        }
+    }
+
+    public static function getHelloMessageForTime(): string
+    {
+        $date = strtotime(date('H:i'));
+        if (strtotime('06:01') <= $date and strtotime('12:00') >= $date) {
+            return 'утро';
+        }
+
+        if (strtotime('12:01') <= $date and strtotime('18:00') >= $date) {
+            return 'день';
+        }
+
+        if (strtotime('18:01') <= $date and strtotime('00:00') >= $date) {
+            return 'вечер';
+        }
+
+        if (strtotime('00:01') <= $date and strtotime('06:00') >= $date) {
+            return 'ночи';
         }
     }
 }
