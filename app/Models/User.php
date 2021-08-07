@@ -78,11 +78,12 @@ class User extends Authenticatable
      * @param int $requestApiId
      * @return void
      */
-    public function receivedRequest($requestApiId, ?int $subscription_category_id = null)
+    public function receivedRequest($requestApiId, ?int $subscription_id = null, ?int $request_id = null)
     {
         $requestReceived = new UserReceivedRequest();
         $requestReceived->request_api_id = $requestApiId;
-        $requestReceived->subscription_category_id = $subscription_category_id;
+        $requestReceived->subscription_id  = $subscription_id;
+        $requestReceived->request_id  = $request_id;
         $this->userReceivedRequest()->save($requestReceived);
     }
 

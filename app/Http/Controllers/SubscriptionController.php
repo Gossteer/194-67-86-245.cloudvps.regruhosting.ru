@@ -35,7 +35,13 @@ class SubscriptionController extends Controller
 
     public function getSubscriptionsByUser(Request $request)
     {
-        return response()->json(Subscription::select('id', 'data', 'last_date', 'period', 'subscription_category_id')->with('subscriptionCategory')->where('user_id', $request->user_id)->where('subscription_category_id', $request->subscription_category_id)->get());
+        return response()->json(Subscription::select(
+            'id',
+            'data',
+            'last_date',
+            'period',
+            'subscription_category_id')
+            ->with('subscriptionCategory')->where('user_id', $request->user_id)->where('subscription_category_id', $request->subscription_category_id)->get());
     }
 
     public function deleteSubscription($subscription_id)

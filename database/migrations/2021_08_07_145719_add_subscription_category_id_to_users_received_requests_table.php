@@ -14,7 +14,9 @@ class AddSubscriptionCategoryIdToUsersReceivedRequestsTable extends Migration
     public function up()
     {
         Schema::table('users_received_requests', function (Blueprint $table) {
-            $table->foreignId('subscription_category_id')->nullable()->constrained('subscription_categories');
+            $table->unsignedInteger('request_id')->nullable();
+            $table->foreign('request_id')->references('id')->on('requests')->onDelete('cascade');
+            $table->foreignId('subscription_id')->nullable()->constrained('subscriptions')->onDelete('cascade');
         });
     }
 
@@ -26,7 +28,10 @@ class AddSubscriptionCategoryIdToUsersReceivedRequestsTable extends Migration
     public function down()
     {
         Schema::table('users_received_requests', function (Blueprint $table) {
-            $table->dropColumn('subscription_category_id');
+            $table->dropForeign('users_received_requests_request_id_foreign');
+            $table->dropColumn('request_id');
+            $table->dropForeign('users_received_requests_subscription_id_foreign');
+            $table->dropColumn('subscription_id');
         });
     }
 }

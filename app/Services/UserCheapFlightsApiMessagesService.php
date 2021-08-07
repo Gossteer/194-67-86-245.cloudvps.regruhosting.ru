@@ -73,7 +73,7 @@ class UserCheapFlightsApiMessagesService
                         $errors[$response['error']['error_code']] = $response['error']['request_params'][3]['value'];
                     }
 
-                    $user->receivedRequest($flight['id'], 2);
+                    $user->receivedRequest($flight['id'], null, $request->id);
                     sleep(1);
                 }
             }

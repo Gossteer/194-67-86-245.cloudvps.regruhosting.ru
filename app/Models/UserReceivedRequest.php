@@ -24,8 +24,13 @@ class UserReceivedRequest extends Model
         'subscription_category_id'
     ];
 
-    public function subscriptionCategory()
+    public function subscription()
     {
-        return $this->belongsTo(SubscriptionCategory::class);
+        return $this->belongsTo(Subscription::class);
+    }
+
+    public function request()
+    {
+        return $this->belongsTo(Request::class);
     }
 }

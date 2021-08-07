@@ -453,4 +453,9 @@ EOT;
         $passengers = isset($output['passengers']) ? $output['passengers'] : "url";
         return $item['localizedInfos'][$currencyForUrl][$passengers] ?? null;
     }
+
+    public function userReceivedRequests()
+    {
+        return $this->hasMany(UserReceivedRequest::class);
+    }
 }
