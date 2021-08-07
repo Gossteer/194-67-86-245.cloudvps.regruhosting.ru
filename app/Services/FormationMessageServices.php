@@ -63,6 +63,8 @@ class FormationMessageServices
         $data['time_tostr'] = self::getHelloMessageForTime();
 
         $response['message'] = $this->makeRequestMessage($data, 'hello_text');
+
+        return $response;
     }
 
     public function sendFirstSearchTickets(array $src, array $dst, array $bullets, array $airlines, string $search_id): array
