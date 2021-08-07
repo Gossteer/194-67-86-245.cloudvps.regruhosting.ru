@@ -58,7 +58,7 @@ class FormationMessageServices
         }
     }
 
-    public function sendHelloMessage()
+    public function sendHelloMessage(): array
     {
         $data['time_tostr'] = self::getHelloMessageForTime();
 
