@@ -113,6 +113,22 @@ class UserCheapFlightsApiMessagesService
         }
     }
 
+    /**
+     * Формирование ссылки поиска на авиасеилс
+     *
+     * @param string $src_code
+     * @param string $dst_code
+     * @param string $departure_date
+     * @param array $passenger
+     * @param string $marker = '122890.miniарр_subscr'
+     * @param string|null $return_date
+     * @return string
+     */
+    public static function getUrlAviasales(string $src_code, string $dst_code, string $departure_date, array $passengers, string $trip_class, ?string $return_date = null, string $marker = "122890.miniapp_subscr"): string
+    {
+        return "https://www.aviasales.ru/search?origin_iata=$src_code&destination_iata=$dst_code&depart_date=$departure_date&with_request=1&adults={$passengers['adults']}&children={$passengers['children']}&infants={$passengers['infants']}&trip_class=$trip_class&marker=$marker&oneway=0" . ($return_date ? "&return_date=$return_date" : "");
+    }
+
     // private function getErrorForGroup(array $errors = []): array
     // {
     //     return array_filter($errors, function ($key, $value) use(&$errors)

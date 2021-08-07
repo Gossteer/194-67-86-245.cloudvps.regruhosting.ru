@@ -134,7 +134,7 @@ class FormationMessageServices
                         'label' => 'Купить'
                     ],
                     [
-                        'link' => "https://www.aviasales.ru/search?origin_iata={$src['code']}&destination_iata={$dst['code']}&depart_date={$bullet['segment'][0]['flight'][0]['departure_date']}&with_request=1&adults={$passengers['adults']}&children={$passengers['children']}&infants={$passengers['infants']}&trip_class=$trip_class&marker=122890.tickets_from_serbia&oneway=0",
+                        'link' => UserCheapFlightsApiMessagesService::getUrlAviasales($src['code'], $dst['code'], $bullet['segment'][0]['flight'][0]['departure_date'], $passengers, $trip_class, $bullet_segment_dst['flight'][0]['departure_date'] ?? null),
                         'label' => 'Проверить цену'
                     ]
                 ]
