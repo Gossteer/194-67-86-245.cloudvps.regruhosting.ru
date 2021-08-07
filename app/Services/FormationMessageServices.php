@@ -34,7 +34,13 @@ class FormationMessageServices
     {
         try {
             foreach ($buttons as $group => $value) {
-                $group_buttons[$group][] = $this->getActionForButtons($group, $value);
+                if (isset($value[0])) {
+                    foreach ($value as $key => $button) {
+                        $group_buttons[$group][] = $this->getActionForButtons($group, $button);
+                    }
+                } else {
+                    $group_buttons[$group][] = $this->getActionForButtons($group, $value);
+                }
             }
 
             foreach ($group_buttons as $group => $button) {
@@ -93,7 +99,7 @@ class FormationMessageServices
         return $response;
     }
 
-    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id): array
+    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id, array $passengers, string $trip_class): array
     {
         $data['srcCity'] = $src['name'];
         $data['srcCountry'] = $src['country_name'];
@@ -123,8 +129,14 @@ class FormationMessageServices
         if ($url = ($this->travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
             $response['keyboard'] = $this->makeRequestKeyboard(false, true, [
                 'open_link' => [
-                    'link' => $url,
-                    'label' => 'Купить'
+                    [
+                        'link' => $url,
+                        'label' => 'Купить'
+                    ],
+                    [
+                        'link' => "https://www.aviasales.ru/search?origin_iata={$src['code']}&destination_iata={$dst['code']}&depart_date={$bullet['segment'][0]['flight'][0]['departure_date']}&with_request=1&adults={$passengers['adults']}&children={$passengers['children']}&infants={$passengers['infants']}&trip_class=$trip_class&marker=122890.tickets_from_serbia&oneway=0",
+                        'label' => 'Проверить цену'
+                    ]
                 ]
             ]);
         } else {
