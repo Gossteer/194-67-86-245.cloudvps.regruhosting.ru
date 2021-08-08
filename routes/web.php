@@ -42,60 +42,6 @@ Route::post('/remove-tags', 'TagController@remove'); //Отсоединяем т
 
 //Тестовые методы
 Route::get('/test', 'TestController@test');
-Route::get('testbutton', function () {
-    $keyboard = new stdClass();
-    $keyboard->one_time = false;
-    $keyboard->inline = true;
-    $buttons = new stdClass();
-    $buttons->action = [
-        'type' => "open_link",
-        'link' => '',
-        'label' => '',
-        'payload' => ''
-    ];
-    $keyboard->buttons[0] = [$buttons];
-
-
-    $lol['keyboard'] = [
-        'one_time' => true,
-        'inline' => true,
-        'buttons' => [
-            [
-                [
-                    'action' => [
-                        'type' => "open_link",
-                        'link' => '',
-                        'label' => '',
-                        'payload' => ''
-                    ]
-                ]
-
-            ]
-        ]
-    ];
-
-    $keyboard = [
-        'one_time' => false,
-        'inline' => true,
-        "buttons" => [[
-            [
-                "action" => [
-                    'type' => "open_link",
-                    'link' => '',
-                    "payload" => '{"button": "1"}',
-                    "label" => "Фрукты?"
-                ],
-                "color" => "default"
-            ],
-        ]]
-    ];
-
-    // $keyboard;
-    dd(json_encode($keyboard, JSON_UNESCAPED_UNICODE), $keyboard);
-});
-Route::get('lool', function () {
-
-});
 
 //Административные методы
 Route::post('/update-message', 'AdminController@messageUpdate');
