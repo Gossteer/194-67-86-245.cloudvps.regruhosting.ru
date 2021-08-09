@@ -19,7 +19,7 @@ jobs:
                 with:
                     php-version: '^7.4'
             -   name: Deployment
-                uses: appleboy/ssh-action@main
+                uses: appleboy/ssh-action@master
                 with:
                   host: ${{ secrets.SSH_HOST }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
