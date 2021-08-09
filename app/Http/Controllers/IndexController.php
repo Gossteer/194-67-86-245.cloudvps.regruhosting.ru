@@ -61,7 +61,7 @@ class IndexController extends Controller
             . 'destination=' . $dstCityCode
             . '&'
             . '&'
-            . 'token=' . getenv('MIX_AVIASALES_API_TOKEN')
+            . 'token=' . config('cheapest.MIX_AVIASALES_API_TOKEN')
         );
 
         return response()->json([

@@ -100,12 +100,12 @@ class VkApi
     private function call($method, $accessToken = '')
     {
         $this->params['access_token'] = $accessToken;
-        $this->params['v'] = getenv('VK_API_VERSION');
+        $this->params['v'] = config('vk.api.VK_API_VERSION');
 
         // Log::info(json_encode($this->params));
 
         $response = $this->client->post(
-            getenv('VK_API_ENDPOINT') . $method,
+            config('vk.api.VK_API_ENDPOINT') . $method,
             [
                 'form_params' => $this->params
             ]

@@ -99,7 +99,7 @@ class UserControllerTest extends TestCase
                 $this->api->messagesSend(
                     ['user_id' => $user->id],
                     $request->makeRequestMessage($flight),
-                    getenv('MIX_MAIN_VK_PUBLIC_ID'),
+                    config('vk.groups.MIX_MAIN_VK_PUBLIC_ID'),
                     $this->getKeyboard($request->getUrl($flight))
                 );
                 $user->receivedRequest($flight['id']);

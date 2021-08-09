@@ -41,7 +41,7 @@ class UserDataController extends Controller
             ]);
 
             if ($key == 'is_install') {
-                $vkApi->messagesSend(['user_id' => $user_id], $formationMessageServices->sendHelloMessage()['message'], env('HELLO_MESSAGE_VK_PUBLIC_ID', '205982527'));
+                $vkApi->messagesSend(['user_id' => $user_id], $formationMessageServices->sendHelloMessage()['message'], config('vk.groups.HELLO_MESSAGE_VK_PUBLIC_ID', '205982527'));
             }
 
             return response()->noContent(Response::HTTP_CREATED);

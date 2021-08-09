@@ -367,7 +367,7 @@ class Request extends Model
         // $currencyForUrl = isset($output['currencyForUrl']) ? $output['currencyForUrl'] : "RUB";
         // $passengers = isset($output['passengers']) ? $output['passengers'] : "url";
         // $fullUrl = '';
-        $vkAppId = getenv('VK_APP_ID');
+        $vkAppId = config('vk.VK_APP_ID');
 
         if (!empty($days)) {
             $dates = <<<EOT
@@ -382,7 +382,7 @@ EOT;
         }
 
         // $imgApiArr = array_pop($item['dstImages']);
-        // $imgSrc = getenv('API_URL') . $imgApiArr['url'];
+        // $imgSrc = config('cheapest.API_URL') . $imgApiArr['url'];
 
         $apiMessage = Message::where(['name' => 'api_text'])->first();
 

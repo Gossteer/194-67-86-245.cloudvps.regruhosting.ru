@@ -59,7 +59,7 @@ class UserCheapFlightsApiMessagesService
                     $response[] = $this->api->messagesSend(
                         ['user_id' => $user->id],
                         $request->makeRequestMessage($flight),
-                        $request->group_id ?? getenv('MIX_MAIN_VK_PUBLIC_ID'),
+                        $request->group_id ?? config('vk.groups.MIX_MAIN_VK_PUBLIC_ID'),
                         true,
                         $this->formation_message_services->makeRequestKeyboard(false, true, [
                             'open_link' => [
@@ -106,7 +106,7 @@ class UserCheapFlightsApiMessagesService
                 $this->api->messagesSend(
                     ['user_id' => '382960669'],
                     $text,
-                    getenv('MIX_MAIN_VK_PUBLIC_ID'),
+                    config('vk.groups.MIX_MAIN_VK_PUBLIC_ID'),
                     true
                 );
             }
