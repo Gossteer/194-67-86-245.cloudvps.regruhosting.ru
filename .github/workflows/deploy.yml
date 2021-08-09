@@ -1,0 +1,33 @@
+name: Build and Deploy
+on:
+    push:
+        branches:
+            -   master
+
+env:
+  DEPLOY_PATH: /var/www/194-67-86-245.cloudvps.regruhosting.ru/
+
+jobs:
+    build:
+        name: Build and Deploy
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+            -   name: Setup Enviroment
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '^7.4'
+            -   name: Deployment
+                uses: appleboy/ssh-action@main
+                with:
+                  host: ${{ secrets.SSH_HOST }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  script: |
+                    cd ${{ env.DEPLOY_PATH }} 
+                    git checkout -f 
+                    git pull
+                    php artisan optimize
+            -   name: Install Packages
+                run: composer install --no-dev -o
