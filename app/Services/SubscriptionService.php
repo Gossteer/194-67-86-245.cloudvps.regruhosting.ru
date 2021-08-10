@@ -93,7 +93,7 @@ class SubscriptionService
 
                         $subscription->user->receivedRequest($low_after_now_search[0]['search_id'], $subscription->id);
 
-                        $subscription_data['statistic'][date('d.m.Y H:i:m', $date_now)] = $new_price;
+                        $subscription_data['statistic'][date('d.m.Y H:i:m', strtotime($date_now))] = $new_price;
                         $subscription_data['сurrent_price'] = $new_price;
                         $subscription->data = $subscription_data;
                     }
