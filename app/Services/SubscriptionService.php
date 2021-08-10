@@ -40,7 +40,12 @@ class SubscriptionService
 
         if ($request->last_data_response) {
             $data_subscription['last_data_response'] = $request->last_data_response;
-            $data_subscription['data']['first_price'] = $data_subscription['last_data_response']['terms'][array_key_first($data_subscription['last_data_response']['terms'])]['price'];
+
+            $current_price = $data_subscription['last_data_response']['terms'][array_key_first($data_subscription['last_data_response']['terms'])]['price'];
+            $data_subscription['data']['statistic'][date('d.m.Y H:i:m')] = $current_price;
+            $data_subscription['data']['сurrent_price'] = $current_price;
+            $data_subscription['data']['first_price'] = $current_price;
+
             $subscription = Subscription::create($data_subscription);
             $subscription->updated_at = $updated_at;
             $subscription->save();
@@ -78,6 +83,7 @@ class SubscriptionService
                         $last_data_response = $low_after_now_search[0]['proposals'][0];
                         $last_data_response['old_price'] = $last_price;
 
+
                         $subscription->last_data_response = $last_data_response;
                         $subscription->last_date = $date_now;
 
@@ -86,6 +92,10 @@ class SubscriptionService
                         $vk_api->messagesSend(['user_id' => $subscription->user_id], $message['message'], config('vk.groups.SEND_SUBSCRIPTION_SEARCH_VK_PUBLIC_ID', '205982619'), true, $message['keyboard']);
 
                         $subscription->user->receivedRequest($low_after_now_search[0]['search_id'], $subscription->id);
+
+                        $subscription_data['statistic'][date('d.m.Y H:i:m', $date_now)] = $new_price;
+                        $subscription_data['сurrent_price'] = $new_price;
+                        $subscription->data = $subscription_data;
                     }
                 }
 
