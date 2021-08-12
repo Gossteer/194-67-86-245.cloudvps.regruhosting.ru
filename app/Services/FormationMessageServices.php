@@ -193,11 +193,11 @@ class FormationMessageServices
             return 'день';
         }
 
-        if (strtotime('18:01') <= $date and strtotime('00:00') >= $date) {
+        if (strtotime('18:01') <= $date and strtotime('24:00') >= $date) {
             return 'вечер';
         }
 
-        if (strtotime('00:01') <= $date and strtotime('06:00') >= $date) {
+        if (strtotime('24:01') <= $date and strtotime('06:00') >= $date) {
             return 'ночи';
         }
     }
