@@ -13,6 +13,7 @@ class SubscriptionService
     {
         $data = $request->form;
         $data['ip'] = $request->ip;
+        $data['date_end'] = $request->date_end;
         $data['low_price'] = $request->low_price ?? 1000;
         $period = $request->period ?? 1440;
 
@@ -27,7 +28,6 @@ class SubscriptionService
         }
 
         $data_subscription = [
-            'date_end' => $request->date_end,
             'origin_code' => $data['src']['code'],
             'destination_code' => $data['dst']['code'],
             'origin_date' => $this->getDateFormatForMySql($data['date_src']),
