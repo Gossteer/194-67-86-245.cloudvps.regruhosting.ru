@@ -27,6 +27,7 @@ class SubscriptionService
         }
 
         $data_subscription = [
+            'date_end' => $request->date_end,
             'origin_code' => $data['src']['code'],
             'destination_code' => $data['dst']['code'],
             'origin_date' => $this->getDateFormatForMySql($data['date_src']),
@@ -59,21 +60,28 @@ class SubscriptionService
         return $subscription;
     }
 
-    public function sendSupbscription(VkApi $vk_api, FormationMessageServices $formation_message_services, TravelPayoutsServices $travel_payouts_services)
+    private function sendTPST(VkApi $vk_api, FormationMessageServices $formation_message_services, TravelPayoutsServices $travel_payouts_services)
     {
-        $subscription_TPST = SubscriptionCategory::with('subscriptions.user')->limit(1)->first();
+        $subscription_TPST = SubscriptionCategory::where('name', 'TPST')->with('subscriptions.user')->limit(1)->first();
 
         $date_now = date('Y-m-d H:i:s');
 
-        $subscription_TPST->subscriptions()->where('origin_date', '<',  $date_now)->where('subscription_category_id', $subscription_TPST->id)->delete();
+        $subscription_TPST->subscriptions()->where('origin_date', '<=',  $date_now)->where('subscription_category_id', $subscription_TPST->id)->delete();
 
         foreach ($subscription_TPST->subscriptions->where('origin_date', '>=',  $this->getDateFormatForMySql($date_now)) as $subscription) {
+            $subscription_data = $subscription->data->toArray();
+
+            if (date('Y-m-d H:i:s', strtotime($subscription_data['date_end'])) <= $date_now) {
+                $subscription->delete();
+
+                return 0;
+            }
+
             if (strtotime(date('Y-m-d H:i:s', strtotime($subscription->updated_at))) <= strtotime($date_now)) {
 
                 $low_after_now_search = $travel_payouts_services->searchResults($travel_payouts_services->searchTicketsArray($subscription->data->toArray()), 15, 15);
 
                 if (!$subscription->user->hasRequestReceived($low_after_now_search[0]['search_id'])) {
-                    $subscription_data = $subscription->data->toArray();
                     $last_price = $subscription->last_data_response->toArray()['terms'][array_key_first($subscription->last_data_response->toArray()['terms'])]['price'];
                     $low_last_search = $last_price - $subscription_data['low_price'];
                     $max_last_search = $last_price + $subscription_data['low_price'];
@@ -103,6 +111,11 @@ class SubscriptionService
                 $subscription->save();
             }
         }
+    }
+
+    public function sendSupbscription(VkApi $vk_api, FormationMessageServices $formation_message_services, TravelPayoutsServices $travel_payouts_services): int
+    {
+        $this->sendTPST($vk_api, $formation_message_services, $travel_payouts_services);
 
         return 0;
     }
