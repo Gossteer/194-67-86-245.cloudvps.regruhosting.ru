@@ -25,7 +25,7 @@ class Subscription extends Model
     protected $casts = [
         'data' => 'collection',
         'last_data_response' => 'collection',
-        'updated_at' => 'datetime:Y-m-d H:i:m'
+        'updated_at' => 'datetime:Y-m-d H:i'
     ];
 
     public function subscriptionCategory()
