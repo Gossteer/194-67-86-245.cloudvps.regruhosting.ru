@@ -42,6 +42,7 @@ class SubscriptionController extends Controller
             'last_date',
             'period',
             'subscription_category_id',
+            'updated_at',
             DB::raw('(select count(*) from users_received_requests where subscription_id = subscriptions.id) as count_send')
             )->with('subscriptionCategory')->where('user_id', $request->user_id)->where('subscription_category_id', $request->subscription_category_id)->get());
     }
