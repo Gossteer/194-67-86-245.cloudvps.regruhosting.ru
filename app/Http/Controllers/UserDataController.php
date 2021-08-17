@@ -79,7 +79,7 @@ class UserDataController extends Controller
         $user_data->save();
 
         $user_data_value['bullets_for_user'] = $bullets_for_user;
-        $user_data_value['users_now'] = $users_now;
+        $user_data_value['users_now'] = ($users_now === 0 ? rand(10, 100) : $users_now);
         $user_data_value['bullets'] = $bullets;
         $user_data_value['bullets_for_users_now'] = ($bullets_for_users_now === 0 ? rand(100, 1000) : $bullets_for_users_now);
         $user_data_value['bullets_for_user_now'] = $bullets_for_user_now;
