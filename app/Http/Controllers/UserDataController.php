@@ -70,6 +70,8 @@ class UserDataController extends Controller
         $bullets_for_user_now = $static_data_servise->getStaticDataBetwinDateForUser(UserReceivedRequest::class, $user_data_value['old_date'] ?? $now_date, $user_data->user_id);
         $bullets_for_users_now = $static_data_servise->getStaticDataBetwinDate(UserReceivedRequest::class, $user_data_value['old_date'] ?? $now_date);
         $subscription_and_request_now = $static_data_servise->getStaticDataBetwinDate(ModelsRequest::class,  $user_data_value['old_date'] ?? $now_date);
+        $users_now = $static_data_servise->getStaticDataBetwinDate(User::class, $user_data_value['old_date'] ?? $now_date);
+        $bullets = $static_data_servise->getStaticData(UserReceivedRequest::class);
 
         $user_data_value['old_date'] = $user_data_value['now_date'] ?? $now_date;
         $user_data_value['now_date'] = $now_date;
@@ -77,6 +79,8 @@ class UserDataController extends Controller
         $user_data->save();
 
         $user_data_value['bullets_for_user'] = $bullets_for_user;
+        $user_data_value['users_now'] = $users_now;
+        $user_data_value['bullets'] = $bullets;
         $user_data_value['bullets_for_users_now'] = ($bullets_for_users_now === 0 ? rand(100, 1000) : $bullets_for_users_now);
         $user_data_value['bullets_for_user_now'] = $bullets_for_user_now;
         $user_data_value['subscription_and_request_now'] = ($subscription_and_request_now === 0 ? rand(10, 50) : $subscription_and_request_now);
