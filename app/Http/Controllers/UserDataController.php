@@ -65,7 +65,7 @@ class UserDataController extends Controller
             $user_data_value = [];
         }
 
-        $now_date = date('d.m.Y H:i:m');
+        $now_date = date('d.m.Y H:i');
         $bullets_for_user = $static_data_servise->getStaticDataForUser(UserReceivedRequest::class, $user_data->user_id);
         $bullets_for_user_now = $static_data_servise->getStaticDataBetwinDateForUser(UserReceivedRequest::class, $user_data_value['old_date'] ?? $now_date, $user_data->user_id);
         $bullets_for_users_now = $static_data_servise->getStaticDataBetwinDate(UserReceivedRequest::class, $user_data_value['old_date'] ?? $now_date);
