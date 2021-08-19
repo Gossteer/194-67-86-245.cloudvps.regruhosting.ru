@@ -186,19 +186,19 @@ class FormationMessageServices
     {
         $date = strtotime(date('H:i'));
         if (strtotime('06:01') <= $date and strtotime('12:00') >= $date) {
-            return 'утро';
+            return 'Доброе утро';
         }
 
         if (strtotime('12:01') <= $date and strtotime('18:00') >= $date) {
-            return 'день';
+            return 'Добрый день';
         }
 
         if (strtotime('18:01') <= $date and strtotime('24:00') >= $date) {
-            return 'вечер';
+            return 'Добрый вечер';
         }
 
         if (strtotime('24:01') <= $date and strtotime('06:00') >= $date) {
-            return 'ночи';
+            return 'Доброй ночи';
         }
     }
 }
