@@ -217,8 +217,6 @@ class FormationMessageServices
             return 'Добрый вечер';
         }
 
-        if (strtotime('24:01') <= $date and strtotime('06:00') >= $date) {
-            return 'Доброй ночи';
-        }
+        return 'Доброй ночи';
     }
 }
