@@ -120,7 +120,7 @@ class FormationMessageServices
             $transfers_to_message = "c пересадками в ";
             $transfers_to_key_last = array_key_last($transfers_to);
             foreach ($transfers_to as $key => $value) {
-                $transfers_to_message += $airports[$value['to']]['name'] . (($transfers_to_key_last != $key) ? ", " : " ");
+                $transfers_to_message .= $airports[$value['to']]['name'] . (($transfers_to_key_last != $key) ? ", " : " ");
             }
         } else {
             $transfers_to_message = "без пересадок ";
@@ -131,7 +131,7 @@ class FormationMessageServices
                 $transfers_from_message = "c пересадками в ";
                 $transfers_from_key_last = array_key_last($transfers_from);
                 foreach ($transfers_from as $key => $value) {
-                    $transfers_from_message += $airports[$value['to']]['name'] . (($transfers_from_key_last != $key) ? ", " : " ");
+                    $transfers_from_message .= $airports[$value['to']]['name'] . (($transfers_from_key_last != $key) ? ", " : " ");
                 }
             } else {
                 $transfers_from_message = "без пересадок ";

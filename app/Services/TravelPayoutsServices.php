@@ -110,13 +110,10 @@ class TravelPayoutsServices
         sleep($time_search);
 
         try {
-            $_SESSION['response_result'] = $response->wait()->getContents();
+            $response_result = json_decode($response->wait()->getContents(), true);
 
 
             session_write_close();
-
-            $response_result = json_decode($_SESSION['response_result'], true);
-
 
             // Проверяем уникальность найденных билетов по цене, даты отправке, и по IATA коду авиакомпании, выполняющей перевозку
             $unique_value_check = [];
