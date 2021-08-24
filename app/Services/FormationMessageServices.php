@@ -109,21 +109,41 @@ class FormationMessageServices
         return $response;
     }
 
-    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id, array $passengers, string $trip_class, string $date_create, int $first_price): array
+    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id, array $passengers, string $trip_class, string $date_create, int $first_price, array $airports): array
     {
         $data['srcCity'] = $src['name'];
         $data['srcCountry'] = $src['country_name'];
         $data['dstCity'] = $dst['name'];
         $data['dstCountry'] = $dst['country_name'];
 
+        if ($transfers_to = ($bullet['segment'][0]['transfers'] ?? false)) {
+            $transfers_to_message = "c пересадками в ";
+            $transfers_to_key_last = array_key_last($transfers_to);
+            foreach ($transfers_to as $key => $value) {
+                $transfers_to_message += $airports[$value['to']]['name'] . (($transfers_to_key_last != $key) ? ", " : " ");
+            }
+        } else {
+            $transfers_to_message = "без пересадок ";
+        }
+
         if ($bullet_segment_dst = ($bullet['segment'][1] ?? false)) {
+            if ($transfers_from = ($bullet_segment_dst['transfers'] ?? false)) {
+                $transfers_from_message = "c пересадками в ";
+                $transfers_from_key_last = array_key_last($transfers_from);
+                foreach ($transfers_from as $key => $value) {
+                    $transfers_from_message += $airports[$value['to']]['name'] . (($transfers_from_key_last != $key) ? ", " : " ");
+                }
+            } else {
+                $transfers_from_message = "без пересадок ";
+            }
+
             $data['arrow'] = '⇄';
             $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' в ' . $bullet['segment'][0]['flight'][0]['arrival_time'] . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date'])) . ' в ' . $bullet_segment_dst['flight'][0]['arrival_time'];
-            $data['footer'] = 'Туда: ' .  $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'] . ', обратно: ' . $airlines[$bullet_segment_dst['flight'][0]['operating_carrier']]['name'];
+            $data['footer'] = 'Туда: ' . $transfers_to_message .  $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'] . ', обратно: '. $transfers_from_message . $airlines[$bullet_segment_dst['flight'][0]['operating_carrier']]['name'];
         } else {
             $data['arrow'] = '→';
             $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' в ' . $bullet['segment'][0]['flight'][0]['arrival_time'];
-            $data['footer'] = 'Туда: ' . $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'];
+            $data['footer'] = 'Туда: ' . $transfers_to_message . $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'];
         }
 
         $data['seller'] = current($bullet['gates_info'])['label'];
