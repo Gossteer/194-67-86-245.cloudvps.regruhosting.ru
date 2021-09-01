@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use App\Models\Request as ModelsRequest;
 use App\Models\User;
+use App\Models\UserData;
 use App\Models\UserReceivedRequest;
 use App\Services\FormationMessageServices;
 use App\Services\StaticDataServise;
+use App\Services\UserCheapFlightsApiMessagesService;
 use App\Services\VkApi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -116,5 +118,73 @@ class UserDataController extends Controller
         }
 
         return $data;
+    }
+
+    /**
+     * Создание/добавления списка избранных билетов
+     *
+     * @param  Request $request
+     * @return JsonResponse
+     */
+    public function addFavoriteTicket(Request $request): JsonResponse
+    {
+        if ($user_data_favorite_ticket = UserData::where('user_id', $request->user_id)->where('key', 'favorite_ticket')->fitst()) {
+            $data = json_decode($user_data_favorite_ticket->value, true);
+            $favorite_ticket = json_decode($request->ticket, true);
+            $favorite_ticket['date_favorite'] = date("d.m.Y H:i:m");
+            $favorite_ticket['search_link'] =  UserCheapFlightsApiMessagesService::getUrlAviasales(
+                $request->ticket['data']['code'],
+                $request->ticket['data']['code'],
+                $request->ticket['ticket']['segment'][0]['flight'][0]['departure_date'],
+                $request->ticket['data']['passengers'],
+                $request->ticket['data']['trip_class'],
+                $request->ticket['ticket']['segment'][1]['flight'][0]['departure_date'] ?? null
+            );
+            $data[$request->ticket['ticket']['sign']] = $favorite_ticket;
+
+            $user_data_favorite_ticket->value = $data;
+            $user_data_favorite_ticket->save();
+        } else {
+            $data = new UserData();
+            $data->user_id = $request->user_id;
+            $data->key = 'favorite_ticket';
+            $data->value = [
+                $request->ticket['sign'] => $request->ticket
+            ];
+            $data->save();
+        }
+
+        return response()->json($user_data_favorite_ticket);
+    }
+
+    /**
+     * Создание/добавления списка избранных билетов
+     *
+     * @param  Request $request
+     * @return JsonResponse
+     */
+    public function deleteFavoriteTicket(Request $request): JsonResponse
+    {
+        if (($user_data_favorite_ticket = UserData::where('user_id', $request->user_id)->where('key', 'favorite_ticket')->fitst()) and isset(($data = json_decode($user_data_favorite_ticket->value, true))[$request->sign])) {
+            unset($data[$request->sign]);
+
+            $user_data_favorite_ticket->value = $data;
+            $user_data_favorite_ticket->save();
+        } else {
+            return response()->json(['message' => 'Данный билет/хранилище билетов не найдено'], 501);
+        }
+
+        return response()->json($user_data_favorite_ticket);
+    }
+
+    /**
+     * Получение избранных билетов
+     *
+     * @param  int $user_id
+     * @return JsonResponse
+     */
+    public function getFavoriteTickets(int $user_id): JsonResponse
+    {
+        return response()->json([UserData::where('user_id', $user_id)->where('key', 'favorite_ticket')->fitst()->value]);
     }
 }

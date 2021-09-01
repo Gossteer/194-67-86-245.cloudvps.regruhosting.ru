@@ -28,6 +28,9 @@ Route::post('/get-requests', 'RequestController@all'); //Получаем все
 Route::get('/get-request/{request_id}', 'RequestController@get_data'); //Получаем подписку
 
 //Методы для работы с пользователем
+Route::post('/user-add-favorite-ficket', 'UserDataController@addFavoriteTicket'); //Создание/добавления списка избранных билетов
+Route::post('/user-delete-favorite-ficket', 'UserDataController@deleteFavoriteTicket'); //Удаление избранного билета
+Route::get('/user-get-favorite-ficket/{user_id}', 'UserDataController@getFavoriteTickets'); //Получение избранных билетов
 Route::post('/user/{user}/data/{key}', 'UserDataController@store'); //Создание пользоваетля и его data(и её обновление)
 Route::get('/user/{user}/data', 'UserDataController@get'); //Получение ключа и value data пользователя
 
