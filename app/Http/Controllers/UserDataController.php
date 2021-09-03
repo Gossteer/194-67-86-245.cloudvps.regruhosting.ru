@@ -128,7 +128,7 @@ class UserDataController extends Controller
      */
     public function addFavoriteTicket(Request $request): JsonResponse
     {
-        if ($user_data_favorite_ticket = UserData::where('user_id', $request->user_id)->where('key', 'favorite_ticket')->fitst()) {
+        if ($user_data_favorite_ticket = UserData::where('user_id', $request->user_id)->where('key', 'favorite_ticket')->first()) {
             $data = json_decode($user_data_favorite_ticket->value, true);
             $favorite_ticket = json_decode($request->ticket, true);
             $favorite_ticket['date_favorite'] = date("d.m.Y H:i:m");
@@ -165,7 +165,7 @@ class UserDataController extends Controller
      */
     public function deleteFavoriteTicket(Request $request): JsonResponse
     {
-        if (($user_data_favorite_ticket = UserData::where('user_id', $request->user_id)->where('key', 'favorite_ticket')->fitst()) and isset(($data = json_decode($user_data_favorite_ticket->value, true))[$request->sign])) {
+        if (($user_data_favorite_ticket = UserData::where('user_id', $request->user_id)->where('key', 'favorite_ticket')->first()) and isset(($data = json_decode($user_data_favorite_ticket->value, true))[$request->sign])) {
             unset($data[$request->sign]);
 
             $user_data_favorite_ticket->value = $data;
@@ -185,6 +185,6 @@ class UserDataController extends Controller
      */
     public function getFavoriteTickets(int $user_id): JsonResponse
     {
-        return response()->json([UserData::where('user_id', $user_id)->where('key', 'favorite_ticket')->fitst()->value]);
+        return response()->json([UserData::where('user_id', $user_id)->where('key', 'favorite_ticket')->first()->value]);
     }
 }
