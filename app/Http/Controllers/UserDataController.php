@@ -135,8 +135,8 @@ class UserDataController extends Controller
             $favorite_ticket = $request->ticket;
             $favorite_ticket['date_favorite'] = date("d.m.Y H:i:m");
             $favorite_ticket['search_link'] =  UserCheapFlightsApiMessagesService::getUrlAviasales(
-                $request->ticket['data']['code'],
-                $request->ticket['data']['code'],
+                $request->ticket['data']['src']['code'],
+                $request->ticket['data']['dst']['code'],
                 $request->ticket['ticket']['segment'][0]['flight'][0]['departure_date'],
                 $request->ticket['data']['passengers'],
                 $request->ticket['data']['trip_class'],
@@ -154,8 +154,8 @@ class UserDataController extends Controller
             $favorite_ticket = $request->ticket;
             $favorite_ticket['date_favorite'] = date("d.m.Y H:i:m");
             $favorite_ticket['search_link'] =  UserCheapFlightsApiMessagesService::getUrlAviasales(
-                $request->ticket['data']['code'],
-                $request->ticket['data']['code'],
+                $request->ticket['data']['src']['code'],
+                $request->ticket['data']['dst']['code'],
                 $request->ticket['ticket']['segment'][0]['flight'][0]['departure_date'],
                 $request->ticket['data']['passengers'],
                 $request->ticket['data']['trip_class'],
