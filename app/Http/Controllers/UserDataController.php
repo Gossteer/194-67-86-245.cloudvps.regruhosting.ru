@@ -149,7 +149,7 @@ class UserDataController extends Controller
             $data->user_id = $request->user_id;
             $data->key = 'favorite_ticket';
             $data->value = [
-                $request->ticket['data']['sign'] => $request->ticket
+                $request->ticket['ticket']['sign'] => $request->ticket
             ];
             $data->save();
         }
