@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+use function GuzzleHttp\json_decode;
+
 class UserDataController extends Controller
 {
     /**
@@ -145,13 +147,13 @@ class UserDataController extends Controller
             $user_data_favorite_ticket->value = json_encode($data);
             $user_data_favorite_ticket->save();
         } else {
-            $data = new UserData();
-            $data->user_id = $request->user_id;
-            $data->key = 'favorite_ticket';
-            $data->value =json_encode([
+            $user_data_favorite_ticket = new UserData();
+            $user_data_favorite_ticket->user_id = $request->user_id;
+            $user_data_favorite_ticket->key = 'favorite_ticket';
+            $user_data_favorite_ticket->value =json_encode([
                 $request->ticket['ticket']['sign'] => $request->ticket
             ]);
-            $data->save();
+            $user_data_favorite_ticket->save();
         }
 
         return response()->json($user_data_favorite_ticket);
@@ -185,6 +187,6 @@ class UserDataController extends Controller
      */
     public function getFavoriteTickets(int $user_id): JsonResponse
     {
-        return response()->json([UserData::where('user_id', $user_id)->where('key', 'favorite_ticket')->first()->value]);
+        return response()->json(json_decode(UserData::where('user_id', $user_id)->where('key', 'favorite_ticket')->first()->value, true));
     }
 }
