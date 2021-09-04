@@ -150,9 +150,19 @@ class UserDataController extends Controller
             $user_data_favorite_ticket = new UserData();
             $user_data_favorite_ticket->user_id = $request->user_id;
             $user_data_favorite_ticket->key = 'favorite_ticket';
-            $user_data_favorite_ticket->value =json_encode([
-                $request->ticket['ticket']['sign'] => $request->ticket
-            ]);
+
+            $favorite_ticket = json_decode($request->ticket, true);
+            $favorite_ticket['date_favorite'] = date("d.m.Y H:i:m");
+            $favorite_ticket['search_link'] =  UserCheapFlightsApiMessagesService::getUrlAviasales(
+                $request->ticket['data']['code'],
+                $request->ticket['data']['code'],
+                $request->ticket['ticket']['segment'][0]['flight'][0]['departure_date'],
+                $request->ticket['data']['passengers'],
+                $request->ticket['data']['trip_class'],
+                $request->ticket['ticket']['segment'][1]['flight'][0]['departure_date'] ?? null
+            );
+            $data[$request->ticket['ticket']['sign']] = $favorite_ticket;
+            $user_data_favorite_ticket->value =json_encode($data);
             $user_data_favorite_ticket->save();
         }
 
