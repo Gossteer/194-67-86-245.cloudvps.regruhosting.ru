@@ -142,15 +142,15 @@ class UserDataController extends Controller
             );
             $data[$request->ticket['ticket']['sign']] = $favorite_ticket;
 
-            $user_data_favorite_ticket->value = $data;
+            $user_data_favorite_ticket->value = json_encode($data);
             $user_data_favorite_ticket->save();
         } else {
             $data = new UserData();
             $data->user_id = $request->user_id;
             $data->key = 'favorite_ticket';
-            $data->value = [
+            $data->value =json_encode([
                 $request->ticket['ticket']['sign'] => $request->ticket
-            ];
+            ]);
             $data->save();
         }
 
@@ -168,7 +168,7 @@ class UserDataController extends Controller
         if (($user_data_favorite_ticket = UserData::where('user_id', $request->user_id)->where('key', 'favorite_ticket')->first()) and isset(($data = json_decode($user_data_favorite_ticket->value, true))[$request->sign])) {
             unset($data[$request->sign]);
 
-            $user_data_favorite_ticket->value = $data;
+            $user_data_favorite_ticket->value = json_encode($data);
             $user_data_favorite_ticket->save();
         } else {
             return response()->json(['message' => 'Данный билет/хранилище билетов не найдено'], 501);
