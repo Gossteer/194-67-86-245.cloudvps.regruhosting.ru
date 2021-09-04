@@ -132,7 +132,7 @@ class UserDataController extends Controller
     {
         if ($user_data_favorite_ticket = UserData::where('user_id', $request->user_id)->where('key', 'favorite_ticket')->first()) {
             $data = json_decode($user_data_favorite_ticket->value, true);
-            $favorite_ticket = $request->ticket,;
+            $favorite_ticket = $request->ticket;
             $favorite_ticket['date_favorite'] = date("d.m.Y H:i:m");
             $favorite_ticket['search_link'] =  UserCheapFlightsApiMessagesService::getUrlAviasales(
                 $request->ticket['data']['code'],
