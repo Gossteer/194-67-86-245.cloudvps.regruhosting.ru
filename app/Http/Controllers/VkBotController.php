@@ -21,7 +21,7 @@ class VkBotController extends Controller
                 $vk_api_v2->call(
                     $vk_api_v2->prepareUrl(
                         'messages.send',
-                        $vk_api_v2->prepareMessageData('Тест', $request->object->peer_id)
+                        $vk_api_v2->prepareMessageData('Тест', $request->object['peer_id'])
                     )
                 );
                 break;
