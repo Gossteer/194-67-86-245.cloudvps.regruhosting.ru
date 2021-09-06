@@ -10,7 +10,7 @@ class VkBotController extends Controller
 {
     public function responseToMessage(Request $request)
     {
-        Log::info("message", $request);
+        Log::info("message", $request->all());
 
         switch ($request->type) {
             case 'confirmation':
