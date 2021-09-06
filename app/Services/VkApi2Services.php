@@ -13,40 +13,42 @@ class VkApi2Services
      *
      * @var string
      */
-    private ?string $token;
+    private string $token;
     /**
      * Версия api
      *
      * @var string
      */
-    private ?string $version;
+    private string $version;
     /**
      * GuzzleHttp клиент
      *
      * @var Client
      */
     private Client $client;
+    /**
+     * Сервис форматирования контента
+     *
+     * @var FormationMessageServices
+     */
+    private FormationMessageServices $formation_message_services;
 
     public function __construct(?string $token = null, ?string $version = null)
     {
         $this->client = new Client();
         $this->token = $token ?? config('vk.api.VK_GROUP_API_TOKEN');
         $this->version = $version ?? config('vk.api.VK_API_VERSION');
+        $this->formation_message_services = new FormationMessageServices();
     }
 
-    public function prepareMessageData(string $text, int $peer_id): array
+    public function prepareMessageData(string $text, int $peer_id, ?array $keyboard = null): array
     {
-        return [
-            'message' => $text,
-            'peer_id' => $peer_id,
-            'access_token' => $this->token,
-            'v' => $this->version
-        ];
+        return $this->formation_message_services->prepareMessageDataVkApi2($text, $peer_id, $this->token, $this->version, $keyboard);
     }
 
     public function prepareUrl(string $endpoint, array $params): string
     {
-        return "https://api.vk.com/method/$endpoint?" . http_build_query($params);
+        return $this->formation_message_services->prepareUrlVkApi2($endpoint, $params);
     }
 
     public function call(string $url): \Psr\Http\Message\ResponseInterface

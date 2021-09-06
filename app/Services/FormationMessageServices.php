@@ -9,11 +9,21 @@ use Throwable;
 
 class FormationMessageServices
 {
-    private TravelPayoutsServices $travel_payouts_services;
-
-    public function __construct(TravelPayoutsServices $travel_payouts_services)
+    public function prepareMessageDataVkApi2(string $text, int $peer_id, string $token, string $version, ?array $keyboard = null): array
     {
-        $this->travel_payouts_services = $travel_payouts_services;
+        return [
+            'random_id' => rand(),
+            'message' => $text,
+            'peer_id' => $peer_id,
+            'access_token' => $token,
+            'v' => $version,
+            'keyboard' => $keyboard
+        ];
+    }
+
+    public function prepareUrlVkApi2(string $endpoint, array $params): string
+    {
+        return "https://api.vk.com/method/$endpoint?" . http_build_query($params);
     }
 
     public function makeRequestMessage(array $data, string $type_message): string
@@ -94,7 +104,8 @@ class FormationMessageServices
             $data['updatedD'] = date('d.m.Y H:i');
 
             $response[$key]['message'] = $this->makeRequestMessage($data, 'api_send_tickets');
-            if ($url = ($this->travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
+            $travel_payouts_services = new TravelPayoutsServices();
+            if ($url = ($travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
                 $response[$key]['keyboard'] = $this->makeRequestKeyboard(false, true, [
                     'open_link' => [
                         'link' => $url,
@@ -159,7 +170,8 @@ class FormationMessageServices
         $data['updatedD'] = date('d.m.Y в H:i');
 
         $response['message'] = $this->makeRequestMessage($data, 'send_new_price_subscription');
-        if ($url = ($this->travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
+        $travel_payouts_services = new TravelPayoutsServices();
+        if ($url = ($travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
             $response['keyboard'] = $this->makeRequestKeyboard(false, true, [
                 'open_link' => [
                     [
