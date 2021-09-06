@@ -21,7 +21,22 @@ class VkBotController extends Controller
                 Log::info('response lol', json_decode($vk_api_v2->call(
                     $vk_api_v2->prepareUrl(
                         'messages.send',
-                        $vk_api_v2->prepareMessageData('Тест', $request->object['message']['peer_id'])
+                        $vk_api_v2->prepareMessageData(
+                            'Тест',
+                            $request->object['message']['peer_id'],
+                            $vk_api_v2->prepareKeyboard(false, false, [
+                                'open_link' => [
+                                    [
+                                        'link' => "https://github.com/Gossteer/CheapFlights",
+                                        'label' => 'Купить'
+                                    ],
+                                    [
+                                        'link' => "https://habr.com/ru/company/ruvds/blog/438796/",
+                                        'label' => 'Проверить цену'
+                                    ]
+                                ]
+                            ])
+                        )
                     )
                 )->getBody()->getContents(), true));
                 return 'OK';

@@ -51,6 +51,11 @@ class VkApi2Services
         return $this->formation_message_services->prepareUrlVkApi2($endpoint, $params);
     }
 
+    public function prepareKeyboard(bool $one_time = false, bool $inline = false, array $buttons): ?string
+    {
+        return $this->formation_message_services->makeRequestKeyboard($one_time, $inline, $buttons);
+    }
+
     public function call(string $url): \Psr\Http\Message\ResponseInterface
     {
         return $this->client->get($url);
