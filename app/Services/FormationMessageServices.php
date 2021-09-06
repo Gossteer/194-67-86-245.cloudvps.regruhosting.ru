@@ -9,7 +9,7 @@ use Throwable;
 
 class FormationMessageServices
 {
-    public function prepareMessageDataVkApi2(string $text, int $peer_id, string $token, string $version, ?array $keyboard = null): array
+    public function prepareMessageDataVkApi2(string $text, int $peer_id, string $token, string $version, ?string $keyboard = null): array
     {
         return [
             'random_id' => rand(),
