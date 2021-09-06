@@ -16,6 +16,8 @@ Route::post('/subscription-create', 'SubscriptionController@createSupbscription'
 Route::get('/get-subscriptions-byuser', 'SubscriptionController@getSubscriptionsByUser'); //Создание получение кастомной подписки
 Route::post('/delete-subscription/{subscription_id}', 'SubscriptionController@deleteSubscription');
 
+//Методы для работы с ботом(и)
+Route::post('/vk-bot-api-v2', 'VkBotController@responseToMessage');
 
 //Методы по работе со статистикой
 Route::get('/get-static-for-user', 'UserDataController@staticDataForUserStartMeny'); // Статистика юзера и о юзере
