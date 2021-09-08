@@ -79,7 +79,7 @@ class SubscriptionService
                 $subscription_array_for_delete['dst'],
                 $subscription_array_for_delete['src'],
                 $subscription_for_delete->last_data_response->toArray(),
-            ));
+            )['message']);
 
             $subscription_for_delete->delete();
         }
@@ -92,7 +92,7 @@ class SubscriptionService
                     $subscription_data['dst'],
                     $subscription_data['src'],
                     $subscription_data->last_data_response->toArray(),
-                ));
+                )['message']);
 
                 $subscription->delete();
 
