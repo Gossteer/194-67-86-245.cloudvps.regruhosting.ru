@@ -130,7 +130,7 @@ class FormationMessageServices
             $data['arrow'] = '→';
             $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' в ' . $bullet['segment'][0]['flight'][0]['arrival_time'];
         }
-
+        $data['time_tostr'] = self::getHelloMessageForTime();
         $response['message'] = $this->makeRequestMessage($data, 'send_after_delete_sub');
 
         return $response;
