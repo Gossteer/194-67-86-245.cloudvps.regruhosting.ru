@@ -79,10 +79,8 @@ class FormationMessageServices
 
     public function sendFirstSearchTickets(array $src, array $dst, array $bullets, array $airlines, string $search_id): array
     {
-        $data['srcCity'] = $src['name'];
-        $data['srcCountry'] = $src['country_name'];
-        $data['dstCity'] = $dst['name'];
-        $data['dstCountry'] = $dst['country_name'];
+        $data = [];
+        $this->setCityAndContry($src, $dst, $data);
 
         foreach ($bullets as $key => $bullet) {
 
@@ -120,12 +118,36 @@ class FormationMessageServices
         return $response;
     }
 
-    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id, array $passengers, string $trip_class, string $date_create, int $first_price, array $airports): array
+    public function sendAfterDeleteSub(array $src, array $dst, array $bullet): array
+    {
+        $data = [];
+        $this->setCityAndContry($src, $dst, $data);
+
+        if ($bullet_segment_dst = ($bullet['segment'][1] ?? false)) {
+            $data['arrow'] = '⇄';
+            $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' в ' . $bullet['segment'][0]['flight'][0]['arrival_time'] . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date'])) . ' в ' . $bullet_segment_dst['flight'][0]['arrival_time'];
+        } else {
+            $data['arrow'] = '→';
+            $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' в ' . $bullet['segment'][0]['flight'][0]['arrival_time'];
+        }
+
+        $response['message'] = $this->makeRequestMessage($data, 'send_after_delete_sub');
+
+        return $response;
+    }
+
+    private function setCityAndContry(array $src, array $dst, array &$data): void
     {
         $data['srcCity'] = $src['name'];
         $data['srcCountry'] = $src['country_name'];
         $data['dstCity'] = $dst['name'];
         $data['dstCountry'] = $dst['country_name'];
+    }
+
+    public function sendSubscriptionSearchTickets(array $src, array $dst, array $bullet, array $airlines, string $search_id, array $passengers, string $trip_class, string $date_create, int $first_price, array $airports): array
+    {
+        $data = [];
+        $this->setCityAndContry($src, $dst, $data);
 
         if ($transfers_to = ($bullet['segment'][0]['transfers'] ?? false)) {
             $transfers_to_message = "c пересадками в ";

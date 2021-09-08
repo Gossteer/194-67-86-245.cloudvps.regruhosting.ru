@@ -6,6 +6,7 @@ use App\Models\Subscription;
 use App\Models\SubscriptionCategory;
 use App\Models\UserReceivedRequest;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\This;
 
 class SubscriptionService
 {
@@ -60,21 +61,42 @@ class SubscriptionService
         return $subscription;
     }
 
+    private function sendMessageAfterDeleteSub(VkApi $vk_api, $user_id, $message)
+    {
+        $vk_api->messagesSend(['user_id' => $user_id], $message, config('vk.groups.SEND_SUBSCRIPTION_SEARCH_VK_PUBLIC_ID', '205982619'));
+    }
+
     private function sendTPST(VkApi $vk_api, FormationMessageServices $formation_message_services, TravelPayoutsServices $travel_payouts_services)
     {
         $subscription_TPST = SubscriptionCategory::where('name', 'TPST')->with('subscriptions.user')->limit(1)->first();
 
         $date_now = date('Y-m-d H:i:s');
 
-        $subscription_TPST->subscriptions()->where('origin_date', '<=',  $date_now)->where('subscription_category_id', $subscription_TPST->id)->delete();
+        foreach ($subscription_TPST->subscriptions->where('origin_date', '<=',  $date_now)->where('subscription_category_id', $subscription_TPST->id) as $subscription_for_delete) {
+            $subscription_array_for_delete = $subscription_for_delete->data->toArray();
+
+            $this->sendMessageAfterDeleteSub($vk_api, $subscription_for_delete->user_id, $formation_message_services->sendAfterDeleteSub(
+                $subscription_array_for_delete['dst'],
+                $subscription_array_for_delete['src'],
+                $subscription_for_delete->last_data_response->toArray(),
+            ));
+
+            $subscription_for_delete->delete();
+        }
 
         foreach ($subscription_TPST->subscriptions->where('origin_date', '>=',  $this->getDateFormatForMySql($date_now)) as $subscription) {
             $subscription_data = $subscription->data->toArray();
 
             if (date('Y-m-d H:i:s', strtotime($subscription_data['date_end'])) <= $date_now) {
+                $this->sendMessageAfterDeleteSub($vk_api, $subscription_data->user_id, $formation_message_services->sendAfterDeleteSub(
+                    $subscription_data['dst'],
+                    $subscription_data['src'],
+                    $subscription_data->last_data_response->toArray(),
+                ));
+
                 $subscription->delete();
 
-                return 0;
+                continue;
             }
 
             if (strtotime(date('Y-m-d H:i:s', strtotime($subscription->updated_at))) <= strtotime($date_now)) {
