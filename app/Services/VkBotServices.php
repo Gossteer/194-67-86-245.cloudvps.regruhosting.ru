@@ -21,18 +21,7 @@ class VkBotServices
                 $this->log('response message_new', json_decode($this->messageSend($vk_api_v2->prepareMessageData(
                     'Добро пожаловать',
                     $peer_id,
-                    $vk_api_v2->prepareKeyboard(false, false, [
-                        'text' => [
-                            [
-                                'label' => 'healp',
-                                'payload' => "{\"command\":\"healp\"}"
-                            ],
-                            [
-                                'label' => 'Оформить подписку',
-                                'payload' => "{\"command\":\"subscribe_now\"}"
-                            ]
-                        ]
-                    ])
+                    $this->defaultKeyboard()
                 )), true));
 
                 return 'OK';
@@ -41,18 +30,7 @@ class VkBotServices
                 $this->log('response message_new', json_decode($this->messageSend($vk_api_v2->prepareMessageData(
                     'Я вас не понял',
                     $peer_id,
-                    $vk_api_v2->prepareKeyboard(false, false, [
-                        'text' => [
-                            [
-                                'label' => 'healp',
-                                'payload' => "{\"command\":\"healp\"}"
-                            ],
-                            [
-                                'label' => 'Оформить подписку',
-                                'payload' => "{\"command\":\"subscribe_now\"}"
-                            ]
-                        ]
-                    ])
+                    $this->defaultKeyboard()
                 )), true));
 
                 return 'OK';
@@ -61,18 +39,16 @@ class VkBotServices
                 $this->log('response message_new', json_decode($this->messageSend($vk_api_v2->prepareMessageData(
                     'Сейчас оформим',
                     $peer_id,
-                    $vk_api_v2->prepareKeyboard(false, false, [
-                        'text' => [
-                            [
-                                'label' => 'healp',
-                                'payload' => "{\"command\":\"healp\"}"
-                            ],
-                            [
-                                'label' => 'Оформить подписку',
-                                'payload' => "{\"command\":\"subscribe_now\"}"
-                            ]
-                        ]
-                    ])
+                    $this->defaultKeyboard()
+                )), true));
+
+                return 'OK';
+            },
+            'healp' => function (int $peer_id, VkApi2Services $vk_api_v2): string {
+                $this->log('response message_new', json_decode($this->messageSend($vk_api_v2->prepareMessageData(
+                    'Я вам не помощник',
+                    $peer_id,
+                    $this->defaultKeyboard()
                 )), true));
 
                 return 'OK';
@@ -84,8 +60,10 @@ class VkBotServices
                 return '06f42143';
             },
             'message_new' => function (Request $request, VkApi2Services $vk_api_v2): string {
-                $fun_message = self::$func_message[$request->object['message']['text']] ??
-                self::$func_message[json_decode($request->object['message']['payload'] ?? "{\"command\":\"error\"}", true)['command']];
+                $fun_message =
+                    self::$func_message[json_decode($request->object['message']['payload'] ?? "{\"command\":\"error\"}", true)['command']]
+                    ?? self::$func_message[$request->object['message']['text']]
+                    ?? self::$func_message['error'];
 
                 return $fun_message($request->object['message']['peer_id'], $vk_api_v2);
             },
@@ -112,5 +90,21 @@ class VkBotServices
                 $params
             )
         )->getBody()->getContents();
+    }
+
+    private function defaultKeyboard(): string
+    {
+        return $this->vk_api_v2->prepareKeyboard(false, false, [
+            'text' => [
+                [
+                    'label' => 'Помощь',
+                    'payload' => "{\"command\":\"healp\"}"
+                ],
+                [
+                    'label' => 'Оформить подписку',
+                    'payload' => "{\"command\":\"subscribe_now\"}"
+                ]
+            ]
+        ]);
     }
 }
