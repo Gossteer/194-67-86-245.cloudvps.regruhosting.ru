@@ -172,7 +172,7 @@ class FormationMessageServices
 
             $data['arrow'] = '⇄';
             $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' в ' . $bullet['segment'][0]['flight'][0]['arrival_time'] . ' - ' . date('d.m.Y', strtotime($bullet_segment_dst['flight'][0]['departure_date'])) . ' в ' . $bullet_segment_dst['flight'][0]['arrival_time'];
-            $data['footer'] = 'Туда: ' . $transfers_to_message .  $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'] . ', обратно: '. $transfers_from_message . $airlines[$bullet_segment_dst['flight'][0]['operating_carrier']]['name'];
+            $data['footer'] = 'Туда: ' . $transfers_to_message .  $airlines[$bullet['segment'][0]['flight'][0]['operating_carrier']]['name'] . ', обратно: ' . $transfers_from_message . $airlines[$bullet_segment_dst['flight'][0]['operating_carrier']]['name'];
         } else {
             $data['arrow'] = '→';
             $data['dates'] = date('d.m.Y', strtotime($bullet['segment'][0]['flight'][0]['departure_date'])) . ' в ' . $bullet['segment'][0]['flight'][0]['arrival_time'];
@@ -225,6 +225,17 @@ class FormationMessageServices
                         'link' => $data['link'],
                         "label" => $data['label']
                     ]
+                ];
+                break;
+            case 'text':
+                return [
+                    "action" =>
+                    [
+                        'type' => $type,
+                        'payload' => $data['payload'] ?? null,
+                        "label" => $data['label']
+                    ],
+                    "color" => $data['color'] ?? "secondary"
                 ];
                 break;
 
