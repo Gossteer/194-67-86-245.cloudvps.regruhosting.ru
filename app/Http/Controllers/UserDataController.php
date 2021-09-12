@@ -197,6 +197,12 @@ class UserDataController extends Controller
      */
     public function getFavoriteTickets(int $user_id): JsonResponse
     {
-        return response()->json(json_decode(UserData::where('user_id', $user_id)->where('key', 'favorite_ticket')->first()->value, true));
+        $favorite_ticket_user = [];
+
+        if ($favorite_ticket_user_data = UserData::where('user_id', $user_id)->where('key', 'favorite_ticket')->first()) {
+            $favorite_ticket_user = json_decode($favorite_ticket_user_data->value, true);
+        }
+
+        return response()->json($favorite_ticket_user);
     }
 }
