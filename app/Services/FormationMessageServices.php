@@ -41,13 +41,13 @@ class FormationMessageServices
     public function makeRequestKeyboard(bool $one_time = false, bool $inline = false, array $buttons): ?string
     {
         try {
-            foreach ($buttons as $key => $value) {
+            foreach ($buttons as $key_group => $value) {
                 if (isset($value[0])) {
-                    foreach ($value as $key => $button) {
-                        $group_buttons[$key][] = $this->getActionForButtons($button);
+                    foreach ($value as $button) {
+                        $group_buttons[$key_group][] = $this->getActionForButtons($button);
                     }
                 } else {
-                    $group_buttons[$key][] = $this->getActionForButtons($value);
+                    $group_buttons[$key_group][] = $this->getActionForButtons($value);
                 }
             }
 
