@@ -41,9 +41,9 @@ class VkApi2Services
         $this->formation_message_services = new FormationMessageServices();
     }
 
-    public function prepareMessageData(string $text, int $peer_id, ?string $keyboard = null): array
+    public function prepareMessageData(array $params = [], ?string $keyboard = null): array
     {
-        return $this->formation_message_services->prepareMessageDataVkApi2($text, $peer_id, $this->token, $this->version, $keyboard);
+        return $this->formation_message_services->prepareMessageDataVkApi2($params, $this->token, $this->version, $keyboard);
     }
 
     public function prepareUrl(string $endpoint, array $params): string

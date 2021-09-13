@@ -9,16 +9,14 @@ use Throwable;
 
 class FormationMessageServices
 {
-    public function prepareMessageDataVkApi2(string $text, int $peer_id, string $token, string $version, ?string $keyboard = null): array
+    public function prepareMessageDataVkApi2(array $params = [], string $token, string $version, ?string $keyboard = null): array
     {
-        return [
+        return array_merge([
             'random_id' => rand(),
-            'message' => $text,
-            'peer_id' => $peer_id,
             'access_token' => $token,
             'v' => $version,
             'keyboard' => $keyboard
-        ];
+        ], $params);
     }
 
     public function prepareUrlVkApi2(string $endpoint, array $params): string
