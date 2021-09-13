@@ -30,7 +30,7 @@ class VkBotServices
             0 => function (int $peer_id): string {
                 return $this->messageSend($this->vk_api_v2->prepareMessageData(
                     [
-                        'text' => 'Необходимо выдать доступ данной группе',
+                        'message' => 'Необходимо выдать доступ данной группе',
                         'peer_id' => $peer_id,
                         'attachment' => 'https://vk.com/photo-206970444_457239017',
                     ],
@@ -70,7 +70,7 @@ class VkBotServices
             'start' => function (int $peer_id): string {
                 $this->log('response message_new', json_decode($this->messageSend($this->vk_api_v2->prepareMessageData(
                     [
-                        'text' => 'Добро пожаловать',
+                        'message' => 'Добро пожаловать',
                         'peer_id' => $peer_id
                     ],
                     $this->defaultKeyboard()
@@ -81,7 +81,7 @@ class VkBotServices
             'error' => function (int $peer_id): string {
                 $this->log('response message_new', json_decode($this->messageSend($this->vk_api_v2->prepareMessageData(
                     [
-                        'text' => 'Я вас не понял',
+                        'message' => 'Я вас не понял',
                         'peer_id' => $peer_id
                     ],
                     $this->defaultKeyboard()
@@ -104,7 +104,7 @@ class VkBotServices
             'subscribe_now' => function (int $peer_id): string {
                 $this->log('response message_new', json_decode($this->messageSend($this->vk_api_v2->prepareMessageData(
                     [
-                        'text' => 'Сейчас оформим',
+                        'message' => 'Сейчас оформим',
                         'peer_id' => $peer_id
                     ],
                     $this->defaultKeyboard()
@@ -115,7 +115,7 @@ class VkBotServices
             'healp' => function (int $peer_id): string {
                 $this->log('response message_new', json_decode($this->messageSend($this->vk_api_v2->prepareMessageData(
                     [
-                        'text' => 'Я вам не помощник',
+                        'message' => 'Я вам не помощник',
                         'peer_id' => $peer_id
                     ],
                     $this->defaultKeyboard()
@@ -190,10 +190,6 @@ class VkBotServices
                 [
                     'label' => 'Оформить подписку',
                     'payload' => "{\"command\":\"subscribe_now\"}"
-                ],
-                [
-                    'label' => 'Поиск билетов',
-                    'payload' => "{\"command\":\"search_tickets\"}"
                 ]
             ]
         ]);
