@@ -182,14 +182,21 @@ class VkBotServices
     private function defaultKeyboard(): string
     {
         return $this->vk_api_v2->prepareKeyboard(false, false, [
-            'text' => [
+            [
                 [
                     'label' => 'Помощь',
-                    'payload' => "{\"command\":\"healp\"}"
+                    'payload' => "{\"command\":\"healp\"}",
+                    'type' => 'text'
                 ],
                 [
                     'label' => 'Оформить подписку',
-                    'payload' => "{\"command\":\"subscribe_now\"}"
+                    'payload' => "{\"command\":\"subscribe_now\"}",
+                    'type' => 'text'
+                ],
+                [
+                    'label' => 'Поиск билетов',
+                    'payload' => "{\"command\":\"search_tickets\"}",
+                    'type' => 'text'
                 ]
             ]
         ]);

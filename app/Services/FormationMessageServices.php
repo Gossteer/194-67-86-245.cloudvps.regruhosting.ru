@@ -41,17 +41,17 @@ class FormationMessageServices
     public function makeRequestKeyboard(bool $one_time = false, bool $inline = false, array $buttons): ?string
     {
         try {
-            foreach ($buttons as $group => $value) {
+            foreach ($buttons as $key => $value) {
                 if (isset($value[0])) {
                     foreach ($value as $key => $button) {
-                        $group_buttons[$group][] = $this->getActionForButtons($group, $button);
+                        $group_buttons[$key][] = $this->getActionForButtons($button);
                     }
                 } else {
-                    $group_buttons[$group][] = $this->getActionForButtons($group, $value);
+                    $group_buttons[$key][] = $this->getActionForButtons($value);
                 }
             }
 
-            foreach ($group_buttons as $group => $button) {
+            foreach ($group_buttons as $button) {
                 $keyboard_buttons[] = $button;
             }
 
@@ -103,9 +103,10 @@ class FormationMessageServices
             $travel_payouts_services = new TravelPayoutsServices();
             if ($url = ($travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
                 $response[$key]['keyboard'] = $this->makeRequestKeyboard(false, true, [
-                    'open_link' => [
+                    [
                         'link' => $url,
-                        'label' => 'Проверить цену'
+                        'label' => 'Проверить цену',
+                        'type' => 'open_link'
                     ]
                 ]);
             } else {
@@ -193,14 +194,16 @@ class FormationMessageServices
         $travel_payouts_services = new TravelPayoutsServices();
         if ($url = ($travel_payouts_services->getURL($search_id, $terms['url'])['url'] ?? null)) {
             $response['keyboard'] = $this->makeRequestKeyboard(false, true, [
-                'open_link' => [
+                [
                     [
                         'link' => $url,
-                        'label' => 'Купить'
+                        'label' => 'Купить',
+                        'type' => 'open_link'
                     ],
                     [
                         'link' => UserCheapFlightsApiMessagesService::getUrlAviasales($src['code'], $dst['code'], $bullet['segment'][0]['flight'][0]['departure_date'], $passengers, $trip_class, $bullet_segment_dst['flight'][0]['departure_date'] ?? null),
-                        'label' => 'Проверить цену'
+                        'label' => 'Проверить цену',
+                        'type' => 'open_link'
                     ]
                 ]
             ]);
@@ -212,14 +215,14 @@ class FormationMessageServices
         return $response;
     }
 
-    private function getActionForButtons(string $type, array $data): array
+    private function getActionForButtons(array $data): array
     {
-        switch ($type) {
+        switch ($data['type']) {
             case 'open_link':
                 return [
                     "action" =>
                     [
-                        'type' => $type,
+                        'type' => $data['type'],
                         'link' => $data['link'],
                         "label" => $data['label']
                     ]
@@ -229,7 +232,7 @@ class FormationMessageServices
                 return [
                     "action" =>
                     [
-                        'type' => $type,
+                        'type' => $data['type'],
                         'payload' => $data['payload'] ?? null,
                         "label" => $data['label']
                     ],
@@ -238,7 +241,7 @@ class FormationMessageServices
                 break;
 
             default:
-                $error_message = ("Тип $type не найден" . ' getActionForButtons   ' . __FILE__ . ' строка:' . __LINE__);
+                $error_message = ("Тип {$data['type']} не найден" . ' getActionForButtons   ' . __FILE__ . ' строка:' . __LINE__);
                 Log::error($error_message);
                 throw new Exception($error_message);
                 break;

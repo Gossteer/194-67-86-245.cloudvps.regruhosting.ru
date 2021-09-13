@@ -62,9 +62,10 @@ class UserCheapFlightsApiMessagesService
                         $request->group_id ?? config('vk.groups.MIX_MAIN_VK_PUBLIC_ID'),
                         true,
                         $this->formation_message_services->makeRequestKeyboard(false, true, [
-                            'open_link' => [
+                            [
                                 'link' => $request->getUrl($flight),
-                                'label' => 'Проверить цену'
+                                'label' => 'Проверить цену',
+                                'type' => 'open_link'
                             ]
                         ]),
                     );
