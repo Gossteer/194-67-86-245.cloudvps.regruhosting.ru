@@ -130,7 +130,9 @@ class VkBotServices
     {
         $this->log("message main", $request->all());
 
-        if (!($this->user_data = UserData::where('user_id', $request->object['message']['from_id'])->where('key', 'bot')->first())) {
+        if ($user_data = UserData::where('user_id', $request->object['message']['from_id'])->where('key', 'bot')->first()) {
+            $this->user_data = $user_data;
+        } else {
             $this->user_data = new UserData();
             $this->user_data->user_id = $request->object['message']['from_id'];
             $this->user_data->key = 'bot';
