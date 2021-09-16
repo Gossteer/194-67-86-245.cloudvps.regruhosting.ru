@@ -13,6 +13,12 @@ class VkBotServices
     private static array $func_message;
     private static array $func_search_ticket;
     private UserData $user_data;
+    const FUNK = [
+        'search_tickets' => 'search_tickets',
+        'start' => 'start',
+        'subscribe_now' => 'subscribe_now',
+        'healp' => 'healp'
+    ];
 
     private VkApi2Services $vk_api_v2;
 
@@ -39,13 +45,19 @@ class VkBotServices
                         [
                             'label' => 'Выдать доступ',
                             'link' => 'https://vk.com/public' . config('vk.groups.SEND_SUBSCRIPTION_SEARCH_VK_PUBLIC_ID', '205982619'),
-                            'payload' => "{\"command\":\"healp\"}",
                             'type' => 'open_link'
                         ],
                         [
-                            'label' => 'Главная',
-                            'payload' => "{\"command\":\"healp\"}",
-                            'type' => 'text'
+                            [
+                                'label' => 'Я выдал доступ',
+                                'payload' => "{\"command\":\"" . self::FUNK['search_tickets'] . "\"}",
+                                'type' => 'text'
+                            ],
+                            [
+                                'label' => 'Главная',
+                                'payload' => "{\"command\":\"" . self::FUNK['healp'] . "\"}",
+                                'type' => 'text'
+                            ]
                         ]
                     ])
                 ));
@@ -61,9 +73,8 @@ class VkBotServices
             },
             'message_new' => function (Request $request): string {
                 $fun_message =
-                    self::$func_message[json_decode($request->object['message']['payload'] ?? "{\"command\":\"error\"}", true)['command']]
-                    ?? self::$func_message[$request->object['message']['text']]
-                    ?? self::$func_message['error'];
+                    self::$func_message[$request->object['message']['text']]
+                    ?? self::$func_message[json_decode($request->object['message']['payload'] ?? "{\"command\":\"" . self::FUNK['error'] . "\"}", true)['command']];
 
                 return $fun_message($request->object['message']['peer_id']);
             },
@@ -73,26 +84,26 @@ class VkBotServices
     private function setFuncMessage(): array
     {
         return [
-            'start' => function (int $peer_id): string {
+            self::FUNK['start'] => function (int $peer_id): string {
                 return $this->defaultMessageSend('Добро пожаловать', $peer_id);
             },
-            'error' => function (int $peer_id): string {
+            self::FUNK['error'] => function (int $peer_id): string {
                 return $this->defaultMessageSend('Я вас не понял', $peer_id);
             },
-            'search_tickets' => function (int $peer_id): string {
+            self::FUNK['search_tickets'] => function (int $peer_id): string {
                 $user_value = json_decode($this->user_data->value, true);
                 $respons = '';
 
-                if ((!isset($user_value['search_tickets'])) && (!$this->chatAllowedSearchTicker($this->user_data->user_id))) {
+                if ((!isset($user_value[self::FUNK['search_tickets']])) && (!$this->chatAllowedSearchTicker($this->user_data->user_id))) {
                     $respons = self::$func_search_ticket[0]($peer_id);
                 }
 
                 return $respons;
             },
-            'subscribe_now' => function (int $peer_id): string {
+            self::FUNK['subscribe_now'] => function (int $peer_id): string {
                 return $this->defaultMessageSend('Сейчас оформим', $peer_id);
             },
-            'healp' => function (int $peer_id): string {
+            self::FUNK['healp'] => function (int $peer_id): string {
                 return $this->defaultMessageSend('Я вам не помощник', $peer_id);
             }
         ];
@@ -176,18 +187,18 @@ class VkBotServices
             [
                 [
                     'label' => 'Оформить подписку',
-                    'payload' => "{\"command\":\"subscribe_now\"}",
+                    'payload' => "{\"command\":\"" . self::FUNK['subscribe_now'] . "\"}",
                     'type' => 'text'
                 ],
                 [
                     'label' => 'Поиск билетов',
-                    'payload' => "{\"command\":\"search_tickets\"}",
+                    'payload' => "{\"command\":\"" . self::FUNK['search_tickets'] . "\"}",
                     'type' => 'text'
                 ]
             ],
             [
                 'label' => 'Помощь',
-                'payload' => "{\"command\":\"healp\"}",
+                'payload' => "{\"command\":\"" . self::FUNK['healp'] . "\"}",
                 'type' => 'text'
             ],
         ]);
