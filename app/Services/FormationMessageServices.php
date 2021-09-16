@@ -229,6 +229,7 @@ class FormationMessageServices
                     ]
                 ];
                 break;
+            case 'callback':
             case 'text':
                 return [
                     "action" =>
