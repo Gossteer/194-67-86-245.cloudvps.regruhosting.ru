@@ -203,7 +203,7 @@ class VkBotServices
             },
             self::FUNK['healp'] => function (): string {
                 $user_value = $this->getUserValue();
-                if ($user_value['step']) {
+                if (isset($user_value['step'])) {
                     $user_value[$user_value['step']]['step']--;
                     $user_value['step'] = null;
                 }
