@@ -58,13 +58,13 @@ class VkBotServices
             'confirmation' => static function () {
                 exit('6c5abbe6');
             },
-            'message_new' => function (Request $request): void {
+            'message_new' => function (Request $request): string {
                 $fun_message =
                     self::$func_message[json_decode($request->object['message']['payload'] ?? "{\"command\":\"error\"}", true)['command']]
                     ?? self::$func_message[$request->object['message']['text']]
                     ?? self::$func_message['error'];
 
-                $fun_message($request->object['message']['peer_id']);
+                return $fun_message($request->object['message']['peer_id']);
             },
         ];
     }
@@ -72,25 +72,13 @@ class VkBotServices
     private function setFuncMessage(): array
     {
         return [
-            'start' => function (int $peer_id): void {
-                $this->log('response message_new', json_decode($this->messageSend($this->vk_api_v2->prepareMessageData(
-                    [
-                        'message' => 'Добро пожаловать',
-                        'peer_id' => $peer_id
-                    ],
-                    $this->defaultKeyboard()
-                )), true));
+            'start' => function (int $peer_id): string {
+                return $this->defaultMessageSend('Добро пожаловать', $peer_id);
             },
-            'error' => function (int $peer_id): void {
-                $this->log('response message_new', json_decode($this->messageSend($this->vk_api_v2->prepareMessageData(
-                    [
-                        'message' => 'Я вас не понял',
-                        'peer_id' => $peer_id
-                    ],
-                    $this->defaultKeyboard()
-                )), true));
+            'error' => function (int $peer_id): string {
+                return $this->defaultMessageSend('Я вас не понял', $peer_id);
             },
-            'search_tickets' => function (int $peer_id): void {
+            'search_tickets' => function (int $peer_id): string {
                 $user_value = json_decode($this->user_data->value, true);
                 $respons = '';
 
@@ -98,48 +86,39 @@ class VkBotServices
                     $respons = self::$func_search_ticket[0]($peer_id);
                 }
 
-                $this->log('response message_new', json_decode($respons, true) ?? []);
+                return $respons;
             },
-            'subscribe_now' => function (int $peer_id): void {
-                $this->log('response message_new', json_decode($this->messageSend($this->vk_api_v2->prepareMessageData(
-                    [
-                        'message' => 'Сейчас оформим',
-                        'peer_id' => $peer_id
-                    ],
-                    $this->defaultKeyboard()
-                )), true));
+            'subscribe_now' => function (int $peer_id): string {
+                return $this->defaultMessageSend('Сейчас оформим', $peer_id);
             },
-            'healp' => function (int $peer_id): void {
-                $this->log('response message_new', json_decode($this->messageSend($this->vk_api_v2->prepareMessageData(
-                    [
-                        'message' => 'Я вам не помощник',
-                        'peer_id' => $peer_id
-                    ],
-                    $this->defaultKeyboard()
-                )), true));
+            'healp' => function (int $peer_id): string {
+                return $this->defaultMessageSend('Я вам не помощник', $peer_id);
             }
         ];
     }
 
     public function main(Request $request): string
     {
-        $this->log("message main", $request->all());
+        $this->log("request vk-bot", $request->all());
 
-        if (isset($request->object['message']['from_id'])) {
-            if ($user_data = UserData::where('user_id', $request->object['message']['from_id'])->where('key', 'bot')->first()) {
-                $this->user_data = $user_data;
-            } else {
-                $this->user_data = new UserData();
-                $this->user_data->user_id = $request->object['message']['from_id'];
-                $this->user_data->key = 'bot';
-                $this->user_data->value = '';
-                $this->user_data->save();
-            }
-        }
+        $this->setUserData($request->object['message']['from_id'] ?? null);
 
-        self::$func[$request->type]($request);
+        $this->log('response vk-bot', json_decode(self::$func[$request->type]($request), true) ?? []);
 
         return 'OK';
+    }
+
+    private function setUserData(?int $from_id)
+    {
+        if ($from_id && ($user_data = UserData::where('user_id', $from_id)->where('key', 'bot')->first())) {
+            $this->user_data = $user_data;
+        } else {
+            $this->user_data = new UserData();
+            $this->user_data->user_id = $from_id;
+            $this->user_data->key = 'bot';
+            $this->user_data->value = '';
+            $this->user_data->save();
+        }
     }
 
     private function log(string $message, ?array $context = []): void
@@ -167,6 +146,17 @@ class VkBotServices
                 $params
             )
         )->getBody()->getContents();
+    }
+
+    private function defaultMessageSend(string $text, int $peer_id): string
+    {
+        return $this->messageSend($this->vk_api_v2->prepareMessageData(
+            [
+                'message' => $text,
+                'peer_id' => $peer_id
+            ],
+            $this->defaultKeyboard()
+        ));
     }
 
     private function messageSend(array $params): string
