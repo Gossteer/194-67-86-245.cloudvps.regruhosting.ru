@@ -114,9 +114,13 @@ class VkBotServices
     {
         $this->log("request vk-bot", $request->all());
 
-        $this->setUserData($request->object['message']['from_id'] ?? null);
+        try {
+            $this->setUserData($request->object['message']['from_id'] ?? null);
 
-        $this->log('response vk-bot', json_decode(self::$func[$request->type]($request), true) ?? []);
+            $this->log('response vk-bot', json_decode(self::$func[$request->type]($request), true) ?? []);
+        } catch (\Throwable $th) {
+            $this->log('error vk-bot', $th->getTrace());
+        }
 
         return 'OK';
     }
