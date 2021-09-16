@@ -196,7 +196,7 @@ class VkBotServices
         $this->log("request vk-bot", self::$request_vk = $request->all());
 
         try {
-            $this->setUserData(self::$request_vk->object['message']['from_id'] ?? null);
+            $this->setUserData($request->object['message']['from_id'] ?? null);
 
             $this->log('response vk-bot', json_decode(self::$func[self::$request_vk['type']](), true) ?? []);
         } catch (\Throwable $th) {
@@ -210,7 +210,7 @@ class VkBotServices
     {
         if ($from_id && ($user_data = UserData::where('user_id', $from_id)->where('key', 'bot')->first())) {
             $this->user_data = $user_data;
-        } else {
+        } elseif ($from_id) {
             $this->user_data = new UserData();
             $this->user_data->user_id = $from_id;
             $this->user_data->key = 'bot';
