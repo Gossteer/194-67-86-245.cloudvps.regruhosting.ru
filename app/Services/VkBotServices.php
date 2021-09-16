@@ -17,7 +17,8 @@ class VkBotServices
         'search_tickets' => 'search_tickets',
         'start' => 'start',
         'subscribe_now' => 'subscribe_now',
-        'healp' => 'healp'
+        'healp' => 'healp',
+        'error' => 'error'
     ];
 
     private VkApi2Services $vk_api_v2;
