@@ -200,7 +200,7 @@ class VkBotServices
 
             $this->log('response vk-bot', json_decode(self::$func[$request->type](), true) ?? []);
         } catch (\Throwable $th) {
-            $this->log('error vk-bot', $th->getTrace());
+            $this->log("error vk-bot :\n {$th->getMessage()}\n {$th->getLine()}", $th->getTrace());
         }
 
         return 'OK';
