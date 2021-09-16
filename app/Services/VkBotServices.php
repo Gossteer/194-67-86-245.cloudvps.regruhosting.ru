@@ -12,7 +12,7 @@ class VkBotServices
     private static array $func;
     private static array $func_message;
     private static array $func_search_ticket;
-    private static $request;
+    private static $request_vk;
 
     private UserData $user_data;
 
@@ -43,7 +43,7 @@ class VkBotServices
                 return $this->messageSend($this->vk_api_v2->prepareMessageData(
                     [
                         'message' => 'Необходимо выдать доступ данной группе',
-                        'peer_id' => self::$request->object['message']['peer_id'],
+                        'peer_id' => self::$request_vk['object']['message']['peer_id'],
                         'attachment' => 'photo-206970444_457239017',
                     ],
                     $this->vk_api_v2->prepareKeyboard(false, false, [
@@ -74,7 +74,7 @@ class VkBotServices
                 return $this->messageSend($this->vk_api_v2->prepareMessageData(
                     [
                         'message' => 'Введите пожалуйста город отправления',
-                        'peer_id' => self::$request->object['message']['peer_id'],
+                        'peer_id' => self::$request_vk['object']['message']['peer_id'],
                     ],
                     $this->vk_api_v2->prepareKeyboard(false, false, [
                         [
@@ -87,13 +87,13 @@ class VkBotServices
             },
             2 => function (array $user_value): string {
                 $user_value[self::FUNK['search_tickets']]['step'] = 2;
-                $user_value[self::FUNK['search_tickets']]['data']['city'] = self::$request->object['message']['message'];
+                $user_value[self::FUNK['search_tickets']]['data']['city'] = self::$request_vk['object']['message']['message'];
                 $this->setUserValue($user_value);
 
                 return $this->messageSend($this->vk_api_v2->prepareMessageData(
                     [
                         'message' => 'Введите пожалуйста город назначения',
-                        'peer_id' => self::$request->object['message']['peer_id'],
+                        'peer_id' => self::$request_vk['object']['message']['peer_id'],
                     ],
                     $this->vk_api_v2->prepareKeyboard(false, false, [
                         [
@@ -122,7 +122,7 @@ class VkBotServices
             },
             'message_new' => function (): string {
                 $func =
-                    json_decode(self::$request->object['message']['payload'] ?? '')['command']
+                    json_decode(self::$request_vk['object']['message']['payload'] ?? '')['command']
                     ?? $this->getUserValue()['step']
                     ?? self::FUNK['error'];
 
@@ -142,10 +142,10 @@ class VkBotServices
                 return self::$func_message[$user_value['step']]();
             },
             self::FUNK['start'] => function (): string {
-                return $this->defaultMessageSend('Добро пожаловать', self::$request->object['message']['peer_id']);
+                return $this->defaultMessageSend('Добро пожаловать', self::$request_vk['object']['message']['peer_id']);
             },
             self::FUNK['error'] => function (): string {
-                return $this->defaultMessageSend('Я вас не понял', self::$request->object['message']['peer_id']);
+                return $this->defaultMessageSend('Я вас не понял', self::$request_vk['object']['message']['peer_id']);
             },
             self::FUNK['search_tickets'] => function (): string {
                 $user_value = $this->getUserValue();
@@ -168,14 +168,14 @@ class VkBotServices
                 return self::$func_search_ticket[$user_value[self::FUNK['search_tickets']]['step']]($user_value);
             },
             self::FUNK['subscribe_now'] => function (): string {
-                return $this->defaultMessageSend('Сейчас оформим', self::$request->object['message']['peer_id']);
+                return $this->defaultMessageSend('Сейчас оформим', self::$request_vk['object']['message']['peer_id']);
             },
             self::FUNK['healp'] => function (): string {
                 $user_value = $this->getUserValue();
                 $user_value['step'] = null;
                 $this->setUserValue($user_value);
 
-                return $this->defaultMessageSend('Я вам не помощник', self::$request->object['message']['peer_id']);
+                return $this->defaultMessageSend('Я вам не помощник', self::$request_vk['object']['message']['peer_id']);
             }
         ];
     }
@@ -193,12 +193,12 @@ class VkBotServices
 
     public function main(Request $request): string
     {
-        $this->log("request vk-bot", self::$request = $request->all());
+        $this->log("request vk-bot", self::$request_vk = $request->all());
 
         try {
-            $this->setUserData($request->object['message']['from_id'] ?? null);
+            $this->setUserData(self::$request_vk['object']['message']['from_id'] ?? null);
 
-            $this->log('response vk-bot', json_decode(self::$func[$request->type](), true) ?? []);
+            $this->log('response vk-bot', json_decode(self::$func[self::$request_vk['type']](), true) ?? []);
         } catch (\Throwable $th) {
             $this->log("error vk-bot :\n{$th->getMessage()}\n{$th->getLine()}", $th->getTrace());
         }
