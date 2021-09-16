@@ -206,8 +206,8 @@ class VkBotServices
                 if (isset($user_value['step'])) {
                     $user_value[$user_value['step']]['step']--;
                     $user_value['step'] = null;
+                    $this->setUserValue($user_value);
                 }
-                $this->setUserValue($user_value);
 
                 return $this->defaultMessageSend('Я вам не помощник', $this->request_vk['object']['message']['peer_id']);
             }
