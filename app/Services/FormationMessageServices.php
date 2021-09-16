@@ -224,7 +224,8 @@ class FormationMessageServices
                     [
                         'type' => $data['type'],
                         'link' => $data['link'],
-                        "label" => $data['label']
+                        "label" => $data['label'],
+                        "payload" => $data['payload'] ?? null
                     ]
                 ];
                 break;

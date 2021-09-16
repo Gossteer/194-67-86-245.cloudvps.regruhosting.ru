@@ -39,6 +39,7 @@ class VkBotServices
                         [
                             'label' => 'Выдать доступ',
                             'link' => 'https://vk.com/public' . config('vk.groups.SEND_SUBSCRIPTION_SEARCH_VK_PUBLIC_ID', '205982619'),
+                            'payload' => "{\"command\":\"healp\"}",
                             'type' => 'open_link'
                         ],
                         [
