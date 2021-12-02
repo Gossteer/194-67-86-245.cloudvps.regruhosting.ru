@@ -162,7 +162,7 @@ class VkBotServices
     {
         return [
             'confirmation' => static function () {
-                exit('6c5abbe6');
+                exit('85e3b31e');
             },
             'message_new' => function (): string {
                 $func =
