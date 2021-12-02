@@ -17,41 +17,41 @@ Route::post('/subscription-create', 'SubscriptionController@createSupbscription'
 Route::get('/get-subscriptions-byuser', 'SubscriptionController@getSubscriptionsByUser'); //Создание получение кастомной подписки
 Route::post('/delete-subscription/{subscription_id}', 'SubscriptionController@deleteSubscription');
 
-Route::options('test-marusa', function (Request $request) {
-    header("Access-Control-Allow-Headers: Content-Type, Accept");
-    header("Access-Control-Allow-Origin: https://skill-debugger.marusia.mail.ru");
-    Log::info("1", $request->all());
+// Route::options('test-marusa', function (Request $request) {
+//     header("Access-Control-Allow-Headers: Content-Type, Accept");
+//     header("Access-Control-Allow-Origin: https://skill-debugger.marusia.mail.ru");
+//     Log::info("1", $request->all());
 
-    return 1;
-});
+//     return 1;
+// });
 
-Route::post('test-marusa', function (Request $request) {
-    header("Access-Control-Allow-Origin: *");
-    Log::info("2", [json_encode(['command' => 124325])]);
+// Route::post('test-marusa', function (Request $request) {
+//     header("Access-Control-Allow-Origin: *");
+//     Log::info("2", [json_encode(['command' => 124325])]);
 
-    return response()->json(json_decode('{
-        "response": {
-        "text": "Сейчас очередь в столовой 5 человек.",
-        "tts": "Сейчас очередь в столовой пять человек.",
-        "buttons": [
-        {
-        "title": "Надпись на кнопке",
-        "payload": '. json_encode(['command' => 124325]) .',
-        "url": "https://vk.com/gossteer"
-        }
-        ],
-        "end_session": false
-        },
-        "session": {
-        "session_id": "' . $request['session']['session_id'] . '",
-        "user_id": "' . $request['session']['user_id'] . '",
-        "new": false,
-        "message_id": ' . $request['session']['message_id'] . '
-        },
-        "version": "1.0"
-        }', true), 200, ["Access-Control-Allow-Headers: Content-Type, Accept",
-        "Access-Control-Allow-Origin: https://skill-debugger.marusia.mail.ru"]);
-});
+//     return response()->json(json_decode('{
+//         "response": {
+//         "text": "Сейчас очередь в столовой 5 человек.",
+//         "tts": "Сейчас очередь в столовой пять человек.",
+//         "buttons": [
+//         {
+//         "title": "Надпись на кнопке",
+//         "payload": '. json_encode(['command' => 124325]) .',
+//         "url": "https://vk.com/gossteer"
+//         }
+//         ],
+//         "end_session": false
+//         },
+//         "session": {
+//         "session_id": "' . $request['session']['session_id'] . '",
+//         "user_id": "' . $request['session']['user_id'] . '",
+//         "new": false,
+//         "message_id": ' . $request['session']['message_id'] . '
+//         },
+//         "version": "1.0"
+//         }', true), 200, ["Access-Control-Allow-Headers: Content-Type, Accept",
+//         "Access-Control-Allow-Origin: https://skill-debugger.marusia.mail.ru"]);
+// });
 
 //Методы для работы с ботом(и)
 Route::post('/vk-bot-api-v2', 'VkBotController@responseToMessage');
